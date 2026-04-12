@@ -29,6 +29,33 @@ function normalizeBaseUrl(value) {
   return `https://${raw}`;
 }
 
+function readStoredServerUrl() {
+  const fallback = localStorage.getItem("serverUrl") || DEFAULT_API_BASE;
+  if (!chrome.storage?.local) return Promise.resolve(fallback);
+
+  return new Promise((resolve) => {
+    chrome.storage.local.get({ serverUrl: fallback }, (items) => {
+      if (chrome.runtime?.lastError) {
+        resolve(fallback);
+        return;
+      }
+      resolve(items?.serverUrl || fallback);
+    });
+  });
+}
+
+function writeStoredServerUrl(value) {
+  const nextValue = normalizeBaseUrl(value);
+  localStorage.setItem("serverUrl", nextValue);
+  if (!chrome.storage?.local) return Promise.resolve();
+
+  return new Promise((resolve) => {
+    chrome.storage.local.set({ serverUrl: nextValue }, () => {
+      resolve();
+    });
+  });
+}
+
 function captureVisibleTab() {
   return new Promise((resolve, reject) => {
     chrome.tabs.captureVisibleTab(null, { format: "png" }, (dataUrl) => {
@@ -161,15 +188,14 @@ async function loadConfig() {
 }
 
 async function loadSavedServerUrl() {
-  const stored = await chrome.storage.local.get({ serverUrl: DEFAULT_API_BASE });
-  apiBase = normalizeBaseUrl(stored.serverUrl);
+  apiBase = normalizeBaseUrl(await readStoredServerUrl());
   els.serverUrl.value = apiBase;
 }
 
 async function saveServerUrl() {
   apiBase = normalizeBaseUrl(els.serverUrl.value);
   els.serverUrl.value = apiBase;
-  await chrome.storage.local.set({ serverUrl: apiBase });
+  await writeStoredServerUrl(apiBase);
   setStatus("地址已保存");
   await loadConfig();
 }

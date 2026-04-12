@@ -101,3 +101,9 @@ npm start
 5. 把扩展里的服务地址改成你的域名。
 
 如果你想长期运行，建议再包一层 `systemd` 服务或者 `pm2`，这样树莓派重启后也会自动起来。
+
+### 常见提示
+
+- 如果页面提示 `Ollama is not running or not reachable`，通常表示服务启动时没有读到 `VISION_PROVIDER=newapi` 或相关 `NEWAPI_*` 环境变量。
+- 这时先检查 `systemd` 的 `EnvironmentFile` 是否真的加载了你的 `.env` 文件。
+- 你也可以在树莓派上直接运行 `printenv | grep -E 'VISION_PROVIDER|NEWAPI|OPENAI|OLLAMA'` 看当前进程环境。

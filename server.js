@@ -3,8 +3,13 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const root = __dirname;
+loadDotEnv(path.join(root, ".env"));
 const port = Number(process.env.PORT || 4173);
-const visionProvider = (process.env.VISION_PROVIDER || "ollama").toLowerCase();
+const defaultVisionProvider =
+  process.env.NEWAPI_API_KEY || process.env.NEWAPI_BASE_URL || process.env.OPENAI_API_KEY || process.env.OPENAI_BASE_URL
+    ? "newapi"
+    : "ollama";
+const visionProvider = (process.env.VISION_PROVIDER || defaultVisionProvider).toLowerCase();
 const visionMode = (process.env.VISION_MODE || "balanced").toLowerCase();
 const openAiBaseUrl = normalizeOpenAiBaseUrl(process.env.OPENAI_BASE_URL || process.env.NEWAPI_BASE_URL);
 const openAiTimeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 45000);
@@ -41,6 +46,28 @@ function loadKnowledgeBase() {
   const knowledgePath = path.join(root, "data", "knowledge-base.json");
   const raw = fs.readFileSync(knowledgePath, "utf8");
   return JSON.parse(raw);
+}
+
+function loadDotEnv(filePath) {
+  if (!fs.existsSync(filePath)) return;
+  try {
+    const raw = fs.readFileSync(filePath, "utf8");
+    for (const line of raw.split(/\r?\n/)) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+      const eqIndex = trimmed.indexOf("=");
+      if (eqIndex <= 0) continue;
+      const key = trimmed.slice(0, eqIndex).trim();
+      if (!key || process.env[key] !== undefined) continue;
+      let value = trimmed.slice(eqIndex + 1).trim();
+      if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+        value = value.slice(1, -1);
+      }
+      process.env[key] = value;
+    }
+  } catch (error) {
+    console.warn(`Failed to load env file: ${filePath}`, error);
+  }
 }
 
 function loadGuideKnowledge() {
