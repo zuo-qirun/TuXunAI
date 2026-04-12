@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "TuXun AI Capture",
+  "version": "0.1.0",
+  "description": "Capture the current tab and send it to the local TuXun AI assistant.",
+  "action": {
+    "default_title": "TuXun AI Capture",
+    "default_popup": "popup.html"
+  },
+  "permissions": ["tabs", "activeTab", "storage"],
+  "host_permissions": ["<all_urls>"]
+}

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>图寻实时辅助 AI</title>
+    <link rel="stylesheet" href="./styles.css?v=20260412" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="intro band">
+        <div>
+          <p class="eyebrow">TuXun Practice Copilot</p>
+          <h1>图寻实时辅助 AI</h1>
+          <p class="lede">
+            边看街景边整理线索：驾驶方向、文字、车牌、道路标线、街景车、电线杆、指示牌、镜头特征和环境。
+          </p>
+        </div>
+        <div class="status-strip" aria-label="助手状态">
+          <span id="captureStatus">未开始捕获</span>
+          <span id="analysisStatus">等待线索</span>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <div class="preview-pane">
+          <div class="toolbar" aria-label="捕获控制">
+            <button id="startCapture" type="button">选择屏幕</button>
+            <button id="stopCapture" type="button" disabled>停止</button>
+            <label class="file-button">
+              上传截图
+              <input id="imageUpload" type="file" accept="image/*" />
+            </label>
+            <button id="clearFrame" type="button">清空</button>
+          </div>
+
+          <div class="frame-surface">
+            <video id="screenVideo" autoplay muted playsinline></video>
+            <canvas id="frameCanvas"></canvas>
+            <div id="dropHint" class="drop-hint">
+              粘贴截图、拖入图片，或者选择图寻窗口。
+            </div>
+          </div>
+
+          <div class="metrics" id="visualMetrics" aria-live="polite">
+            <span>天空 --</span>
+            <span>植被 --</span>
+            <span>道路 --</span>
+            <span>黄线 --</span>
+            <span>白线 --</span>
+          </div>
+
+          <div class="auto-clues">
+            <div class="auto-clues-head">
+              <div>
+                <p class="eyebrow">Auto Vision</p>
+                <h2>自动识别线索</h2>
+              </div>
+              <span id="visionStatus" class="score-chip">本地粗略识别</span>
+            </div>
+            <div id="autoClues" class="auto-clue-list" aria-live="polite">
+              选择屏幕或粘贴截图后，我会自动读取文字、路牌、车牌、道路和环境。
+            </div>
+          </div>
+        </div>
+
+        <aside class="assistant-pane" aria-label="辅助建议">
+          <div class="result-head">
+            <div>
+              <p class="eyebrow">Ranked Guess</p>
+              <h2>候选区域</h2>
+            </div>
+            <button id="resetSignals" type="button">重置线索</button>
+          </div>
+
+          <div class="city-list-wrap">
+            <h3>地点判断</h3>
+            <div id="placeGuess" class="candidate-list"></div>
+          </div>
+
+          <div id="candidateList" class="candidate-list"></div>
+
+          <div class="city-list-wrap">
+            <h3>城市候选</h3>
+            <div id="cityList" class="candidate-list"></div>
+          </div>
+
+          <div class="next-checks">
+            <h3>下一步看什么</h3>
+            <ul id="nextChecks"></ul>
+          </div>
+        </aside>
+      </section>
+
+      <section class="clue-board band" aria-label="线索板">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Corrections</p>
+            <h2>需要时再手动校正</h2>
+          </div>
+        </div>
+
+        <div class="clue-grid" id="clueGrid"></div>
+
+        <div class="text-clues">
+          <label>
+            画面文字、地名、电话区号、道路编号
+            <textarea id="textClues" rows="4" placeholder="例如：fr、Rue、Krakow、km/h、66、Toyota、红白路牌"></textarea>
+          </label>
+          <label>
+            备注
+            <textarea id="freeNotes" rows="4" placeholder="例如：左行，但植被像热带；路肩是红土；电线杆像混凝土圆柱。"></textarea>
+          </label>
+        </div>
+      </section>
+
+      <section class="guide band">
+        <div>
+          <p class="eyebrow">Guide Order</p>
+          <h2>判题优先级</h2>
+        </div>
+        <ol>
+          <li>第 0 步：先确认是否在图寻可玩覆盖范围，再看代际。</li>
+          <li>先抓文字、国别名、电话区号和地名。</li>
+          <li>再看驾驶方向、道路标线、车牌颜色、路牌样式。</li>
+          <li>补充街景车、镜头代际、电线杆、护栏、路桩和环境。</li>
+          <li>最后用气候、植被、建筑、地形缩小到地区。</li>
+        </ol>
+      </section>
+    </main>
+
+    <script src="./src/knowledge.js?v=20260412"></script>
+    <script src="./src/app.js?v=20260412"></script>
+  </body>
+</html>

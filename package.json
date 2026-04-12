@@ -1,0 +1,14 @@
+{
+  "name": "tuxun-ai-assistant",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A local real-time clue assistant for practicing TuXun / geolocation rounds.",
+  "scripts": {
+    "start": "node server.js",
+    "crawl:guide": "node scripts/build-plonkit-guide.js",
+    "build:coverage": "node scripts/build-coverage-generations.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

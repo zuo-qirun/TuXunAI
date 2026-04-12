@@ -1,0 +1,678 @@
+{
+  "version": 1,
+  "groups": [
+    {
+      "id": "drive",
+      "title": "驾驶方向",
+      "multi": false,
+      "options": [
+        { "id": "drive-left", "label": "左侧通行", "weight": 4 },
+        { "id": "drive-right", "label": "右侧通行", "weight": 4 }
+      ]
+    },
+    {
+      "id": "road-marking",
+      "title": "道路标线 / 路肩",
+      "multi": true,
+      "options": [
+        { "id": "yellow-center", "label": "黄中线", "weight": 2.2 },
+        { "id": "white-center", "label": "白中线", "weight": 2.1 },
+        { "id": "double-yellow", "label": "双黄线", "weight": 2.4 },
+        { "id": "red-shoulder", "label": "红土路肩", "weight": 2.2 },
+        { "id": "snow-road", "label": "雪地/寒带道路", "weight": 1.8 },
+        { "id": "desert-road", "label": "荒漠/干旱道路", "weight": 1.8 },
+        { "id": "no-marking", "label": "几乎无标线", "weight": 1.4 },
+        { "id": "rumble-strip", "label": "震荡带/边线", "weight": 1.3 },
+        { "id": "paved-road", "label": "铺装道路", "weight": 1.2 },
+        { "id": "gravel-road", "label": "碎石道路", "weight": 1.4 },
+        { "id": "dirt-road", "label": "土路/泥路", "weight": 1.6 }
+      ]
+    },
+    {
+      "id": "plates",
+      "title": "车牌",
+      "multi": true,
+      "options": [
+        { "id": "plate-eu", "label": "欧盟蓝条", "weight": 2.2 },
+        { "id": "plate-yellow", "label": "黄底牌", "weight": 2.5 },
+        { "id": "plate-white-long", "label": "白底长牌", "weight": 2.7 },
+        { "id": "plate-black", "label": "黑底牌", "weight": 2.8 },
+        { "id": "plate-red", "label": "红色车牌", "weight": 2.5 },
+        { "id": "plate-green", "label": "绿色车牌", "weight": 2.6 },
+        { "id": "plate-blue", "label": "蓝色车牌", "weight": 2.2 },
+        { "id": "no-visible-plate", "label": "看不到车牌", "weight": 1.0 }
+      ]
+    },
+    {
+      "id": "script",
+      "title": "文字 / 语言",
+      "multi": true,
+      "options": [
+        { "id": "latin", "label": "拉丁字母", "weight": 1.6 },
+        { "id": "cyrillic", "label": "西里尔字母", "weight": 3.8 },
+        { "id": "arabic", "label": "阿拉伯文", "weight": 3.8 },
+        { "id": "thai", "label": "泰文", "weight": 3.8 },
+        { "id": "khmer", "label": "高棉文", "weight": 3.8 },
+        { "id": "hangul", "label": "韩文", "weight": 3.8 },
+        { "id": "kana", "label": "日文假名", "weight": 4 },
+        { "id": "chinese", "label": "中文", "weight": 3.8 },
+        { "id": "devanagari", "label": "天城文", "weight": 3.6 },
+        { "id": "greek", "label": "希腊文", "weight": 3 }
+      ]
+    },
+    {
+      "id": "signs",
+      "title": "路牌 / 指示牌",
+      "multi": true,
+      "options": [
+        { "id": "eu-sign", "label": "欧洲风格", "weight": 1.8 },
+        { "id": "us-sign", "label": "美式路牌", "weight": 2.6 },
+        { "id": "red-white-chevron", "label": "红白箭头/护栏", "weight": 1.8 },
+        { "id": "blue-motorway", "label": "蓝色高速牌", "weight": 2 },
+        { "id": "green-highway", "label": "绿色高速牌", "weight": 2 },
+        { "id": "town-blue", "label": "蓝底城镇牌", "weight": 1.6 },
+        { "id": "km-marker", "label": "公里桩", "weight": 1.4 },
+        { "id": "bilingual-sign", "label": "双语路牌", "weight": 1.8 }
+      ]
+    },
+    {
+      "id": "streetview",
+      "title": "街景车 / 镜头",
+      "multi": true,
+      "options": [
+        { "id": "car-roof-rack", "label": "车顶架", "weight": 1.4 },
+        { "id": "car-antenna", "label": "天线明显", "weight": 1.2 },
+        { "id": "low-cam", "label": "低机位", "weight": 1.8 },
+        { "id": "blur-heavy", "label": "模糊较重", "weight": 1 },
+        { "id": "trekker", "label": "步行/背包机位", "weight": 1.8 },
+        { "id": "motorcycle", "label": "摩托车街景", "weight": 1.6 }
+      ]
+    },
+    {
+      "id": "poles",
+      "title": "电线杆 / 路桩",
+      "multi": true,
+      "options": [
+        { "id": "concrete-pole", "label": "混凝土杆", "weight": 1.8 },
+        { "id": "wood-pole", "label": "木杆", "weight": 1.8 },
+        { "id": "metal-pole", "label": "金属杆", "weight": 1 },
+        { "id": "striped-bollard", "label": "黑白/红白路桩", "weight": 1.8 },
+        { "id": "round-bollard", "label": "圆头路桩", "weight": 1.5 },
+        { "id": "double-pole", "label": "双杆/门型杆", "weight": 1.5 },
+        { "id": "many-wires", "label": "线缆很多", "weight": 1.5 },
+        { "id": "single-wire", "label": "单线/稀疏线缆", "weight": 1 },
+        { "id": "transmission-tower", "label": "高压塔", "weight": 1.2 }
+      ]
+    },
+    {
+      "id": "environment",
+      "title": "环境 / 地形",
+      "multi": true,
+      "options": [
+        { "id": "tropical", "label": "热带", "weight": 1.4 },
+        { "id": "temperate", "label": "温带", "weight": 1.3 },
+        { "id": "mediterranean", "label": "地中海感", "weight": 1.4 },
+        { "id": "nordic", "label": "北欧/寒带", "weight": 1.6 },
+        { "id": "mountain", "label": "山地", "weight": 1.4 },
+        { "id": "flat", "label": "平原/平坦", "weight": 1.2 },
+        { "id": "urban-dense", "label": "高密度城市", "weight": 1.4 },
+        { "id": "suburban", "label": "郊区", "weight": 1.1 },
+        { "id": "rural", "label": "乡村", "weight": 1.5 },
+        { "id": "coastal", "label": "海岸/沿海", "weight": 1.4 },
+        { "id": "arid", "label": "干旱/荒漠", "weight": 1.5 },
+        { "id": "snowy", "label": "积雪/冰雪", "weight": 1.5 },
+        { "id": "wetland", "label": "湿地/潮湿", "weight": 1.2 },
+        { "id": "forest", "label": "森林", "weight": 1.3 }
+      ]
+    },
+    {
+      "id": "infrastructure",
+      "title": "道路基础设施",
+      "multi": true,
+      "options": [
+        { "id": "guardrail", "label": "护栏多", "weight": 1.1 },
+        { "id": "narrow-road", "label": "窄路", "weight": 1.2 },
+        { "id": "wide-road", "label": "宽路", "weight": 1.1 },
+        { "id": "roundabout-heavy", "label": "环岛多", "weight": 1.2 },
+        { "id": "fenced-road", "label": "路边围栏", "weight": 1 },
+        { "id": "service-road", "label": "支路/辅路", "weight": 1 },
+        { "id": "motorway", "label": "高速/快速路", "weight": 1.2 },
+        { "id": "bridge-road", "label": "桥路/高架", "weight": 1 }
+      ]
+    }
+  ],
+  "frameRules": [
+    {
+      "tag": "tropical",
+      "reason": "植被占比较高，优先考虑热带/亚热带地区",
+      "confidence": 0.72,
+      "conditions": [{ "metric": "vegPct", "op": ">=", "value": 22 }]
+    },
+    {
+      "tag": "temperate",
+      "reason": "树木与天空比例更像温带或城郊",
+      "confidence": 0.66,
+      "conditions": [
+        { "metric": "vegPct", "op": ">=", "value": 12 },
+        { "metric": "skyPct", "op": "<=", "value": 16 }
+      ]
+    },
+    {
+      "tag": "forest",
+      "reason": "画面树林密度高，优先考虑林地或森林道路",
+      "confidence": 0.7,
+      "conditions": [
+        { "metric": "vegPct", "op": ">=", "value": 28 },
+        { "metric": "roadPct", "op": "<=", "value": 18 }
+      ]
+    },
+    {
+      "tag": "urban-dense",
+      "reason": "暗部与遮挡较多，像高密度城市或城镇街区",
+      "confidence": 0.62,
+      "conditions": [
+        { "metric": "darkPct", "op": ">=", "value": 16 },
+        { "metric": "skyPct", "op": "<=", "value": 12 }
+      ]
+    },
+    {
+      "tag": "suburban",
+      "reason": "道路与植被占比均衡，比较像城郊",
+      "confidence": 0.56,
+      "conditions": [
+        { "metric": "roadPct", "op": ">=", "value": 10 },
+        { "metric": "roadPct", "op": "<=", "value": 26 },
+        { "metric": "vegPct", "op": ">=", "value": 6 },
+        { "metric": "vegPct", "op": "<=", "value": 24 }
+      ]
+    },
+    {
+      "tag": "rural",
+      "reason": "开阔度高、植被明显，优先考虑乡村道路",
+      "confidence": 0.68,
+      "conditions": [
+        { "metric": "vegPct", "op": ">=", "value": 10 },
+        { "metric": "roadPct", "op": "<=", "value": 18 },
+        { "metric": "darkPct", "op": "<=", "value": 16 }
+      ]
+    },
+    {
+      "tag": "arid",
+      "reason": "天空与裸地占比高，像干旱区域",
+      "confidence": 0.66,
+      "conditions": [
+        { "metric": "skyPct", "op": ">=", "value": 26 },
+        { "metric": "vegPct", "op": "<=", "value": 8 }
+      ]
+    },
+    {
+      "tag": "snowy",
+      "reason": "白色地表或路面元素较多，像雪地场景",
+      "confidence": 0.7,
+      "conditions": [
+        { "metric": "whitePct", "op": ">=", "value": 14 },
+        { "metric": "skyPct", "op": ">=", "value": 10 }
+      ]
+    },
+    {
+      "tag": "coastal",
+      "reason": "视野较开阔，像沿海或海边地形",
+      "confidence": 0.5,
+      "conditions": [
+        { "metric": "skyPct", "op": ">=", "value": 20 },
+        { "metric": "vegPct", "op": "<=", "value": 18 },
+        { "metric": "darkPct", "op": "<=", "value": 14 }
+      ]
+    },
+    {
+      "tag": "mountain",
+      "reason": "起伏感和遮挡较明显，像山地或坡地",
+      "confidence": 0.58,
+      "conditions": [
+        { "metric": "vegPct", "op": ">=", "value": 8 },
+        { "metric": "roadPct", "op": "<=", "value": 16 },
+        { "metric": "skyPct", "op": ">=", "value": 14 }
+      ]
+    },
+    {
+      "tag": "paved-road",
+      "reason": "路面更像铺装或沥青",
+      "confidence": 0.58,
+      "conditions": [
+        { "metric": "roadPct", "op": ">=", "value": 14 },
+        { "metric": "yellowPct", "op": "<=", "value": 2 },
+        { "metric": "whitePct", "op": ">=", "value": 4 },
+        { "metric": "redPct", "op": "<", "value": 3 }
+      ]
+    },
+    {
+      "tag": "gravel-road",
+      "reason": "路面更像碎石或粗颗粒土石路",
+      "confidence": 0.56,
+      "conditions": [
+        { "metric": "roadPct", "op": ">=", "value": 10 },
+        { "metric": "yellowPct", "op": "<=", "value": 2 },
+        { "metric": "whitePct", "op": "<=", "value": 4 },
+        { "metric": "redPct", "op": ">=", "value": 2 }
+      ]
+    },
+    {
+      "tag": "dirt-road",
+      "reason": "路面更像土路或未铺装道路",
+      "confidence": 0.64,
+      "conditions": [
+        { "metric": "roadPct", "op": ">=", "value": 10 },
+        { "metric": "yellowPct", "op": "<=", "value": 2 },
+        { "metric": "whitePct", "op": "<=", "value": 3 },
+        { "metric": "redPct", "op": ">=", "value": 3 }
+      ]
+    },
+    {
+      "tag": "no-marking",
+      "reason": "路面可见标线较少",
+      "confidence": 0.48,
+      "conditions": [
+        { "metric": "roadPct", "op": ">=", "value": 12 },
+        { "metric": "yellowPct", "op": "<=", "value": 1 },
+        { "metric": "whitePct", "op": "<=", "value": 2 }
+      ]
+    },
+    {
+      "tag": "yellow-center",
+      "reason": "黄色标线明显",
+      "confidence": 0.55,
+      "conditions": [
+        { "metric": "roadPct", "op": ">=", "value": 14 },
+        { "metric": "yellowPct", "op": ">=", "value": 2 }
+      ]
+    },
+    {
+      "tag": "white-center",
+      "reason": "白色标线明显",
+      "confidence": 0.55,
+      "conditions": [
+        { "metric": "roadPct", "op": ">=", "value": 14 },
+        { "metric": "whitePct", "op": ">=", "value": 5 }
+      ]
+    },
+    {
+      "tag": "red-shoulder",
+      "reason": "红土或红色路肩较明显",
+      "confidence": 0.6,
+      "conditions": [{ "metric": "redPct", "op": ">=", "value": 3 }]
+    },
+    {
+      "tag": "desert-road",
+      "reason": "天空占比高、植被少，像干旱道路",
+      "confidence": 0.55,
+      "conditions": [
+        { "metric": "skyPct", "op": ">=", "value": 30 },
+        { "metric": "vegPct", "op": "<=", "value": 6 },
+        { "metric": "roadPct", "op": ">=", "value": 10 }
+      ]
+    }
+  ],
+  "textHints": [
+    {
+      "tag": "kana",
+      "reason": "文本像日本线索",
+      "phrases": [".jp", "tokyo", "osaka", "kyoto", "prefecture", "県", "市", "町"]
+    },
+    {
+      "tag": "hangul",
+      "reason": "文本像韩国线索",
+      "phrases": [".kr", "seoul", "busan", "daegu", "incheon", "hangul", "서울", "부산"]
+    },
+    {
+      "tag": "chinese",
+      "reason": "文本像中文线索",
+      "phrases": [".cn", ".tw", ".hk", "中国", "台湾", "香港", "北京", "上海", "广东", "省", "市", "县"]
+    },
+    {
+      "tag": "chinese",
+      "reason": "文本像繁体中文或台湾线索",
+      "phrases": ["繁體", "台北", "高雄", "新北", "台中", "鄉", "鎮", "路"]
+    },
+    {
+      "tag": "drive-left",
+      "reason": "文本像香港或右舵地区线索",
+      "phrases": [".hk", "hong kong", "kowloon", "lhd", "left hand", "左行", "左側通行"]
+    },
+    {
+      "tag": "thai",
+      "reason": "文本像泰国线索",
+      "phrases": [".th", "bangkok", "chiang", "phuket", "thailand", "กรุงเทพ", "เชียงใหม่"]
+    },
+    {
+      "tag": "khmer",
+      "reason": "文本像柬埔寨线索",
+      "phrases": [".kh", "phnom", "siem reap", "cambodia", "khmer", "កម្ពុជា"]
+    },
+    {
+      "tag": "drive-left",
+      "reason": "文本像马来西亚或新加坡线索",
+      "phrases": [".my", "kuala", "johor", ".sg", "singapore", "jalan", "左行"]
+    },
+    {
+      "tag": "drive-left",
+      "reason": "文本像印度尼西亚线索",
+      "phrases": [".id", "jakarta", "surabaya", "bandung", "indonesia"]
+    },
+    {
+      "tag": "arabic",
+      "reason": "文本像阿拉伯语线索",
+      "phrases": [".ae", ".sa", ".qa", ".kw", ".bh", ".om", "dubai", "abu dhabi", "riyadh", "arabic", "العربية"]
+    },
+    {
+      "tag": "latin",
+      "reason": "文本像拉丁字母线索",
+      "phrases": ["street", "avenue", "road", "route", "via", "rue", "calle", "straße", "strasse"]
+    },
+    {
+      "tag": "cyrillic",
+      "reason": "文本像西里尔字母线索",
+      "phrases": [".ru", ".ua", "moscow", "kyiv", "kiev", "sankt", "улица", "проспект"]
+    },
+    {
+      "tag": "devanagari",
+      "reason": "文本像印度或尼泊尔线索",
+      "phrases": [".in", "delhi", "mumbai", "bangalore", "nepal", "हिंदी", "भारत"]
+    },
+    {
+      "tag": "greek",
+      "reason": "文本像希腊线索",
+      "phrases": [".gr", "athens", "thessaloniki", "Αθήνα", "Ελλάδα"]
+    },
+    {
+      "tag": "latin",
+      "reason": "文本像英语或其他拉丁字母国家线索",
+      "phrases": [".us", ".ca", ".uk", ".ie", ".fr", ".de", ".it", ".es", ".nl", ".pl", ".no", ".se", ".fi", ".au", ".nz", ".za"]
+    },
+    {
+      "tag": "us-sign",
+      "reason": "文本像美国道路体系",
+      "phrases": ["interstate", "county road", "route", "hwy", "highway", "exit", "mph"]
+    },
+    {
+      "tag": "plate-yellow",
+      "reason": "文本像荷兰或部分黄牌地区",
+      "phrases": [".nl", "netherlands", "amsterdam", "rotterdam", "utrecht"]
+    },
+    {
+      "tag": "plate-eu",
+      "reason": "文本像欧盟道路线索",
+      "phrases": [".fr", ".de", ".it", ".es", ".pl", ".be", ".pt", ".cz", ".ro", ".hu"]
+    },
+    {
+      "tag": "nordic",
+      "reason": "文本像北欧线索",
+      "phrases": [".no", ".se", ".fi", "oslo", "bergen", "stockholm", "helsinki", "arctic", "boreal"]
+    },
+    {
+      "tag": "yellow-center",
+      "reason": "文本像加拿大或墨西哥线索",
+      "phrases": [".ca", "ontario", "quebec", "toronto", "montreal", ".mx", "mexico", "mexico city"]
+    },
+    {
+      "tag": "red-shoulder",
+      "reason": "文本像巴西或红土地区线索",
+      "phrases": [".br", "brasil", "sao paulo", "rio de janeiro", "red soil", "laterite"]
+    }
+  ],
+  "nextChecks": [
+    {
+      "tag": "drive-left",
+      "text": "先把路口方向、车道位置和靠左靠右确认好，别让镜像误导判断。"
+    },
+    {
+      "tag": "drive-right",
+      "text": "确认车辆通行方向后，再把车牌和路牌一起看，能很快缩小国家范围。"
+    },
+    {
+      "tag": "kana",
+      "text": "继续找日文假名、地名后缀和低机位特征，日常能直接把日本拉到第一梯队。"
+    },
+    {
+      "tag": "hangul",
+      "text": "继续找韩文、白底长牌和混凝土杆，韩国线索通常很成套。"
+    },
+    {
+      "tag": "cyrillic",
+      "text": "继续找西里尔字母、地名后缀和车牌样式，再分俄罗斯、乌克兰和周边。"
+    },
+    {
+      "tag": "arabic",
+      "text": "继续找阿拉伯语、公里桩和路牌颜色，海湾国家通常很快能分出来。"
+    },
+    {
+      "tag": "plate-eu",
+      "text": "放大车牌左侧蓝条和城市名，欧洲国家常常靠车牌和路牌一起锁定。"
+    },
+    {
+      "tag": "red-shoulder",
+      "text": "继续观察路肩颜色、路牌底色和植被类型，红土区国家经常成组出现。"
+    },
+    {
+      "tag": "tropical",
+      "text": "再看线缆密度、建筑密度和道路肩部，热带国家内部差异很大。"
+    },
+    {
+      "tag": "snowy",
+      "text": "补看护栏、路桩和路面标线，雪地线索常常能把北欧、加拿大和俄罗斯分开。"
+    }
+  ],
+  "profiles": [
+    {
+      "country": "日本",
+      "region": "东亚",
+      "tags": ["drive-left", "kana", "plate-white-long", "low-cam", "concrete-pole", "many-wires", "temperate", "mountain", "rural", "urban-dense"],
+      "boosts": [
+        { "tags": ["kana", "low-cam"], "weight": 1.8, "reason": "日文假名 + 低机位" },
+        { "tags": ["kana", "concrete-pole"], "weight": 1.2, "reason": "日文假名 + 混凝土杆" }
+      ],
+      "notes": "左行、假名、低机位、白底长牌和密集电线杆经常一起出现。"
+    },
+    {
+      "country": "韩国",
+      "region": "东亚",
+      "tags": ["drive-right", "hangul", "plate-white-long", "concrete-pole", "urban-dense", "mountain", "temperate"],
+      "notes": "韩文、右侧通行、白底长牌和混凝土杆的组合很强。"
+    },
+    {
+      "country": "中国大陆",
+      "region": "东亚",
+      "tags": ["drive-right", "chinese", "plate-blue", "plate-green", "green-highway", "blue-motorway", "urban-dense", "concrete-pole", "mountain", "flat"],
+      "boosts": [
+        { "tags": ["chinese", "plate-blue"], "weight": 1.4, "reason": "中文 + 蓝牌" },
+        { "tags": ["chinese", "green-highway"], "weight": 1.2, "reason": "中文 + 绿色高速牌" }
+      ],
+      "notes": "中文、蓝/绿车牌和省市级道路编号是大陆的核心线索。"
+    },
+    {
+      "country": "台湾",
+      "region": "东亚",
+      "tags": ["drive-right", "chinese", "plate-white-long", "tropical", "mountain", "urban-dense", "suburban"],
+      "notes": "繁体中文、白底长牌、山地和城郊感很常见。"
+    },
+    {
+      "country": "香港",
+      "region": "东亚",
+      "tags": ["drive-left", "chinese", "latin", "plate-white-long", "urban-dense", "tropical", "concrete-pole"],
+      "boosts": [
+        { "tags": ["drive-left", "latin"], "weight": 1.1, "reason": "左行 + 英文/拉丁字母" }
+      ],
+      "notes": "左行、中英双语、高密度城市和白底长牌很关键。"
+    },
+    {
+      "country": "新加坡",
+      "region": "东南亚",
+      "tags": ["drive-left", "latin", "chinese", "plate-white-long", "urban-dense", "suburban", "tropical", "wide-road"],
+      "notes": "英文、中文、左行和整洁的城市道路组合非常典型。"
+    },
+    {
+      "country": "马来西亚",
+      "region": "东南亚",
+      "tags": ["drive-left", "latin", "plate-black", "tropical", "many-wires", "rural", "urban-dense", "suburban"],
+      "notes": "黑底牌、热带植被和很多电线是常见组合。"
+    },
+    {
+      "country": "印度尼西亚",
+      "region": "东南亚",
+      "tags": ["drive-left", "latin", "plate-black", "tropical", "many-wires", "red-shoulder", "rural", "suburban"],
+      "notes": "左行、黑底牌、红土和密集线缆经常一起出现。"
+    },
+    {
+      "country": "泰国",
+      "region": "东南亚",
+      "tags": ["drive-left", "thai", "tropical", "many-wires", "concrete-pole", "blue-motorway", "urban-dense", "rural"],
+      "notes": "泰文、左行、混凝土杆和高速蓝牌是高价值线索。"
+    },
+    {
+      "country": "柬埔寨",
+      "region": "东南亚",
+      "tags": ["drive-right", "khmer", "tropical", "red-shoulder", "rural", "many-wires"],
+      "notes": "高棉文和红土路肩经常直接把国家范围缩得很小。"
+    },
+    {
+      "country": "菲律宾",
+      "region": "东南亚",
+      "tags": ["drive-right", "latin", "tropical", "many-wires", "urban-dense", "suburban"],
+      "notes": "英文、热带、线缆很多和城镇密度高是重要线索。"
+    },
+    {
+      "country": "印度",
+      "region": "南亚",
+      "tags": ["drive-left", "latin", "devanagari", "plate-white-long", "tropical", "rural", "many-wires", "concrete-pole"],
+      "boosts": [
+        { "tags": ["devanagari", "many-wires"], "weight": 1.4, "reason": "天城文 + 密集线缆" }
+      ],
+      "notes": "英语、天城文、左行和密集线缆是核心组合。"
+    },
+    {
+      "country": "阿联酋",
+      "region": "西亚",
+      "tags": ["drive-right", "arabic", "desert-road", "urban-dense", "green-highway", "plate-white-long", "wide-road", "arid"],
+      "notes": "阿拉伯文、干旱道路、现代高速和白底长牌很典型。"
+    },
+    {
+      "country": "土耳其",
+      "region": "西亚/欧洲",
+      "tags": ["drive-right", "latin", "mediterranean", "mountain", "red-white-chevron", "blue-motorway", "urban-dense", "rural"],
+      "notes": "拉丁字母、地中海感和红白护栏经常一起出现。"
+    },
+    {
+      "country": "英国",
+      "region": "欧洲",
+      "tags": ["drive-left", "latin", "plate-yellow", "eu-sign", "temperate", "rural", "suburban", "narrow-road"],
+      "notes": "左行、黄牌和狭窄乡间路非常有辨识度。"
+    },
+    {
+      "country": "爱尔兰",
+      "region": "欧洲",
+      "tags": ["drive-left", "latin", "eu-sign", "temperate", "rural", "suburban", "narrow-road"],
+      "notes": "左行、温带湿润感和乡间窄路很常见。"
+    },
+    {
+      "country": "法国",
+      "region": "欧洲",
+      "tags": ["drive-right", "latin", "plate-eu", "eu-sign", "white-center", "temperate", "suburban"],
+      "notes": "欧盟蓝条、法语地名和白中线很关键。"
+    },
+    {
+      "country": "德国",
+      "region": "欧洲",
+      "tags": ["drive-right", "latin", "plate-eu", "eu-sign", "temperate", "blue-motorway", "suburban", "wide-road"],
+      "notes": "德语、欧盟车牌和蓝色高速牌很常见。"
+    },
+    {
+      "country": "意大利",
+      "region": "欧洲",
+      "tags": ["drive-right", "latin", "plate-eu", "eu-sign", "mediterranean", "mountain", "suburban"],
+      "notes": "意大利语、地中海感和山地城镇都很常见。"
+    },
+    {
+      "country": "西班牙",
+      "region": "欧洲",
+      "tags": ["drive-right", "latin", "plate-eu", "eu-sign", "mediterranean", "desert-road", "suburban"],
+      "notes": "西语、地中海和干旱感道路是主要方向。"
+    },
+    {
+      "country": "荷兰",
+      "region": "欧洲",
+      "tags": ["drive-right", "latin", "plate-yellow", "eu-sign", "flat", "urban-dense", "suburban", "wide-road"],
+      "notes": "黄牌、极平坦地形和自行车友好路网很常见。"
+    },
+    {
+      "country": "波兰",
+      "region": "欧洲",
+      "tags": ["drive-right", "latin", "plate-eu", "eu-sign", "flat", "temperate", "concrete-pole"],
+      "notes": "拉丁字母、欧盟车牌和平原感很常见。"
+    },
+    {
+      "country": "挪威",
+      "region": "欧洲",
+      "tags": ["drive-right", "latin", "nordic", "mountain", "snow-road", "eu-sign"],
+      "notes": "北欧感、山地和雪地线索很强。"
+    },
+    {
+      "country": "瑞典/芬兰",
+      "region": "欧洲",
+      "tags": ["drive-right", "latin", "nordic", "flat", "snow-road", "eu-sign", "forest"],
+      "notes": "北欧、平坦、雪地和森林感通常比挪威更平缓。"
+    },
+    {
+      "country": "俄罗斯/乌克兰",
+      "region": "欧亚",
+      "tags": ["drive-right", "cyrillic", "snow-road", "flat", "rural", "wood-pole"],
+      "notes": "西里尔字母、长距离平原和木杆常是决定性线索。"
+    },
+    {
+      "country": "美国",
+      "region": "北美",
+      "tags": ["drive-right", "latin", "yellow-center", "us-sign", "green-highway", "wood-pole", "wide-road", "suburban"],
+      "notes": "美式路牌、黄中线和州际/县道体系很关键。"
+    },
+    {
+      "country": "加拿大",
+      "region": "北美",
+      "tags": ["drive-right", "latin", "yellow-center", "green-highway", "wood-pole", "nordic", "bilingual-sign", "wide-road"],
+      "notes": "双语、黄线、林地和更冷的道路感很常见。"
+    },
+    {
+      "country": "墨西哥",
+      "region": "北美",
+      "tags": ["drive-right", "latin", "yellow-center", "desert-road", "tropical", "rural", "red-shoulder"],
+      "notes": "西语、黄线和干旱/热带交叠的道路环境很典型。"
+    },
+    {
+      "country": "巴西",
+      "region": "南美",
+      "tags": ["drive-right", "latin", "yellow-center", "tropical", "red-shoulder", "rural", "many-wires", "concrete-pole"],
+      "notes": "葡语、黄线、红土和热带植被很常见。"
+    },
+    {
+      "country": "智利/秘鲁",
+      "region": "南美",
+      "tags": ["drive-right", "latin", "mountain", "desert-road", "yellow-center", "rural", "arid"],
+      "notes": "安第斯山地和干旱感道路是主要方向。"
+    },
+    {
+      "country": "澳大利亚",
+      "region": "大洋洲",
+      "tags": ["drive-left", "latin", "yellow-center", "desert-road", "rural", "plate-white-long", "wide-road"],
+      "notes": "左行、黄线、干旱感和宽阔道路很常见。"
+    },
+    {
+      "country": "新西兰",
+      "region": "大洋洲",
+      "tags": ["drive-left", "latin", "temperate", "mountain", "rural", "plate-white-long", "forest"],
+      "notes": "左行、温带牧场、山地和森林道路都很典型。"
+    },
+    {
+      "country": "南非",
+      "region": "非洲",
+      "tags": ["drive-left", "latin", "yellow-center", "desert-road", "rural", "plate-white-long", "suburban", "wide-road"],
+      "notes": "左行、黄线、干旱感和白底长牌常一起出现。"
+    }
+  ]
+}

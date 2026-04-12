@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TuXun AI Capture</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="top">
+        <div>
+          <p class="eyebrow">TuXun AI</p>
+          <h1>点击抓图识图</h1>
+        </div>
+        <span id="status" class="pill">等待操作</span>
+      </header>
+
+      <section class="panel">
+        <h2>服务地址</h2>
+        <div class="server-row">
+          <input id="serverUrl" type="url" spellcheck="false" placeholder="http://localhost:4173" />
+          <button id="saveServerUrl" type="button">保存</button>
+        </div>
+      </section>
+
+      <button id="captureBtn" class="primary" type="button">截图并识图</button>
+
+      <section class="panel">
+        <h2>预览</h2>
+        <img id="preview" alt="截图预览" />
+      </section>
+
+      <section class="panel">
+        <h2>地点判断</h2>
+        <div id="place" class="result muted">还没有结果。</div>
+      </section>
+
+      <section class="panel">
+        <h2>线索</h2>
+        <div id="details" class="details muted">点击上方按钮后，这里会显示国家、洲别、位置和理由。</div>
+      </section>
+    </main>
+
+    <script src="./popup.js"></script>
+  </body>
+</html>
