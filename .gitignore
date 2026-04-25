@@ -1,2 +1,4 @@
 pem
 dist
+.env
+.claude/

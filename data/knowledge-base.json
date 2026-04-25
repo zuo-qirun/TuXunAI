@@ -6,8 +6,16 @@
       "title": "驾驶方向",
       "multi": false,
       "options": [
-        { "id": "drive-left", "label": "左侧通行", "weight": 4 },
-        { "id": "drive-right", "label": "右侧通行", "weight": 4 }
+        {
+          "id": "drive-left",
+          "label": "左侧通行",
+          "weight": 4
+        },
+        {
+          "id": "drive-right",
+          "label": "右侧通行",
+          "weight": 4
+        }
       ]
     },
     {
@@ -15,17 +23,61 @@
       "title": "道路标线 / 路肩",
       "multi": true,
       "options": [
-        { "id": "yellow-center", "label": "黄中线", "weight": 2.2 },
-        { "id": "white-center", "label": "白中线", "weight": 2.1 },
-        { "id": "double-yellow", "label": "双黄线", "weight": 2.4 },
-        { "id": "red-shoulder", "label": "红土路肩", "weight": 2.2 },
-        { "id": "snow-road", "label": "雪地/寒带道路", "weight": 1.8 },
-        { "id": "desert-road", "label": "荒漠/干旱道路", "weight": 1.8 },
-        { "id": "no-marking", "label": "几乎无标线", "weight": 1.4 },
-        { "id": "rumble-strip", "label": "震荡带/边线", "weight": 1.3 },
-        { "id": "paved-road", "label": "铺装道路", "weight": 1.2 },
-        { "id": "gravel-road", "label": "碎石道路", "weight": 1.4 },
-        { "id": "dirt-road", "label": "土路/泥路", "weight": 1.6 }
+        {
+          "id": "yellow-center",
+          "label": "黄中线",
+          "weight": 2.2
+        },
+        {
+          "id": "white-center",
+          "label": "白中线",
+          "weight": 2.1
+        },
+        {
+          "id": "double-yellow",
+          "label": "双黄线",
+          "weight": 2.4
+        },
+        {
+          "id": "red-shoulder",
+          "label": "红土路肩",
+          "weight": 2.2
+        },
+        {
+          "id": "snow-road",
+          "label": "雪地/寒带道路",
+          "weight": 1.8
+        },
+        {
+          "id": "desert-road",
+          "label": "荒漠/干旱道路",
+          "weight": 1.8
+        },
+        {
+          "id": "no-marking",
+          "label": "几乎无标线",
+          "weight": 1.4
+        },
+        {
+          "id": "rumble-strip",
+          "label": "震荡带/边线",
+          "weight": 1.3
+        },
+        {
+          "id": "paved-road",
+          "label": "铺装道路",
+          "weight": 1.2
+        },
+        {
+          "id": "gravel-road",
+          "label": "碎石道路",
+          "weight": 1.4
+        },
+        {
+          "id": "dirt-road",
+          "label": "土路/泥路",
+          "weight": 1.6
+        }
       ]
     },
     {
@@ -33,14 +85,46 @@
       "title": "车牌",
       "multi": true,
       "options": [
-        { "id": "plate-eu", "label": "欧盟蓝条", "weight": 2.2 },
-        { "id": "plate-yellow", "label": "黄底牌", "weight": 2.5 },
-        { "id": "plate-white-long", "label": "白底长牌", "weight": 2.7 },
-        { "id": "plate-black", "label": "黑底牌", "weight": 2.8 },
-        { "id": "plate-red", "label": "红色车牌", "weight": 2.5 },
-        { "id": "plate-green", "label": "绿色车牌", "weight": 2.6 },
-        { "id": "plate-blue", "label": "蓝色车牌", "weight": 2.2 },
-        { "id": "no-visible-plate", "label": "看不到车牌", "weight": 1.0 }
+        {
+          "id": "plate-eu",
+          "label": "欧盟蓝条",
+          "weight": 2.2
+        },
+        {
+          "id": "plate-yellow",
+          "label": "黄底牌",
+          "weight": 2.5
+        },
+        {
+          "id": "plate-white-long",
+          "label": "白底长牌",
+          "weight": 2.7
+        },
+        {
+          "id": "plate-black",
+          "label": "黑底牌",
+          "weight": 2.8
+        },
+        {
+          "id": "plate-red",
+          "label": "红色车牌",
+          "weight": 2.5
+        },
+        {
+          "id": "plate-green",
+          "label": "绿色车牌",
+          "weight": 2.6
+        },
+        {
+          "id": "plate-blue",
+          "label": "蓝色车牌",
+          "weight": 2.2
+        },
+        {
+          "id": "no-visible-plate",
+          "label": "看不到车牌",
+          "weight": 1
+        }
       ]
     },
     {
@@ -48,16 +132,56 @@
       "title": "文字 / 语言",
       "multi": true,
       "options": [
-        { "id": "latin", "label": "拉丁字母", "weight": 1.6 },
-        { "id": "cyrillic", "label": "西里尔字母", "weight": 3.8 },
-        { "id": "arabic", "label": "阿拉伯文", "weight": 3.8 },
-        { "id": "thai", "label": "泰文", "weight": 3.8 },
-        { "id": "khmer", "label": "高棉文", "weight": 3.8 },
-        { "id": "hangul", "label": "韩文", "weight": 3.8 },
-        { "id": "kana", "label": "日文假名", "weight": 4 },
-        { "id": "chinese", "label": "中文", "weight": 3.8 },
-        { "id": "devanagari", "label": "天城文", "weight": 3.6 },
-        { "id": "greek", "label": "希腊文", "weight": 3 }
+        {
+          "id": "latin",
+          "label": "拉丁字母",
+          "weight": 1.6
+        },
+        {
+          "id": "cyrillic",
+          "label": "西里尔字母",
+          "weight": 3.8
+        },
+        {
+          "id": "arabic",
+          "label": "阿拉伯文",
+          "weight": 3.8
+        },
+        {
+          "id": "thai",
+          "label": "泰文",
+          "weight": 3.8
+        },
+        {
+          "id": "khmer",
+          "label": "高棉文",
+          "weight": 3.8
+        },
+        {
+          "id": "hangul",
+          "label": "韩文",
+          "weight": 3.8
+        },
+        {
+          "id": "kana",
+          "label": "日文假名",
+          "weight": 4
+        },
+        {
+          "id": "chinese",
+          "label": "中文",
+          "weight": 3.8
+        },
+        {
+          "id": "devanagari",
+          "label": "天城文",
+          "weight": 3.6
+        },
+        {
+          "id": "greek",
+          "label": "希腊文",
+          "weight": 3
+        }
       ]
     },
     {
@@ -65,14 +189,46 @@
       "title": "路牌 / 指示牌",
       "multi": true,
       "options": [
-        { "id": "eu-sign", "label": "欧洲风格", "weight": 1.8 },
-        { "id": "us-sign", "label": "美式路牌", "weight": 2.6 },
-        { "id": "red-white-chevron", "label": "红白箭头/护栏", "weight": 1.8 },
-        { "id": "blue-motorway", "label": "蓝色高速牌", "weight": 2 },
-        { "id": "green-highway", "label": "绿色高速牌", "weight": 2 },
-        { "id": "town-blue", "label": "蓝底城镇牌", "weight": 1.6 },
-        { "id": "km-marker", "label": "公里桩", "weight": 1.4 },
-        { "id": "bilingual-sign", "label": "双语路牌", "weight": 1.8 }
+        {
+          "id": "eu-sign",
+          "label": "欧洲风格",
+          "weight": 1.8
+        },
+        {
+          "id": "us-sign",
+          "label": "美式路牌",
+          "weight": 2.6
+        },
+        {
+          "id": "red-white-chevron",
+          "label": "红白箭头/护栏",
+          "weight": 1.8
+        },
+        {
+          "id": "blue-motorway",
+          "label": "蓝色高速牌",
+          "weight": 2
+        },
+        {
+          "id": "green-highway",
+          "label": "绿色高速牌",
+          "weight": 2
+        },
+        {
+          "id": "town-blue",
+          "label": "蓝底城镇牌",
+          "weight": 1.6
+        },
+        {
+          "id": "km-marker",
+          "label": "公里桩",
+          "weight": 1.4
+        },
+        {
+          "id": "bilingual-sign",
+          "label": "双语路牌",
+          "weight": 1.8
+        }
       ]
     },
     {
@@ -80,12 +236,36 @@
       "title": "街景车 / 镜头",
       "multi": true,
       "options": [
-        { "id": "car-roof-rack", "label": "车顶架", "weight": 1.4 },
-        { "id": "car-antenna", "label": "天线明显", "weight": 1.2 },
-        { "id": "low-cam", "label": "低机位", "weight": 1.8 },
-        { "id": "blur-heavy", "label": "模糊较重", "weight": 1 },
-        { "id": "trekker", "label": "步行/背包机位", "weight": 1.8 },
-        { "id": "motorcycle", "label": "摩托车街景", "weight": 1.6 }
+        {
+          "id": "car-roof-rack",
+          "label": "车顶架",
+          "weight": 1.4
+        },
+        {
+          "id": "car-antenna",
+          "label": "天线明显",
+          "weight": 1.2
+        },
+        {
+          "id": "low-cam",
+          "label": "低机位",
+          "weight": 1.8
+        },
+        {
+          "id": "blur-heavy",
+          "label": "模糊较重",
+          "weight": 1
+        },
+        {
+          "id": "trekker",
+          "label": "步行/背包机位",
+          "weight": 1.8
+        },
+        {
+          "id": "motorcycle",
+          "label": "摩托车街景",
+          "weight": 1.6
+        }
       ]
     },
     {
@@ -93,15 +273,51 @@
       "title": "电线杆 / 路桩",
       "multi": true,
       "options": [
-        { "id": "concrete-pole", "label": "混凝土杆", "weight": 1.8 },
-        { "id": "wood-pole", "label": "木杆", "weight": 1.8 },
-        { "id": "metal-pole", "label": "金属杆", "weight": 1 },
-        { "id": "striped-bollard", "label": "黑白/红白路桩", "weight": 1.8 },
-        { "id": "round-bollard", "label": "圆头路桩", "weight": 1.5 },
-        { "id": "double-pole", "label": "双杆/门型杆", "weight": 1.5 },
-        { "id": "many-wires", "label": "线缆很多", "weight": 1.5 },
-        { "id": "single-wire", "label": "单线/稀疏线缆", "weight": 1 },
-        { "id": "transmission-tower", "label": "高压塔", "weight": 1.2 }
+        {
+          "id": "concrete-pole",
+          "label": "混凝土杆",
+          "weight": 1.8
+        },
+        {
+          "id": "wood-pole",
+          "label": "木杆",
+          "weight": 1.8
+        },
+        {
+          "id": "metal-pole",
+          "label": "金属杆",
+          "weight": 1
+        },
+        {
+          "id": "striped-bollard",
+          "label": "黑白/红白路桩",
+          "weight": 1.8
+        },
+        {
+          "id": "round-bollard",
+          "label": "圆头路桩",
+          "weight": 1.5
+        },
+        {
+          "id": "double-pole",
+          "label": "双杆/门型杆",
+          "weight": 1.5
+        },
+        {
+          "id": "many-wires",
+          "label": "线缆很多",
+          "weight": 1.5
+        },
+        {
+          "id": "single-wire",
+          "label": "单线/稀疏线缆",
+          "weight": 1
+        },
+        {
+          "id": "transmission-tower",
+          "label": "高压塔",
+          "weight": 1.2
+        }
       ]
     },
     {
@@ -109,20 +325,76 @@
       "title": "环境 / 地形",
       "multi": true,
       "options": [
-        { "id": "tropical", "label": "热带", "weight": 1.4 },
-        { "id": "temperate", "label": "温带", "weight": 1.3 },
-        { "id": "mediterranean", "label": "地中海感", "weight": 1.4 },
-        { "id": "nordic", "label": "北欧/寒带", "weight": 1.6 },
-        { "id": "mountain", "label": "山地", "weight": 1.4 },
-        { "id": "flat", "label": "平原/平坦", "weight": 1.2 },
-        { "id": "urban-dense", "label": "高密度城市", "weight": 1.4 },
-        { "id": "suburban", "label": "郊区", "weight": 1.1 },
-        { "id": "rural", "label": "乡村", "weight": 1.5 },
-        { "id": "coastal", "label": "海岸/沿海", "weight": 1.4 },
-        { "id": "arid", "label": "干旱/荒漠", "weight": 1.5 },
-        { "id": "snowy", "label": "积雪/冰雪", "weight": 1.5 },
-        { "id": "wetland", "label": "湿地/潮湿", "weight": 1.2 },
-        { "id": "forest", "label": "森林", "weight": 1.3 }
+        {
+          "id": "tropical",
+          "label": "热带",
+          "weight": 1.4
+        },
+        {
+          "id": "temperate",
+          "label": "温带",
+          "weight": 1.3
+        },
+        {
+          "id": "mediterranean",
+          "label": "地中海感",
+          "weight": 1.4
+        },
+        {
+          "id": "nordic",
+          "label": "北欧/寒带",
+          "weight": 1.6
+        },
+        {
+          "id": "mountain",
+          "label": "山地",
+          "weight": 1.4
+        },
+        {
+          "id": "flat",
+          "label": "平原/平坦",
+          "weight": 1.2
+        },
+        {
+          "id": "urban-dense",
+          "label": "高密度城市",
+          "weight": 1.4
+        },
+        {
+          "id": "suburban",
+          "label": "郊区",
+          "weight": 1.1
+        },
+        {
+          "id": "rural",
+          "label": "乡村",
+          "weight": 1.5
+        },
+        {
+          "id": "coastal",
+          "label": "海岸/沿海",
+          "weight": 1.4
+        },
+        {
+          "id": "arid",
+          "label": "干旱/荒漠",
+          "weight": 1.5
+        },
+        {
+          "id": "snowy",
+          "label": "积雪/冰雪",
+          "weight": 1.5
+        },
+        {
+          "id": "wetland",
+          "label": "湿地/潮湿",
+          "weight": 1.2
+        },
+        {
+          "id": "forest",
+          "label": "森林",
+          "weight": 1.3
+        }
       ]
     },
     {
@@ -130,14 +402,46 @@
       "title": "道路基础设施",
       "multi": true,
       "options": [
-        { "id": "guardrail", "label": "护栏多", "weight": 1.1 },
-        { "id": "narrow-road", "label": "窄路", "weight": 1.2 },
-        { "id": "wide-road", "label": "宽路", "weight": 1.1 },
-        { "id": "roundabout-heavy", "label": "环岛多", "weight": 1.2 },
-        { "id": "fenced-road", "label": "路边围栏", "weight": 1 },
-        { "id": "service-road", "label": "支路/辅路", "weight": 1 },
-        { "id": "motorway", "label": "高速/快速路", "weight": 1.2 },
-        { "id": "bridge-road", "label": "桥路/高架", "weight": 1 }
+        {
+          "id": "guardrail",
+          "label": "护栏多",
+          "weight": 1.1
+        },
+        {
+          "id": "narrow-road",
+          "label": "窄路",
+          "weight": 1.2
+        },
+        {
+          "id": "wide-road",
+          "label": "宽路",
+          "weight": 1.1
+        },
+        {
+          "id": "roundabout-heavy",
+          "label": "环岛多",
+          "weight": 1.2
+        },
+        {
+          "id": "fenced-road",
+          "label": "路边围栏",
+          "weight": 1
+        },
+        {
+          "id": "service-road",
+          "label": "支路/辅路",
+          "weight": 1
+        },
+        {
+          "id": "motorway",
+          "label": "高速/快速路",
+          "weight": 1.2
+        },
+        {
+          "id": "bridge-road",
+          "label": "桥路/高架",
+          "weight": 1
+        }
       ]
     }
   ],
@@ -146,15 +450,29 @@
       "tag": "tropical",
       "reason": "植被占比较高，优先考虑热带/亚热带地区",
       "confidence": 0.72,
-      "conditions": [{ "metric": "vegPct", "op": ">=", "value": 22 }]
+      "conditions": [
+        {
+          "metric": "vegPct",
+          "op": ">=",
+          "value": 22
+        }
+      ]
     },
     {
       "tag": "temperate",
       "reason": "树木与天空比例更像温带或城郊",
       "confidence": 0.66,
       "conditions": [
-        { "metric": "vegPct", "op": ">=", "value": 12 },
-        { "metric": "skyPct", "op": "<=", "value": 16 }
+        {
+          "metric": "vegPct",
+          "op": ">=",
+          "value": 12
+        },
+        {
+          "metric": "skyPct",
+          "op": "<=",
+          "value": 16
+        }
       ]
     },
     {
@@ -162,8 +480,16 @@
       "reason": "画面树林密度高，优先考虑林地或森林道路",
       "confidence": 0.7,
       "conditions": [
-        { "metric": "vegPct", "op": ">=", "value": 28 },
-        { "metric": "roadPct", "op": "<=", "value": 18 }
+        {
+          "metric": "vegPct",
+          "op": ">=",
+          "value": 28
+        },
+        {
+          "metric": "roadPct",
+          "op": "<=",
+          "value": 18
+        }
       ]
     },
     {
@@ -171,8 +497,16 @@
       "reason": "暗部与遮挡较多，像高密度城市或城镇街区",
       "confidence": 0.62,
       "conditions": [
-        { "metric": "darkPct", "op": ">=", "value": 16 },
-        { "metric": "skyPct", "op": "<=", "value": 12 }
+        {
+          "metric": "darkPct",
+          "op": ">=",
+          "value": 16
+        },
+        {
+          "metric": "skyPct",
+          "op": "<=",
+          "value": 12
+        }
       ]
     },
     {
@@ -180,10 +514,26 @@
       "reason": "道路与植被占比均衡，比较像城郊",
       "confidence": 0.56,
       "conditions": [
-        { "metric": "roadPct", "op": ">=", "value": 10 },
-        { "metric": "roadPct", "op": "<=", "value": 26 },
-        { "metric": "vegPct", "op": ">=", "value": 6 },
-        { "metric": "vegPct", "op": "<=", "value": 24 }
+        {
+          "metric": "roadPct",
+          "op": ">=",
+          "value": 10
+        },
+        {
+          "metric": "roadPct",
+          "op": "<=",
+          "value": 26
+        },
+        {
+          "metric": "vegPct",
+          "op": ">=",
+          "value": 6
+        },
+        {
+          "metric": "vegPct",
+          "op": "<=",
+          "value": 24
+        }
       ]
     },
     {
@@ -191,9 +541,21 @@
       "reason": "开阔度高、植被明显，优先考虑乡村道路",
       "confidence": 0.68,
       "conditions": [
-        { "metric": "vegPct", "op": ">=", "value": 10 },
-        { "metric": "roadPct", "op": "<=", "value": 18 },
-        { "metric": "darkPct", "op": "<=", "value": 16 }
+        {
+          "metric": "vegPct",
+          "op": ">=",
+          "value": 10
+        },
+        {
+          "metric": "roadPct",
+          "op": "<=",
+          "value": 18
+        },
+        {
+          "metric": "darkPct",
+          "op": "<=",
+          "value": 16
+        }
       ]
     },
     {
@@ -201,8 +563,16 @@
       "reason": "天空与裸地占比高，像干旱区域",
       "confidence": 0.66,
       "conditions": [
-        { "metric": "skyPct", "op": ">=", "value": 26 },
-        { "metric": "vegPct", "op": "<=", "value": 8 }
+        {
+          "metric": "skyPct",
+          "op": ">=",
+          "value": 26
+        },
+        {
+          "metric": "vegPct",
+          "op": "<=",
+          "value": 8
+        }
       ]
     },
     {
@@ -210,8 +580,16 @@
       "reason": "白色地表或路面元素较多，像雪地场景",
       "confidence": 0.7,
       "conditions": [
-        { "metric": "whitePct", "op": ">=", "value": 14 },
-        { "metric": "skyPct", "op": ">=", "value": 10 }
+        {
+          "metric": "whitePct",
+          "op": ">=",
+          "value": 14
+        },
+        {
+          "metric": "skyPct",
+          "op": ">=",
+          "value": 10
+        }
       ]
     },
     {
@@ -219,9 +597,21 @@
       "reason": "视野较开阔，像沿海或海边地形",
       "confidence": 0.5,
       "conditions": [
-        { "metric": "skyPct", "op": ">=", "value": 20 },
-        { "metric": "vegPct", "op": "<=", "value": 18 },
-        { "metric": "darkPct", "op": "<=", "value": 14 }
+        {
+          "metric": "skyPct",
+          "op": ">=",
+          "value": 20
+        },
+        {
+          "metric": "vegPct",
+          "op": "<=",
+          "value": 18
+        },
+        {
+          "metric": "darkPct",
+          "op": "<=",
+          "value": 14
+        }
       ]
     },
     {
@@ -229,9 +619,21 @@
       "reason": "起伏感和遮挡较明显，像山地或坡地",
       "confidence": 0.58,
       "conditions": [
-        { "metric": "vegPct", "op": ">=", "value": 8 },
-        { "metric": "roadPct", "op": "<=", "value": 16 },
-        { "metric": "skyPct", "op": ">=", "value": 14 }
+        {
+          "metric": "vegPct",
+          "op": ">=",
+          "value": 8
+        },
+        {
+          "metric": "roadPct",
+          "op": "<=",
+          "value": 16
+        },
+        {
+          "metric": "skyPct",
+          "op": ">=",
+          "value": 14
+        }
       ]
     },
     {
@@ -239,10 +641,26 @@
       "reason": "路面更像铺装或沥青",
       "confidence": 0.58,
       "conditions": [
-        { "metric": "roadPct", "op": ">=", "value": 14 },
-        { "metric": "yellowPct", "op": "<=", "value": 2 },
-        { "metric": "whitePct", "op": ">=", "value": 4 },
-        { "metric": "redPct", "op": "<", "value": 3 }
+        {
+          "metric": "roadPct",
+          "op": ">=",
+          "value": 14
+        },
+        {
+          "metric": "yellowPct",
+          "op": "<=",
+          "value": 2
+        },
+        {
+          "metric": "whitePct",
+          "op": ">=",
+          "value": 4
+        },
+        {
+          "metric": "redPct",
+          "op": "<",
+          "value": 3
+        }
       ]
     },
     {
@@ -250,10 +668,26 @@
       "reason": "路面更像碎石或粗颗粒土石路",
       "confidence": 0.56,
       "conditions": [
-        { "metric": "roadPct", "op": ">=", "value": 10 },
-        { "metric": "yellowPct", "op": "<=", "value": 2 },
-        { "metric": "whitePct", "op": "<=", "value": 4 },
-        { "metric": "redPct", "op": ">=", "value": 2 }
+        {
+          "metric": "roadPct",
+          "op": ">=",
+          "value": 10
+        },
+        {
+          "metric": "yellowPct",
+          "op": "<=",
+          "value": 2
+        },
+        {
+          "metric": "whitePct",
+          "op": "<=",
+          "value": 4
+        },
+        {
+          "metric": "redPct",
+          "op": ">=",
+          "value": 2
+        }
       ]
     },
     {
@@ -261,10 +695,26 @@
       "reason": "路面更像土路或未铺装道路",
       "confidence": 0.64,
       "conditions": [
-        { "metric": "roadPct", "op": ">=", "value": 10 },
-        { "metric": "yellowPct", "op": "<=", "value": 2 },
-        { "metric": "whitePct", "op": "<=", "value": 3 },
-        { "metric": "redPct", "op": ">=", "value": 3 }
+        {
+          "metric": "roadPct",
+          "op": ">=",
+          "value": 10
+        },
+        {
+          "metric": "yellowPct",
+          "op": "<=",
+          "value": 2
+        },
+        {
+          "metric": "whitePct",
+          "op": "<=",
+          "value": 3
+        },
+        {
+          "metric": "redPct",
+          "op": ">=",
+          "value": 3
+        }
       ]
     },
     {
@@ -272,9 +722,21 @@
       "reason": "路面可见标线较少",
       "confidence": 0.48,
       "conditions": [
-        { "metric": "roadPct", "op": ">=", "value": 12 },
-        { "metric": "yellowPct", "op": "<=", "value": 1 },
-        { "metric": "whitePct", "op": "<=", "value": 2 }
+        {
+          "metric": "roadPct",
+          "op": ">=",
+          "value": 12
+        },
+        {
+          "metric": "yellowPct",
+          "op": "<=",
+          "value": 1
+        },
+        {
+          "metric": "whitePct",
+          "op": "<=",
+          "value": 2
+        }
       ]
     },
     {
@@ -282,8 +744,16 @@
       "reason": "黄色标线明显",
       "confidence": 0.55,
       "conditions": [
-        { "metric": "roadPct", "op": ">=", "value": 14 },
-        { "metric": "yellowPct", "op": ">=", "value": 2 }
+        {
+          "metric": "roadPct",
+          "op": ">=",
+          "value": 14
+        },
+        {
+          "metric": "yellowPct",
+          "op": ">=",
+          "value": 2
+        }
       ]
     },
     {
@@ -291,24 +761,50 @@
       "reason": "白色标线明显",
       "confidence": 0.55,
       "conditions": [
-        { "metric": "roadPct", "op": ">=", "value": 14 },
-        { "metric": "whitePct", "op": ">=", "value": 5 }
+        {
+          "metric": "roadPct",
+          "op": ">=",
+          "value": 14
+        },
+        {
+          "metric": "whitePct",
+          "op": ">=",
+          "value": 5
+        }
       ]
     },
     {
       "tag": "red-shoulder",
       "reason": "红土或红色路肩较明显",
       "confidence": 0.6,
-      "conditions": [{ "metric": "redPct", "op": ">=", "value": 3 }]
+      "conditions": [
+        {
+          "metric": "redPct",
+          "op": ">=",
+          "value": 3
+        }
+      ]
     },
     {
       "tag": "desert-road",
       "reason": "天空占比高、植被少，像干旱道路",
       "confidence": 0.55,
       "conditions": [
-        { "metric": "skyPct", "op": ">=", "value": 30 },
-        { "metric": "vegPct", "op": "<=", "value": 6 },
-        { "metric": "roadPct", "op": ">=", "value": 10 }
+        {
+          "metric": "skyPct",
+          "op": ">=",
+          "value": 30
+        },
+        {
+          "metric": "vegPct",
+          "op": "<=",
+          "value": 6
+        },
+        {
+          "metric": "roadPct",
+          "op": ">=",
+          "value": 10
+        }
       ]
     }
   ],
@@ -316,107 +812,297 @@
     {
       "tag": "kana",
       "reason": "文本像日本线索",
-      "phrases": [".jp", "tokyo", "osaka", "kyoto", "prefecture", "県", "市", "町"]
+      "phrases": [
+        ".jp",
+        "tokyo",
+        "osaka",
+        "kyoto",
+        "prefecture",
+        "県",
+        "市",
+        "町"
+      ]
     },
     {
       "tag": "hangul",
       "reason": "文本像韩国线索",
-      "phrases": [".kr", "seoul", "busan", "daegu", "incheon", "hangul", "서울", "부산"]
+      "phrases": [
+        ".kr",
+        "seoul",
+        "busan",
+        "daegu",
+        "incheon",
+        "hangul",
+        "서울",
+        "부산"
+      ]
     },
     {
       "tag": "chinese",
       "reason": "文本像中文线索",
-      "phrases": [".cn", ".tw", ".hk", "中国", "台湾", "香港", "北京", "上海", "广东", "省", "市", "县"]
+      "phrases": [
+        ".cn",
+        ".tw",
+        ".hk",
+        "中国",
+        "台湾",
+        "香港",
+        "北京",
+        "上海",
+        "广东",
+        "省",
+        "市",
+        "县"
+      ]
     },
     {
       "tag": "chinese",
       "reason": "文本像繁体中文或台湾线索",
-      "phrases": ["繁體", "台北", "高雄", "新北", "台中", "鄉", "鎮", "路"]
+      "phrases": [
+        "繁體",
+        "台北",
+        "高雄",
+        "新北",
+        "台中",
+        "鄉",
+        "鎮",
+        "路"
+      ]
     },
     {
       "tag": "drive-left",
       "reason": "文本像香港或右舵地区线索",
-      "phrases": [".hk", "hong kong", "kowloon", "lhd", "left hand", "左行", "左側通行"]
+      "phrases": [
+        ".hk",
+        "hong kong",
+        "kowloon",
+        "lhd",
+        "left hand",
+        "左行",
+        "左側通行"
+      ]
     },
     {
       "tag": "thai",
       "reason": "文本像泰国线索",
-      "phrases": [".th", "bangkok", "chiang", "phuket", "thailand", "กรุงเทพ", "เชียงใหม่"]
+      "phrases": [
+        ".th",
+        "bangkok",
+        "chiang",
+        "phuket",
+        "thailand",
+        "กรุงเทพ",
+        "เชียงใหม่"
+      ]
     },
     {
       "tag": "khmer",
       "reason": "文本像柬埔寨线索",
-      "phrases": [".kh", "phnom", "siem reap", "cambodia", "khmer", "កម្ពុជា"]
+      "phrases": [
+        ".kh",
+        "phnom",
+        "siem reap",
+        "cambodia",
+        "khmer",
+        "កម្ពុជា"
+      ]
     },
     {
       "tag": "drive-left",
       "reason": "文本像马来西亚或新加坡线索",
-      "phrases": [".my", "kuala", "johor", ".sg", "singapore", "jalan", "左行"]
+      "phrases": [
+        ".my",
+        "kuala",
+        "johor",
+        ".sg",
+        "singapore",
+        "jalan",
+        "左行"
+      ]
     },
     {
       "tag": "drive-left",
       "reason": "文本像印度尼西亚线索",
-      "phrases": [".id", "jakarta", "surabaya", "bandung", "indonesia"]
+      "phrases": [
+        ".id",
+        "jakarta",
+        "surabaya",
+        "bandung",
+        "indonesia"
+      ]
     },
     {
       "tag": "arabic",
       "reason": "文本像阿拉伯语线索",
-      "phrases": [".ae", ".sa", ".qa", ".kw", ".bh", ".om", "dubai", "abu dhabi", "riyadh", "arabic", "العربية"]
+      "phrases": [
+        ".ae",
+        ".sa",
+        ".qa",
+        ".kw",
+        ".bh",
+        ".om",
+        "dubai",
+        "abu dhabi",
+        "riyadh",
+        "arabic",
+        "العربية"
+      ]
     },
     {
       "tag": "latin",
       "reason": "文本像拉丁字母线索",
-      "phrases": ["street", "avenue", "road", "route", "via", "rue", "calle", "straße", "strasse"]
+      "phrases": [
+        "street",
+        "avenue",
+        "road",
+        "route",
+        "via",
+        "rue",
+        "calle",
+        "straße",
+        "strasse"
+      ]
     },
     {
       "tag": "cyrillic",
       "reason": "文本像西里尔字母线索",
-      "phrases": [".ru", ".ua", "moscow", "kyiv", "kiev", "sankt", "улица", "проспект"]
+      "phrases": [
+        ".ru",
+        ".ua",
+        "moscow",
+        "kyiv",
+        "kiev",
+        "sankt",
+        "улица",
+        "проспект"
+      ]
     },
     {
       "tag": "devanagari",
       "reason": "文本像印度或尼泊尔线索",
-      "phrases": [".in", "delhi", "mumbai", "bangalore", "nepal", "हिंदी", "भारत"]
+      "phrases": [
+        ".in",
+        "delhi",
+        "mumbai",
+        "bangalore",
+        "nepal",
+        "हिंदी",
+        "भारत"
+      ]
     },
     {
       "tag": "greek",
       "reason": "文本像希腊线索",
-      "phrases": [".gr", "athens", "thessaloniki", "Αθήνα", "Ελλάδα"]
+      "phrases": [
+        ".gr",
+        "athens",
+        "thessaloniki",
+        "Αθήνα",
+        "Ελλάδα"
+      ]
     },
     {
       "tag": "latin",
       "reason": "文本像英语或其他拉丁字母国家线索",
-      "phrases": [".us", ".ca", ".uk", ".ie", ".fr", ".de", ".it", ".es", ".nl", ".pl", ".no", ".se", ".fi", ".au", ".nz", ".za"]
+      "phrases": [
+        ".us",
+        ".ca",
+        ".uk",
+        ".ie",
+        ".fr",
+        ".de",
+        ".it",
+        ".es",
+        ".nl",
+        ".pl",
+        ".no",
+        ".se",
+        ".fi",
+        ".au",
+        ".nz",
+        ".za"
+      ]
     },
     {
       "tag": "us-sign",
       "reason": "文本像美国道路体系",
-      "phrases": ["interstate", "county road", "route", "hwy", "highway", "exit", "mph"]
+      "phrases": [
+        "interstate",
+        "county road",
+        "route",
+        "hwy",
+        "highway",
+        "exit",
+        "mph"
+      ]
     },
     {
       "tag": "plate-yellow",
       "reason": "文本像荷兰或部分黄牌地区",
-      "phrases": [".nl", "netherlands", "amsterdam", "rotterdam", "utrecht"]
+      "phrases": [
+        ".nl",
+        "netherlands",
+        "amsterdam",
+        "rotterdam",
+        "utrecht"
+      ]
     },
     {
       "tag": "plate-eu",
       "reason": "文本像欧盟道路线索",
-      "phrases": [".fr", ".de", ".it", ".es", ".pl", ".be", ".pt", ".cz", ".ro", ".hu"]
+      "phrases": [
+        ".fr",
+        ".de",
+        ".it",
+        ".es",
+        ".pl",
+        ".be",
+        ".pt",
+        ".cz",
+        ".ro",
+        ".hu"
+      ]
     },
     {
       "tag": "nordic",
       "reason": "文本像北欧线索",
-      "phrases": [".no", ".se", ".fi", "oslo", "bergen", "stockholm", "helsinki", "arctic", "boreal"]
+      "phrases": [
+        ".no",
+        ".se",
+        ".fi",
+        "oslo",
+        "bergen",
+        "stockholm",
+        "helsinki",
+        "arctic",
+        "boreal"
+      ]
     },
     {
       "tag": "yellow-center",
       "reason": "文本像加拿大或墨西哥线索",
-      "phrases": [".ca", "ontario", "quebec", "toronto", "montreal", ".mx", "mexico", "mexico city"]
+      "phrases": [
+        ".ca",
+        "ontario",
+        "quebec",
+        "toronto",
+        "montreal",
+        ".mx",
+        "mexico",
+        "mexico city"
+      ]
     },
     {
       "tag": "red-shoulder",
       "reason": "文本像巴西或红土地区线索",
-      "phrases": [".br", "brasil", "sao paulo", "rio de janeiro", "red soil", "laterite"]
+      "phrases": [
+        ".br",
+        "brasil",
+        "sao paulo",
+        "rio de janeiro",
+        "red soil",
+        "laterite"
+      ]
     }
   ],
   "nextChecks": [
@@ -463,216 +1149,3805 @@
   ],
   "profiles": [
     {
-      "country": "日本",
-      "region": "东亚",
-      "tags": ["drive-left", "kana", "plate-white-long", "low-cam", "concrete-pole", "many-wires", "temperate", "mountain", "rural", "urban-dense"],
-      "boosts": [
-        { "tags": ["kana", "low-cam"], "weight": 1.8, "reason": "日文假名 + 低机位" },
-        { "tags": ["kana", "concrete-pole"], "weight": 1.2, "reason": "日文假名 + 混凝土杆" }
-      ],
-      "notes": "左行、假名、低机位、白底长牌和密集电线杆经常一起出现。"
-    },
-    {
-      "country": "韩国",
-      "region": "东亚",
-      "tags": ["drive-right", "hangul", "plate-white-long", "concrete-pole", "urban-dense", "mountain", "temperate"],
-      "notes": "韩文、右侧通行、白底长牌和混凝土杆的组合很强。"
-    },
-    {
-      "country": "中国大陆",
-      "region": "东亚",
-      "tags": ["drive-right", "chinese", "plate-blue", "plate-green", "green-highway", "blue-motorway", "urban-dense", "concrete-pole", "mountain", "flat"],
-      "boosts": [
-        { "tags": ["chinese", "plate-blue"], "weight": 1.4, "reason": "中文 + 蓝牌" },
-        { "tags": ["chinese", "green-highway"], "weight": 1.2, "reason": "中文 + 绿色高速牌" }
-      ],
-      "notes": "中文、蓝/绿车牌和省市级道路编号是大陆的核心线索。"
-    },
-    {
-      "country": "台湾",
-      "region": "东亚",
-      "tags": ["drive-right", "chinese", "plate-white-long", "tropical", "mountain", "urban-dense", "suburban"],
-      "notes": "繁体中文、白底长牌、山地和城郊感很常见。"
-    },
-    {
-      "country": "香港",
-      "region": "东亚",
-      "tags": ["drive-left", "chinese", "latin", "plate-white-long", "urban-dense", "tropical", "concrete-pole"],
-      "boosts": [
-        { "tags": ["drive-left", "latin"], "weight": 1.1, "reason": "左行 + 英文/拉丁字母" }
-      ],
-      "notes": "左行、中英双语、高密度城市和白底长牌很关键。"
-    },
-    {
-      "country": "新加坡",
-      "region": "东南亚",
-      "tags": ["drive-left", "latin", "chinese", "plate-white-long", "urban-dense", "suburban", "tropical", "wide-road"],
-      "notes": "英文、中文、左行和整洁的城市道路组合非常典型。"
-    },
-    {
-      "country": "马来西亚",
-      "region": "东南亚",
-      "tags": ["drive-left", "latin", "plate-black", "tropical", "many-wires", "rural", "urban-dense", "suburban"],
-      "notes": "黑底牌、热带植被和很多电线是常见组合。"
-    },
-    {
-      "country": "印度尼西亚",
-      "region": "东南亚",
-      "tags": ["drive-left", "latin", "plate-black", "tropical", "many-wires", "red-shoulder", "rural", "suburban"],
-      "notes": "左行、黑底牌、红土和密集线缆经常一起出现。"
-    },
-    {
-      "country": "泰国",
-      "region": "东南亚",
-      "tags": ["drive-left", "thai", "tropical", "many-wires", "concrete-pole", "blue-motorway", "urban-dense", "rural"],
-      "notes": "泰文、左行、混凝土杆和高速蓝牌是高价值线索。"
-    },
-    {
-      "country": "柬埔寨",
-      "region": "东南亚",
-      "tags": ["drive-right", "khmer", "tropical", "red-shoulder", "rural", "many-wires"],
-      "notes": "高棉文和红土路肩经常直接把国家范围缩得很小。"
-    },
-    {
-      "country": "菲律宾",
-      "region": "东南亚",
-      "tags": ["drive-right", "latin", "tropical", "many-wires", "urban-dense", "suburban"],
-      "notes": "英文、热带、线缆很多和城镇密度高是重要线索。"
-    },
-    {
-      "country": "印度",
-      "region": "南亚",
-      "tags": ["drive-left", "latin", "devanagari", "plate-white-long", "tropical", "rural", "many-wires", "concrete-pole"],
-      "boosts": [
-        { "tags": ["devanagari", "many-wires"], "weight": 1.4, "reason": "天城文 + 密集线缆" }
-      ],
-      "notes": "英语、天城文、左行和密集线缆是核心组合。"
-    },
-    {
-      "country": "阿联酋",
-      "region": "西亚",
-      "tags": ["drive-right", "arabic", "desert-road", "urban-dense", "green-highway", "plate-white-long", "wide-road", "arid"],
-      "notes": "阿拉伯文、干旱道路、现代高速和白底长牌很典型。"
-    },
-    {
-      "country": "土耳其",
-      "region": "西亚/欧洲",
-      "tags": ["drive-right", "latin", "mediterranean", "mountain", "red-white-chevron", "blue-motorway", "urban-dense", "rural"],
-      "notes": "拉丁字母、地中海感和红白护栏经常一起出现。"
-    },
-    {
-      "country": "英国",
-      "region": "欧洲",
-      "tags": ["drive-left", "latin", "plate-yellow", "eu-sign", "temperate", "rural", "suburban", "narrow-road"],
-      "notes": "左行、黄牌和狭窄乡间路非常有辨识度。"
-    },
-    {
-      "country": "爱尔兰",
-      "region": "欧洲",
-      "tags": ["drive-left", "latin", "eu-sign", "temperate", "rural", "suburban", "narrow-road"],
-      "notes": "左行、温带湿润感和乡间窄路很常见。"
-    },
-    {
-      "country": "法国",
-      "region": "欧洲",
-      "tags": ["drive-right", "latin", "plate-eu", "eu-sign", "white-center", "temperate", "suburban"],
-      "notes": "欧盟蓝条、法语地名和白中线很关键。"
-    },
-    {
-      "country": "德国",
-      "region": "欧洲",
-      "tags": ["drive-right", "latin", "plate-eu", "eu-sign", "temperate", "blue-motorway", "suburban", "wide-road"],
-      "notes": "德语、欧盟车牌和蓝色高速牌很常见。"
-    },
-    {
-      "country": "意大利",
-      "region": "欧洲",
-      "tags": ["drive-right", "latin", "plate-eu", "eu-sign", "mediterranean", "mountain", "suburban"],
-      "notes": "意大利语、地中海感和山地城镇都很常见。"
-    },
-    {
-      "country": "西班牙",
-      "region": "欧洲",
-      "tags": ["drive-right", "latin", "plate-eu", "eu-sign", "mediterranean", "desert-road", "suburban"],
-      "notes": "西语、地中海和干旱感道路是主要方向。"
-    },
-    {
-      "country": "荷兰",
-      "region": "欧洲",
-      "tags": ["drive-right", "latin", "plate-yellow", "eu-sign", "flat", "urban-dense", "suburban", "wide-road"],
-      "notes": "黄牌、极平坦地形和自行车友好路网很常见。"
-    },
-    {
-      "country": "波兰",
-      "region": "欧洲",
-      "tags": ["drive-right", "latin", "plate-eu", "eu-sign", "flat", "temperate", "concrete-pole"],
-      "notes": "拉丁字母、欧盟车牌和平原感很常见。"
-    },
-    {
-      "country": "挪威",
-      "region": "欧洲",
-      "tags": ["drive-right", "latin", "nordic", "mountain", "snow-road", "eu-sign"],
-      "notes": "北欧感、山地和雪地线索很强。"
-    },
-    {
-      "country": "瑞典/芬兰",
-      "region": "欧洲",
-      "tags": ["drive-right", "latin", "nordic", "flat", "snow-road", "eu-sign", "forest"],
-      "notes": "北欧、平坦、雪地和森林感通常比挪威更平缓。"
-    },
-    {
-      "country": "俄罗斯/乌克兰",
-      "region": "欧亚",
-      "tags": ["drive-right", "cyrillic", "snow-road", "flat", "rural", "wood-pole"],
-      "notes": "西里尔字母、长距离平原和木杆常是决定性线索。"
-    },
-    {
-      "country": "美国",
+      "country": "阿拉斯加",
       "region": "北美",
-      "tags": ["drive-right", "latin", "yellow-center", "us-sign", "green-highway", "wood-pole", "wide-road", "suburban"],
-      "notes": "美式路牌、黄中线和州际/县道体系很关键。"
+      "tags": [
+        "flat",
+        "mountain",
+        "nordic",
+        "snow-road",
+        "temperate",
+        "urban-dense",
+        "us-sign"
+      ],
+      "notes": "The only two major urban areas in Alaska are Anchorage and Fairbanks.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "巴拿马",
+      "region": "北美",
+      "tags": [
+        "concrete-pole",
+        "desert-road",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-yellow",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "white-center",
+        "yellow-center"
+      ],
+      "notes": "Wind turbines can be seen south and north of Penonome.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "百慕大",
+      "region": "北美",
+      "tags": [
+        "drive-left",
+        "nordic",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "yellow-center"
+      ],
+      "notes": "Palms are very commonly found on Bermuda.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "yellow-center",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "黄中线 + 左行"
+        }
+      ]
+    },
+    {
+      "country": "波多黎各",
+      "region": "北美",
+      "tags": [
+        "flat",
+        "mountain",
+        "nordic",
+        "rural",
+        "urban-dense",
+        "us-sign"
+      ],
+      "notes": "Spanish, instead of English, can commonly be seen on signs around Puerto Rico.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "多米尼加",
+      "region": "北美",
+      "tags": [
+        "mountain",
+        "nordic",
+        "urban-dense"
+      ],
+      "notes": "These black-and-purple pole markings are only found on poles in the Santo Domingo area.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "哥斯达黎加",
+      "region": "北美",
+      "tags": [
+        "concrete-pole",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "many-wires",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "urban-dense"
+      ],
+      "notes": "Each province has their own provincial flag.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "格陵兰",
+      "region": "北美",
+      "tags": [
+        "desert-road",
+        "flat",
+        "mountain",
+        "nordic",
+        "rural",
+        "snow-road",
+        "temperate",
+        "urban-dense"
+      ],
+      "notes": "The road east of Kangerlussuaq is easily recognized by the large white truck.",
+      "noteSource": "plonkit"
     },
     {
       "country": "加拿大",
       "region": "北美",
-      "tags": ["drive-right", "latin", "yellow-center", "green-highway", "wood-pole", "nordic", "bilingual-sign", "wide-road"],
-      "notes": "双语、黄线、林地和更冷的道路感很常见。"
+      "tags": [
+        "drive-right",
+        "latin",
+        "yellow-center",
+        "green-highway",
+        "wood-pole",
+        "nordic",
+        "bilingual-sign",
+        "wide-road",
+        "concrete-pole",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "many-wires",
+        "mountain",
+        "plate-eu",
+        "red-shoulder",
+        "rural",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "us-sign"
+      ],
+      "notes": "Stop signs with the word ‘Arrêt’ are unique to Québec.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "yellow-center",
+            "us-sign"
+          ],
+          "weight": 1.2,
+          "reason": "黄中线 + 美式路牌"
+        },
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "马提尼克",
+      "region": "北美",
+      "tags": [
+        "flat",
+        "mountain",
+        "nordic",
+        "red-shoulder",
+        "rural",
+        "temperate",
+        "tropical"
+      ],
+      "notes": "Martinique, officially the Department of Martinique, is an overseas department and region of France, in the Caribbean between Dominica and St Lucia. As such, for country streaks purposes, it is counte",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "美国",
+      "region": "北美",
+      "tags": [
+        "drive-right",
+        "latin",
+        "yellow-center",
+        "us-sign",
+        "green-highway",
+        "wood-pole",
+        "wide-road",
+        "suburban",
+        "concrete-pole",
+        "desert-road",
+        "drive-left",
+        "eu-sign",
+        "flat",
+        "many-wires",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-black",
+        "plate-eu",
+        "plate-white-long",
+        "red-shoulder",
+        "rural",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "white-center"
+      ],
+      "notes": "Triangular yellow signs with the phrase ‘No Passing Zone’ are exclusive to the US.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "drive-left",
+            "plate-black"
+          ],
+          "weight": 1.2,
+          "reason": "左行 + 黑牌"
+        },
+        {
+          "tags": [
+            "yellow-center",
+            "us-sign"
+          ],
+          "weight": 1.2,
+          "reason": "黄中线 + 美式路牌"
+        },
+        {
+          "tags": [
+            "yellow-center",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "黄中线 + 左行"
+        }
+      ]
+    },
+    {
+      "country": "美国本土外小岛屿",
+      "region": "北美",
+      "tags": [
+        "nordic",
+        "rural"
+      ],
+      "notes": "The coverage on the Midway Atoll was made with a Generation 2 camera.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "美属维尔京群岛",
+      "region": "北美",
+      "tags": [
+        "bilingual-sign",
+        "eu-sign",
+        "nordic",
+        "plate-eu",
+        "urban-dense"
+      ],
+      "notes": "Licence plates are short, typically either having a bright blue or a dark blue design.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
     },
     {
       "country": "墨西哥",
       "region": "北美",
-      "tags": ["drive-right", "latin", "yellow-center", "desert-road", "tropical", "rural", "red-shoulder"],
-      "notes": "西语、黄线和干旱/热带交叠的道路环境很典型。"
+      "tags": [
+        "drive-right",
+        "latin",
+        "yellow-center",
+        "desert-road",
+        "tropical",
+        "rural",
+        "red-shoulder",
+        "concrete-pole",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "us-sign",
+        "wood-pole"
+      ],
+      "notes": "Arrows on signs are noticeably very thick.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "yellow-center",
+            "us-sign"
+          ],
+          "weight": 1.2,
+          "reason": "黄中线 + 美式路牌"
+        }
+      ]
     },
     {
-      "country": "巴西",
-      "region": "南美",
-      "tags": ["drive-right", "latin", "yellow-center", "tropical", "red-shoulder", "rural", "many-wires", "concrete-pole"],
-      "notes": "葡语、黄线、红土和热带植被很常见。"
+      "country": "圣皮埃尔和密克隆",
+      "region": "北美",
+      "tags": [
+        "eu-sign",
+        "flat",
+        "nordic",
+        "plate-eu",
+        "plate-white-long",
+        "rural",
+        "temperate"
+      ],
+      "notes": "All coverage was taken with a Generation 3 trekker camera.",
+      "noteSource": "plonkit"
     },
     {
-      "country": "智利/秘鲁",
-      "region": "南美",
-      "tags": ["drive-right", "latin", "mountain", "desert-road", "yellow-center", "rural", "arid"],
-      "notes": "安第斯山地和干旱感道路是主要方向。"
+      "country": "危地马拉",
+      "region": "北美",
+      "tags": [
+        "concrete-pole",
+        "flat",
+        "mountain",
+        "nordic",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "yellow-center"
+      ],
+      "notes": "The central regions of Guatemala are generally mountainous.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "夏威夷",
+      "region": "北美",
+      "tags": [
+        "desert-road",
+        "flat",
+        "mountain",
+        "red-shoulder",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "us-sign"
+      ],
+      "notes": "Within Hawaii, a distinct green blur can only be seen on the island of Oʻahu.",
+      "noteSource": "plonkit"
     },
     {
       "country": "澳大利亚",
       "region": "大洋洲",
-      "tags": ["drive-left", "latin", "yellow-center", "desert-road", "rural", "plate-white-long", "wide-road"],
-      "notes": "左行、黄线、干旱感和宽阔道路很常见。"
+      "tags": [
+        "drive-left",
+        "latin",
+        "yellow-center",
+        "desert-road",
+        "rural",
+        "plate-white-long",
+        "wide-road",
+        "concrete-pole",
+        "eu-sign",
+        "flat",
+        "green-highway",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-black",
+        "plate-eu",
+        "red-shoulder",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "white-center"
+      ],
+      "notes": "A long antenna can be seen in Generation 3 coverage.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "drive-left",
+            "plate-black"
+          ],
+          "weight": 1.2,
+          "reason": "左行 + 黑牌"
+        },
+        {
+          "tags": [
+            "yellow-center",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "黄中线 + 左行"
+        }
+      ]
+    },
+    {
+      "country": "北马里亚纳群岛",
+      "region": "大洋洲",
+      "tags": [
+        "chinese",
+        "concrete-pole",
+        "hangul",
+        "kana",
+        "nordic",
+        "striped-bollard",
+        "tropical",
+        "wood-pole"
+      ],
+      "notes": "Dense commercial areas can be found on the southern half of the west coast.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "kana",
+            "concrete-pole"
+          ],
+          "weight": 1.2,
+          "reason": "日文假名 + 混凝土杆"
+        },
+        {
+          "tags": [
+            "hangul",
+            "concrete-pole"
+          ],
+          "weight": 1.2,
+          "reason": "韩文 + 混凝土杆"
+        }
+      ]
+    },
+    {
+      "country": "关岛",
+      "region": "大洋洲",
+      "tags": [
+        "chinese",
+        "flat",
+        "hangul",
+        "kana",
+        "mountain",
+        "nordic",
+        "striped-bollard",
+        "tropical",
+        "wood-pole"
+      ],
+      "notes": "Hills are mostly found on the southern half of the island.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "科科斯群岛",
+      "region": "大洋洲",
+      "tags": [
+        "desert-road",
+        "nordic",
+        "rural",
+        "temperate",
+        "tropical",
+        "urban-dense"
+      ],
+      "notes": "Bantam Village can be recognized by the cross-hatched brick pavement.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "美属萨摩亚",
+      "region": "大洋洲",
+      "tags": [
+        "flat",
+        "mountain",
+        "temperate",
+        "tropical"
+      ],
+      "notes": "The front of a silver-grey truck with side mirrors can be seen on Manu’a and Olosega, which are connected by a bridge. See below for more information.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "皮特凯恩群岛",
+      "region": "大洋洲",
+      "tags": [
+        "nordic",
+        "temperate",
+        "tropical"
+      ],
+      "notes": "The soil is commonly very red.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "圣诞岛",
+      "region": "大洋洲",
+      "tags": [
+        "green-highway",
+        "nordic",
+        "plate-yellow",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "tropical"
+      ],
+      "notes": "Christmas Island has yellow licence plates.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "瓦努阿图",
+      "region": "大洋洲",
+      "tags": [
+        "nordic",
+        "rural",
+        "temperate",
+        "tropical"
+      ],
+      "notes": "All coverage in Vanuatu was taken with a Generation 3 trekker.",
+      "noteSource": "plonkit"
     },
     {
       "country": "新西兰",
       "region": "大洋洲",
-      "tags": ["drive-left", "latin", "temperate", "mountain", "rural", "plate-white-long", "forest"],
-      "notes": "左行、温带牧场、山地和森林道路都很典型。"
+      "tags": [
+        "drive-left",
+        "latin",
+        "temperate",
+        "mountain",
+        "rural",
+        "plate-white-long",
+        "forest",
+        "concrete-pole",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "many-wires",
+        "mediterranean",
+        "nordic",
+        "plate-black",
+        "snow-road",
+        "striped-bollard",
+        "tropical",
+        "urban-dense",
+        "white-center",
+        "wood-pole",
+        "yellow-center"
+      ],
+      "notes": "Corn is almost exclusively found on the North Island.",
+      "noteSource": "plonkit",
+      "boosts": []
+    },
+    {
+      "country": "菲律宾",
+      "region": "东南亚",
+      "tags": [
+        "drive-right",
+        "latin",
+        "tropical",
+        "many-wires",
+        "urban-dense",
+        "suburban",
+        "concrete-pole",
+        "desert-road",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-black",
+        "plate-white-long",
+        "temperate",
+        "thai",
+        "white-center",
+        "yellow-center"
+      ],
+      "notes": "Chevrons are typically red on white.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "thai",
+            "tropical"
+          ],
+          "weight": 1.2,
+          "reason": "泰文 + 热带"
+        }
+      ]
+    },
+    {
+      "country": "柬埔寨",
+      "region": "东南亚",
+      "tags": [
+        "drive-right",
+        "khmer",
+        "tropical",
+        "red-shoulder",
+        "rural",
+        "many-wires",
+        "bilingual-sign",
+        "blue-motorway",
+        "chinese",
+        "concrete-pole",
+        "desert-road",
+        "drive-left",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "striped-bollard",
+        "temperate",
+        "thai",
+        "urban-dense",
+        "us-sign",
+        "wood-pole"
+      ],
+      "notes": "Shitcam in Cambodia is only found in the southwestern half.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "thai",
+            "tropical"
+          ],
+          "weight": 1.2,
+          "reason": "泰文 + 热带"
+        },
+        {
+          "tags": [
+            "khmer",
+            "tropical"
+          ],
+          "weight": 1.2,
+          "reason": "高棉文 + 热带"
+        },
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "马来西亚",
+      "region": "东南亚",
+      "tags": [
+        "drive-left",
+        "latin",
+        "plate-black",
+        "tropical",
+        "many-wires",
+        "rural",
+        "urban-dense",
+        "suburban",
+        "bilingual-sign",
+        "chinese",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "plate-eu",
+        "striped-bollard",
+        "thai",
+        "us-sign"
+      ],
+      "notes": "Urban areas in Labuan are dotted with blue cylindrical containers.",
+      "noteSource": "plonkit",
+      "boosts": []
+    },
+    {
+      "country": "泰国",
+      "region": "东南亚",
+      "tags": [
+        "drive-left",
+        "thai",
+        "tropical",
+        "many-wires",
+        "concrete-pole",
+        "blue-motorway",
+        "urban-dense",
+        "rural",
+        "arabic",
+        "desert-road",
+        "drive-right",
+        "eu-sign",
+        "flat",
+        "green-highway",
+        "khmer",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "plate-white-long",
+        "plate-yellow",
+        "red-shoulder",
+        "striped-bollard",
+        "temperate",
+        "us-sign",
+        "white-center",
+        "yellow-center"
+      ],
+      "notes": "Sugar cane is mostly grown in central and eastern Thailand.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "drive-left",
+            "plate-yellow"
+          ],
+          "weight": 1.2,
+          "reason": "左行 + 黄牌"
+        },
+        {
+          "tags": [
+            "thai",
+            "tropical"
+          ],
+          "weight": 1.2,
+          "reason": "泰文 + 热带"
+        },
+        {
+          "tags": [
+            "khmer",
+            "tropical"
+          ],
+          "weight": 1.2,
+          "reason": "高棉文 + 热带"
+        },
+        {
+          "tags": [
+            "arabic",
+            "desert-road"
+          ],
+          "weight": 1.2,
+          "reason": "阿拉伯文 + 荒漠道路"
+        },
+        {
+          "tags": [
+            "plate-yellow",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "黄牌 + 左行"
+        }
+      ]
+    },
+    {
+      "country": "新加坡",
+      "region": "东南亚",
+      "tags": [
+        "drive-left",
+        "latin",
+        "chinese",
+        "plate-white-long",
+        "urban-dense",
+        "suburban",
+        "tropical",
+        "wide-road",
+        "eu-sign",
+        "green-highway",
+        "plate-black",
+        "plate-yellow",
+        "rural",
+        "striped-bollard",
+        "temperate"
+      ],
+      "notes": "Rain trees are seen all around Singapore, and are often planted along main roads.",
+      "noteSource": "plonkit",
+      "boosts": []
+    },
+    {
+      "country": "印度尼西亚",
+      "region": "东南亚",
+      "tags": [
+        "drive-left",
+        "latin",
+        "plate-black",
+        "tropical",
+        "many-wires",
+        "red-shoulder",
+        "rural",
+        "suburban",
+        "desert-road",
+        "drive-right",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-yellow",
+        "striped-bollard",
+        "urban-dense"
+      ],
+      "notes": "The official Indonesian currency is the Rupiah (Rp).",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "drive-left",
+            "plate-yellow"
+          ],
+          "weight": 1.2,
+          "reason": "左行 + 黄牌"
+        },
+        {
+          "tags": [
+            "plate-yellow",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "黄牌 + 左行"
+        }
+      ]
+    },
+    {
+      "country": "韩国",
+      "region": "东亚",
+      "tags": [
+        "drive-right",
+        "hangul",
+        "plate-white-long",
+        "concrete-pole",
+        "urban-dense",
+        "mountain",
+        "temperate",
+        "flat",
+        "nordic",
+        "snow-road",
+        "striped-bollard",
+        "yellow-center"
+      ],
+      "notes": "South Korea drives on the right.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "hangul",
+            "concrete-pole"
+          ],
+          "weight": 1.2,
+          "reason": "韩文 + 混凝土杆"
+        }
+      ]
+    },
+    {
+      "country": "日本",
+      "region": "东亚",
+      "tags": [
+        "drive-left",
+        "kana",
+        "plate-white-long",
+        "low-cam",
+        "concrete-pole",
+        "many-wires",
+        "temperate",
+        "mountain",
+        "rural",
+        "urban-dense",
+        "chinese",
+        "cyrillic",
+        "drive-right",
+        "eu-sign",
+        "flat",
+        "hangul",
+        "nordic",
+        "plate-black",
+        "plate-yellow",
+        "red-shoulder",
+        "snow-road",
+        "striped-bollard",
+        "tropical",
+        "us-sign",
+        "white-center",
+        "yellow-center"
+      ],
+      "boosts": [
+        {
+          "tags": [
+            "kana",
+            "low-cam"
+          ],
+          "weight": 1.8,
+          "reason": "日文假名 + 低机位"
+        },
+        {
+          "tags": [
+            "concrete-pole",
+            "kana"
+          ],
+          "weight": 1.2,
+          "reason": "日文假名 + 混凝土杆"
+        },
+        {
+          "tags": [
+            "drive-left",
+            "kana"
+          ],
+          "weight": 1.2,
+          "reason": "左行 + 日文假名"
+        },
+        {
+          "tags": [
+            "drive-left",
+            "plate-yellow"
+          ],
+          "weight": 1.2,
+          "reason": "左行 + 黄牌"
+        },
+        {
+          "tags": [
+            "drive-left",
+            "plate-black"
+          ],
+          "weight": 1.2,
+          "reason": "左行 + 黑牌"
+        },
+        {
+          "tags": [
+            "cyrillic",
+            "snow-road"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 雪地道路"
+        }
+      ],
+      "notes": "The pole reflector pads vary by region in Japan.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "台湾",
+      "region": "东亚",
+      "tags": [
+        "drive-right",
+        "chinese",
+        "plate-white-long",
+        "tropical",
+        "mountain",
+        "urban-dense",
+        "suburban",
+        "concrete-pole",
+        "eu-sign",
+        "flat",
+        "kana",
+        "low-cam",
+        "many-wires",
+        "nordic",
+        "striped-bollard",
+        "temperate",
+        "us-sign",
+        "white-center",
+        "yellow-center"
+      ],
+      "notes": "Taiwan uses black on yellow chevrons.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "kana",
+            "concrete-pole"
+          ],
+          "weight": 1.2,
+          "reason": "日文假名 + 混凝土杆"
+        },
+        {
+          "tags": [
+            "yellow-center",
+            "us-sign"
+          ],
+          "weight": 1.2,
+          "reason": "黄中线 + 美式路牌"
+        }
+      ]
+    },
+    {
+      "country": "香港",
+      "region": "东亚",
+      "tags": [
+        "drive-left",
+        "chinese",
+        "latin",
+        "plate-white-long",
+        "urban-dense",
+        "tropical",
+        "concrete-pole",
+        "bilingual-sign",
+        "drive-right",
+        "eu-sign",
+        "flat",
+        "many-wires",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "wood-pole"
+      ],
+      "boosts": [
+        {
+          "tags": [
+            "drive-left",
+            "latin"
+          ],
+          "weight": 1.1,
+          "reason": "左行 + 英文/拉丁字母"
+        },
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ],
+      "notes": "Distinct bright orange bins can be found on sidewalks.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "中国大陆",
+      "region": "东亚",
+      "tags": [
+        "drive-right",
+        "chinese",
+        "plate-blue",
+        "plate-green",
+        "green-highway",
+        "blue-motorway",
+        "urban-dense",
+        "concrete-pole",
+        "mountain",
+        "flat",
+        "eu-sign",
+        "nordic",
+        "plate-eu",
+        "plate-white-long"
+      ],
+      "boosts": [
+        {
+          "tags": [
+            "chinese",
+            "plate-blue"
+          ],
+          "weight": 1.4,
+          "reason": "中文 + 蓝牌"
+        },
+        {
+          "tags": [
+            "chinese",
+            "green-highway"
+          ],
+          "weight": 1.2,
+          "reason": "中文 + 绿色高速牌"
+        }
+      ],
+      "notes": "Chinese licence plates are blue with white text.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "埃及",
+      "region": "非洲",
+      "tags": [
+        "arabic",
+        "desert-road",
+        "flat",
+        "low-cam",
+        "urban-dense",
+        "us-sign"
+      ],
+      "notes": "Many of the buildings you see in the trekker coverage are made of sandstone.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "arabic",
+            "desert-road"
+          ],
+          "weight": 1.2,
+          "reason": "阿拉伯文 + 荒漠道路"
+        }
+      ]
+    },
+    {
+      "country": "博茨瓦纳",
+      "region": "非洲",
+      "tags": [
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "red-shoulder",
+        "rural",
+        "temperate",
+        "urban-dense",
+        "yellow-center"
+      ],
+      "notes": "The western part of the A2 has overcast coverage, making it recognisable.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "加纳",
+      "region": "非洲",
+      "tags": [
+        "desert-road",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-white-long",
+        "plate-yellow",
+        "red-shoulder",
+        "rural",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "Ghana typically uses wooden poles with 3 insulators on a metallic crossbar.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "肯尼亚",
+      "region": "非洲",
+      "tags": [
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "red-shoulder",
+        "snow-road",
+        "temperate",
+        "tropical",
+        "urban-dense"
+      ],
+      "notes": "While infrequent, road signs in Kenya will mostly be red and white.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "莱索托",
+      "region": "非洲",
+      "tags": [
+        "drive-left",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-white-long",
+        "rural",
+        "striped-bollard",
+        "urban-dense"
+      ],
+      "notes": "Like the three other Southern African countries, Lesotho drives on the left.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "留尼汪",
+      "region": "非洲",
+      "tags": [
+        "eu-sign",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "striped-bollard",
+        "temperate",
+        "tropical"
+      ],
+      "notes": "Being a French Department, you will see French infrastructure, such as signs, bollards and poles.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "卢旺达",
+      "region": "非洲",
+      "tags": [
+        "desert-road",
+        "drive-right",
+        "eu-sign",
+        "mountain",
+        "nordic",
+        "red-shoulder",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "white-center"
+      ],
+      "notes": "Rwanda drives on the right.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "马达加斯加",
+      "region": "非洲",
+      "tags": [
+        "desert-road",
+        "mountain",
+        "nordic",
+        "rural",
+        "temperate",
+        "tropical",
+        "urban-dense"
+      ],
+      "notes": "A cluster of fishing nets can be found in the bay.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "马里",
+      "region": "非洲",
+      "tags": [
+        "desert-road",
+        "eu-sign",
+        "nordic",
+        "plate-eu",
+        "rural",
+        "temperate"
+      ],
+      "notes": "The Sankoré Mosque has richly decorated doors, which are made of wood adorned with metal details.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "纳米比亚",
+      "region": "非洲",
+      "tags": [
+        "desert-road",
+        "drive-left",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "red-shoulder",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "white-center",
+        "yellow-center"
+      ],
+      "notes": "These somewhat baity agricultural fields can be found just west of Mariental.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "yellow-center",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "黄中线 + 左行"
+        }
+      ]
     },
     {
       "country": "南非",
       "region": "非洲",
-      "tags": ["drive-left", "latin", "yellow-center", "desert-road", "rural", "plate-white-long", "suburban", "wide-road"],
-      "notes": "左行、黄线、干旱感和白底长牌常一起出现。"
+      "tags": [
+        "drive-left",
+        "latin",
+        "yellow-center",
+        "desert-road",
+        "rural",
+        "plate-white-long",
+        "suburban",
+        "wide-road",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "red-shoulder",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "white-center"
+      ],
+      "notes": "Trident pole tops are almost unique to KwaZulu-Natal.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "yellow-center",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "黄中线 + 左行"
+        }
+      ]
+    },
+    {
+      "country": "尼日利亚",
+      "region": "非洲",
+      "tags": [
+        "desert-road",
+        "flat",
+        "mountain",
+        "nordic",
+        "red-shoulder",
+        "temperate",
+        "tropical",
+        "urban-dense"
+      ],
+      "notes": "Nigeria uses short licence plates that appear somewhat green through the blur.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "塞内加尔",
+      "region": "非洲",
+      "tags": [
+        "desert-road",
+        "drive-left",
+        "drive-right",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "urban-dense"
+      ],
+      "notes": "Yellow-orange taxis with black fenders can commonly be seen in Senegal.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "圣多美和普林西比",
+      "region": "非洲",
+      "tags": [
+        "temperate",
+        "tropical",
+        "wood-pole"
+      ],
+      "notes": "You can find oil palm plantations in southern São Tomé.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "斯威士兰",
+      "region": "非洲",
+      "tags": [
+        "desert-road",
+        "flat",
+        "mountain",
+        "temperate",
+        "white-center"
+      ],
+      "notes": "Concrete bus shelters are a common sight on roads in Eswatini.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "坦桑尼亚",
+      "region": "非洲",
+      "tags": [
+        "mediterranean",
+        "mountain",
+        "snow-road",
+        "temperate",
+        "tropical"
+      ],
+      "notes": "Higher up on the hills, the forest becomes more open and you will see savannah-like trees around you.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "突尼斯",
+      "region": "非洲",
+      "tags": [
+        "arabic",
+        "bilingual-sign",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-white-long",
+        "rural",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "white-center",
+        "yellow-center"
+      ],
+      "notes": "The area between Tunis and Hammamet looks similar to the area north of Tunis, but the hills tend to be higher and more vegetated.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "arabic",
+            "desert-road"
+          ],
+          "weight": 1.2,
+          "reason": "阿拉伯文 + 荒漠道路"
+        },
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "乌干达",
+      "region": "非洲",
+      "tags": [
+        "desert-road",
+        "drive-left",
+        "flat",
+        "mountain",
+        "nordic",
+        "rural",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "yellow-center"
+      ],
+      "notes": "Uganda uses white front plates with yellow rear plates. These plates can be long or tall.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "yellow-center",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "黄中线 + 左行"
+        }
+      ]
+    },
+    {
+      "country": "南极洲",
+      "region": "南极洲",
+      "tags": [
+        "desert-road",
+        "mountain",
+        "nordic",
+        "snow-road"
+      ],
+      "notes": "The soil will always be dark.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "阿根廷",
+      "region": "南美",
+      "tags": [
+        "concrete-pole",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "red-shoulder",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "You can find these unique markers on provincial roads in Cordoba.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "巴西",
+      "region": "南美",
+      "tags": [
+        "drive-right",
+        "latin",
+        "yellow-center",
+        "tropical",
+        "red-shoulder",
+        "rural",
+        "many-wires",
+        "concrete-pole",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "plate-white-long",
+        "temperate",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "Many houses throughout Brazil have orange tiled roofs.",
+      "noteSource": "plonkit",
+      "boosts": []
+    },
+    {
+      "country": "玻利维亚",
+      "region": "南美",
+      "tags": [
+        "concrete-pole",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "plate-white-long",
+        "rural",
+        "snow-road",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "Bolivia has a lot of standard asphalt roads, but concrete slab roads are also fairly common.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "厄瓜多尔",
+      "region": "南美",
+      "tags": [
+        "blue-motorway",
+        "concrete-pole",
+        "desert-road",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-yellow",
+        "red-shoulder",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "us-sign"
+      ],
+      "notes": "Concrete roads are relatively common in Ecuador.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "福克兰群岛",
+      "region": "南美",
+      "tags": [
+        "flat",
+        "mountain"
+      ],
+      "notes": "Distinct steep cliffs can be seen on New Island.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "哥伦比亚",
+      "region": "南美",
+      "tags": [
+        "concrete-pole",
+        "desert-road",
+        "eu-sign",
+        "mountain",
+        "nordic",
+        "plate-white-long",
+        "plate-yellow",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "yellow-center"
+      ],
+      "notes": "Coverage on the Caribbean island of San Andrés was taken by this distinct white car.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "库拉索",
+      "region": "南美",
+      "tags": [
+        "desert-road",
+        "mountain",
+        "nordic",
+        "rural",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "This black car with a roof rack is unique to Curaçao.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "秘鲁",
+      "region": "南美",
+      "tags": [
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-white-long",
+        "plate-yellow",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "yellow-center"
+      ],
+      "notes": "Bridges in Peru are commonly painted orange.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "南乔治亚和南桑威奇群岛",
+      "region": "南美",
+      "tags": [
+        "mountain",
+        "snow-road"
+      ],
+      "notes": "A church and another building made of white painted wood can also be seen in Grytviken.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "乌拉圭",
+      "region": "南美",
+      "tags": [
+        "concrete-pole",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-white-long",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "white-center",
+        "wood-pole"
+      ],
+      "notes": "This green-painted stone kilometre marker is unique to Uruguay.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "智利",
+      "region": "南美",
+      "tags": [
+        "concrete-pole",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "plate-white-long",
+        "red-shoulder",
+        "rural",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "white-center",
+        "wood-pole",
+        "yellow-center"
+      ],
+      "notes": "Slots can often be seen at the top of signposts.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "印度",
+      "region": "南亚",
+      "tags": [
+        "drive-left",
+        "latin",
+        "devanagari",
+        "plate-white-long",
+        "tropical",
+        "rural",
+        "many-wires",
+        "concrete-pole",
+        "blue-motorway",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "kana",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "plate-yellow",
+        "red-shoulder",
+        "snow-road",
+        "temperate",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "boosts": [
+        {
+          "tags": [
+            "devanagari",
+            "many-wires"
+          ],
+          "weight": 1.4,
+          "reason": "天城文 + 密集线缆"
+        },
+        {
+          "tags": [
+            "drive-left",
+            "kana"
+          ],
+          "weight": 1.2,
+          "reason": "左行 + 日文假名"
+        },
+        {
+          "tags": [
+            "drive-left",
+            "plate-yellow"
+          ],
+          "weight": 1.2,
+          "reason": "左行 + 黄牌"
+        },
+        {
+          "tags": [
+            "kana",
+            "concrete-pole"
+          ],
+          "weight": 1.2,
+          "reason": "日文假名 + 混凝土杆"
+        },
+        {
+          "tags": [
+            "devanagari",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "天城文 + 左行"
+        },
+        {
+          "tags": [
+            "plate-yellow",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "黄牌 + 左行"
+        }
+      ],
+      "notes": "Metal holey poles are common in Kerala.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "阿尔巴尼亚",
+      "region": "欧洲",
+      "tags": [
+        "eu-sign",
+        "flat",
+        "greek",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "red-shoulder",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "urban-dense"
+      ],
+      "notes": "The Albanian word for street is rruga.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "greek",
+            "mediterranean"
+          ],
+          "weight": 1.2,
+          "reason": "希腊文 + 地中海感"
+        }
+      ]
+    },
+    {
+      "country": "爱尔兰",
+      "region": "欧洲",
+      "tags": [
+        "drive-left",
+        "latin",
+        "eu-sign",
+        "temperate",
+        "rural",
+        "suburban",
+        "narrow-road",
+        "bilingual-sign",
+        "concrete-pole",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "plate-white-long",
+        "striped-bollard",
+        "urban-dense",
+        "yellow-center"
+      ],
+      "notes": "Irish yield signs feature the word “YIELD”. NOTE: UK yield signs have the phrase “GIVE WAY”.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "yellow-center",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "黄中线 + 左行"
+        },
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "爱沙尼亚",
+      "region": "欧洲",
+      "tags": [
+        "bilingual-sign",
+        "concrete-pole",
+        "cyrillic",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "plate-white-long",
+        "rural",
+        "striped-bollard",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "Estonian licence plates are long and white, with the standard blue European strip on the left.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "cyrillic",
+            "wood-pole"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 木杆"
+        },
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "安道尔",
+      "region": "欧洲",
+      "tags": [
+        "eu-sign",
+        "mountain",
+        "plate-eu",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "urban-dense"
+      ],
+      "notes": "The Catalan word for street is “carrer”.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "奥地利",
+      "region": "欧洲",
+      "tags": [
+        "blue-motorway",
+        "eu-sign",
+        "flat",
+        "green-highway",
+        "low-cam",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "plate-white-long",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "wood-pole"
+      ],
+      "notes": "Green “Güterweg” signs are found in Burgenland.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "白俄罗斯",
+      "region": "欧亚",
+      "tags": [
+        "cyrillic",
+        "eu-sign",
+        "plate-eu",
+        "urban-dense"
+      ],
+      "notes": "The Holy Spirit Cathedral features prominently in the coverage. Its two towers can often be seen from far away.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "保加利亚",
+      "region": "欧洲",
+      "tags": [
+        "concrete-pole",
+        "cyrillic",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "plate-yellow",
+        "snow-road",
+        "striped-bollard",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "Most poles have small, alternating hook-shaped insulators.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "cyrillic",
+            "snow-road"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 雪地道路"
+        },
+        {
+          "tags": [
+            "cyrillic",
+            "wood-pole"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 木杆"
+        }
+      ]
+    },
+    {
+      "country": "北马其顿",
+      "region": "欧洲",
+      "tags": [
+        "concrete-pole",
+        "cyrillic",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "greek",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "rural",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "yellow-center"
+      ],
+      "notes": "Ohrid is the only large city located next to a lake.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "cyrillic",
+            "snow-road"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 雪地道路"
+        }
+      ]
+    },
+    {
+      "country": "比利时",
+      "region": "欧洲",
+      "tags": [
+        "bilingual-sign",
+        "blue-motorway",
+        "concrete-pole",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-black",
+        "plate-eu",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "thai",
+        "urban-dense",
+        "white-center"
+      ],
+      "notes": "Belgian bicycle paths have short dashed outer lines.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "冰岛",
+      "region": "欧洲",
+      "tags": [
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-black",
+        "plate-eu",
+        "rural",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "white-center",
+        "yellow-center"
+      ],
+      "notes": "The Generation 3 Google car in Iceland is a white car with a long antenna.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "波兰",
+      "region": "欧洲",
+      "tags": [
+        "drive-right",
+        "latin",
+        "plate-eu",
+        "eu-sign",
+        "flat",
+        "temperate",
+        "concrete-pole",
+        "bilingual-sign",
+        "blue-motorway",
+        "cyrillic",
+        "mountain",
+        "nordic",
+        "plate-white-long",
+        "rural",
+        "striped-bollard",
+        "urban-dense",
+        "white-center"
+      ],
+      "notes": "Polish chevrons are white with red arrows.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "丹麦",
+      "region": "欧洲",
+      "tags": [
+        "concrete-pole",
+        "drive-left",
+        "eu-sign",
+        "flat",
+        "nordic",
+        "plate-eu",
+        "plate-white-long",
+        "plate-yellow",
+        "rural",
+        "striped-bollard",
+        "urban-dense",
+        "white-center"
+      ],
+      "notes": "These green bicycle signs are found on the island of Bornholm.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "drive-left",
+            "plate-yellow"
+          ],
+          "weight": 1.2,
+          "reason": "左行 + 黄牌"
+        },
+        {
+          "tags": [
+            "plate-yellow",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "黄牌 + 左行"
+        }
+      ]
+    },
+    {
+      "country": "德国",
+      "region": "欧洲",
+      "tags": [
+        "drive-right",
+        "latin",
+        "plate-eu",
+        "eu-sign",
+        "temperate",
+        "blue-motorway",
+        "suburban",
+        "wide-road",
+        "concrete-pole",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-black",
+        "plate-white-long",
+        "striped-bollard",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "Mailboxes in Germany are bright yellow, and feature this black logo.",
+      "noteSource": "plonkit",
+      "boosts": []
+    },
+    {
+      "country": "俄罗斯",
+      "region": "欧亚",
+      "tags": [
+        "bilingual-sign",
+        "blue-motorway",
+        "concrete-pole",
+        "cyrillic",
+        "desert-road",
+        "drive-left",
+        "eu-sign",
+        "flat",
+        "kana",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-black",
+        "plate-eu",
+        "red-shoulder",
+        "rural",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "The Russian olive is typically found along the Kazakhstan border.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "drive-left",
+            "kana"
+          ],
+          "weight": 1.2,
+          "reason": "左行 + 日文假名"
+        },
+        {
+          "tags": [
+            "drive-left",
+            "plate-black"
+          ],
+          "weight": 1.2,
+          "reason": "左行 + 黑牌"
+        },
+        {
+          "tags": [
+            "cyrillic",
+            "snow-road"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 雪地道路"
+        },
+        {
+          "tags": [
+            "cyrillic",
+            "wood-pole"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 木杆"
+        },
+        {
+          "tags": [
+            "kana",
+            "concrete-pole"
+          ],
+          "weight": 1.2,
+          "reason": "日文假名 + 混凝土杆"
+        }
+      ]
+    },
+    {
+      "country": "法国",
+      "region": "欧洲",
+      "tags": [
+        "drive-right",
+        "latin",
+        "plate-eu",
+        "eu-sign",
+        "white-center",
+        "temperate",
+        "suburban",
+        "bilingual-sign",
+        "concrete-pole",
+        "flat",
+        "greek",
+        "green-highway",
+        "many-wires",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-black",
+        "rural",
+        "striped-bollard",
+        "tropical",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "The French word for street is “rue”.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "greek",
+            "mediterranean"
+          ],
+          "weight": 1.2,
+          "reason": "希腊文 + 地中海感"
+        },
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "法罗群岛",
+      "region": "欧洲",
+      "tags": [
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "rural",
+        "snow-road",
+        "striped-bollard",
+        "temperate"
+      ],
+      "notes": "The Faroe islands have almost no naturally growing trees.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "芬兰",
+      "region": "欧洲",
+      "tags": [
+        "bilingual-sign",
+        "concrete-pole",
+        "eu-sign",
+        "mountain",
+        "nordic",
+        "plate-black",
+        "plate-eu",
+        "plate-white-long",
+        "rural",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "white-center",
+        "wood-pole",
+        "yellow-center"
+      ],
+      "notes": "Small, stunted trees with spindly, thin trunks are common in northern Finland.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "荷兰",
+      "region": "欧洲",
+      "tags": [
+        "drive-right",
+        "latin",
+        "plate-yellow",
+        "eu-sign",
+        "flat",
+        "urban-dense",
+        "suburban",
+        "wide-road",
+        "bilingual-sign",
+        "blue-motorway",
+        "concrete-pole",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "white-center"
+      ],
+      "notes": "Most of the Dutch North Sea coast is lined by dunes.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "黑山",
+      "region": "欧洲",
+      "tags": [
+        "concrete-pole",
+        "desert-road",
+        "eu-sign",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "Guardrails in Montenegro are often rusted.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "捷克",
+      "region": "欧洲",
+      "tags": [
+        "bilingual-sign",
+        "blue-motorway",
+        "concrete-pole",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-black",
+        "plate-eu",
+        "plate-white-long",
+        "rural",
+        "snow-road",
+        "striped-bollard",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "Around 95% of all wine produced in Czechia comes from the Moravian wine region.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "克罗地亚",
+      "region": "欧洲",
+      "tags": [
+        "bilingual-sign",
+        "concrete-pole",
+        "cyrillic",
+        "eu-sign",
+        "flat",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "plate-white-long",
+        "red-shoulder",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "The region north and west of Zagreb is hilly and agricultural.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "cyrillic",
+            "wood-pole"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 木杆"
+        },
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "拉脱维亚",
+      "region": "欧洲",
+      "tags": [
+        "eu-sign",
+        "nordic",
+        "plate-eu",
+        "plate-white-long",
+        "striped-bollard",
+        "temperate",
+        "urban-dense"
+      ],
+      "notes": "Latvian licence plates are long and white, with the standard blue European strip on the left.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "立陶宛",
+      "region": "欧洲",
+      "tags": [
+        "bilingual-sign",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "plate-white-long",
+        "striped-bollard",
+        "temperate"
+      ],
+      "notes": "Many Lithuanian place names end in -ai.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "列支敦士登",
+      "region": "欧洲",
+      "tags": [
+        "eu-sign",
+        "flat",
+        "low-cam",
+        "mountain",
+        "nordic",
+        "plate-black",
+        "striped-bollard",
+        "temperate",
+        "urban-dense"
+      ],
+      "notes": "Flat black signs are found in eastern Liechtenstein.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "卢森堡",
+      "region": "欧洲",
+      "tags": [
+        "bilingual-sign",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "plate-white-long",
+        "plate-yellow",
+        "striped-bollard",
+        "temperate",
+        "urban-dense"
+      ],
+      "notes": "Vineyards are primarily found in the southeast of the country.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "罗马尼亚",
+      "region": "欧洲",
+      "tags": [
+        "bilingual-sign",
+        "concrete-pole",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "yellow-center"
+      ],
+      "notes": "The 67C is a mountain road with all yellow road lines.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "马德拉",
+      "region": "欧洲",
+      "tags": [
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "striped-bollard",
+        "temperate",
+        "tropical"
+      ],
+      "notes": "Foggy coverage is quite common.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "马恩岛",
+      "region": "欧洲",
+      "tags": [
+        "flat",
+        "mountain",
+        "nordic",
+        "striped-bollard",
+        "urban-dense"
+      ],
+      "notes": "Striped kerbs can sometimes be seen along main roads.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "马耳他",
+      "region": "欧洲",
+      "tags": [
+        "blue-motorway",
+        "desert-road",
+        "drive-left",
+        "eu-sign",
+        "mediterranean",
+        "plate-eu",
+        "temperate"
+      ],
+      "notes": "These blue signs are unique to Valletta.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "摩纳哥",
+      "region": "欧洲",
+      "tags": [
+        "eu-sign",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "rural",
+        "temperate",
+        "tropical",
+        "urban-dense"
+      ],
+      "notes": "Planted palm trees are common.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "挪威",
+      "region": "欧洲",
+      "tags": [
+        "drive-right",
+        "latin",
+        "nordic",
+        "mountain",
+        "snow-road",
+        "eu-sign",
+        "bilingual-sign",
+        "blue-motorway",
+        "desert-road",
+        "flat",
+        "plate-eu",
+        "plate-white-long",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "white-center",
+        "wood-pole",
+        "yellow-center"
+      ],
+      "notes": "Norway uses yellow on black chevrons.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "葡萄牙",
+      "region": "欧洲",
+      "tags": [
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "greek",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "rural",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "yellow-center"
+      ],
+      "notes": "Lime green street signs can be found in Porto.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "greek",
+            "mediterranean"
+          ],
+          "weight": 1.2,
+          "reason": "希腊文 + 地中海感"
+        }
+      ]
+    },
+    {
+      "country": "瑞典",
+      "region": "欧洲",
+      "tags": [
+        "bilingual-sign",
+        "blue-motorway",
+        "concrete-pole",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "red-shoulder",
+        "rural",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "Ferns are mostly found in southern and central Sweden. It can occasionally be found further north in the east.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "瑞士",
+      "region": "欧洲",
+      "tags": [
+        "bilingual-sign",
+        "blue-motorway",
+        "eu-sign",
+        "flat",
+        "low-cam",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "yellow-center"
+      ],
+      "notes": "These large town entry signs can sometimes be found in the canton of Vaud.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "塞尔维亚",
+      "region": "欧洲",
+      "tags": [
+        "bilingual-sign",
+        "cyrillic",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "striped-bollard"
+      ],
+      "notes": "A small section of the E-80 north of Pirot has yellow centre lines.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "塞浦路斯",
+      "region": "西亚/欧洲",
+      "tags": [
+        "concrete-pole",
+        "cyrillic",
+        "drive-left",
+        "eu-sign",
+        "flat",
+        "greek",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "red-shoulder",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "tropical"
+      ],
+      "notes": "Vineyards are found more towards the southwest of Cyprus.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "cyrillic",
+            "snow-road"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 雪地道路"
+        },
+        {
+          "tags": [
+            "greek",
+            "mediterranean"
+          ],
+          "weight": 1.2,
+          "reason": "希腊文 + 地中海感"
+        }
+      ]
+    },
+    {
+      "country": "圣马力诺",
+      "region": "欧洲",
+      "tags": [
+        "concrete-pole",
+        "eu-sign",
+        "mediterranean",
+        "mountain",
+        "plate-eu",
+        "rural",
+        "striped-bollard",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "The historic centre is covered by a Generation 3 trekker camera.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "斯洛伐克",
+      "region": "欧洲",
+      "tags": [
+        "bilingual-sign",
+        "concrete-pole",
+        "cyrillic",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "white-center",
+        "wood-pole"
+      ],
+      "notes": "Slovak and Czech poletops typically feature short metal bars that hold the insulators.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "cyrillic",
+            "snow-road"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 雪地道路"
+        },
+        {
+          "tags": [
+            "cyrillic",
+            "wood-pole"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 木杆"
+        },
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "斯洛文尼亚",
+      "region": "欧洲",
+      "tags": [
+        "bilingual-sign",
+        "eu-sign",
+        "flat",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "plate-white-long",
+        "striped-bollard",
+        "temperate",
+        "urban-dense"
+      ],
+      "notes": "Italian bilingual signs can be found in the westernmost region.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "斯瓦尔巴",
+      "region": "欧洲",
+      "tags": [
+        "desert-road",
+        "mountain",
+        "nordic",
+        "plate-yellow",
+        "temperate"
+      ],
+      "notes": "Russian can sometimes be found on signs.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "乌克兰",
+      "region": "欧亚",
+      "tags": [
+        "bilingual-sign",
+        "concrete-pole",
+        "cyrillic",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "plate-white-long",
+        "red-shoulder",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "Ukraine uses white town entry signs.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "cyrillic",
+            "wood-pole"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 木杆"
+        },
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "西班牙",
+      "region": "欧洲",
+      "tags": [
+        "drive-right",
+        "latin",
+        "plate-eu",
+        "eu-sign",
+        "mediterranean",
+        "desert-road",
+        "suburban",
+        "bilingual-sign",
+        "flat",
+        "green-highway",
+        "mountain",
+        "nordic",
+        "red-shoulder",
+        "rural",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "The Spanish word for street is calle.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "希腊",
+      "region": "欧洲",
+      "tags": [
+        "concrete-pole",
+        "cyrillic",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "greek",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "plate-yellow",
+        "red-shoulder",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "yellow-center"
+      ],
+      "notes": "Yellow taxis are found in Athens.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "cyrillic",
+            "snow-road"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 雪地道路"
+        },
+        {
+          "tags": [
+            "greek",
+            "mediterranean"
+          ],
+          "weight": 1.2,
+          "reason": "希腊文 + 地中海感"
+        }
+      ]
+    },
+    {
+      "country": "匈牙利",
+      "region": "欧洲",
+      "tags": [
+        "blue-motorway",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "green-highway",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "While Hungarian road lines are all-white, lines on bicycle lanes are typically yellow.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "亚速尔群岛",
+      "region": "欧洲",
+      "tags": [
+        "desert-road",
+        "eu-sign",
+        "kana",
+        "mountain",
+        "plate-eu",
+        "striped-bollard"
+      ],
+      "notes": "The only island with Generation 4 coverage is Ilha de São Miguel.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "意大利",
+      "region": "欧洲",
+      "tags": [
+        "drive-right",
+        "latin",
+        "plate-eu",
+        "eu-sign",
+        "mediterranean",
+        "mountain",
+        "suburban",
+        "arabic",
+        "bilingual-sign",
+        "concrete-pole",
+        "desert-road",
+        "flat",
+        "green-highway",
+        "nordic",
+        "plate-black",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "Each Italian region has its own unique flag.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "arabic",
+            "desert-road"
+          ],
+          "weight": 1.2,
+          "reason": "阿拉伯文 + 荒漠道路"
+        },
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "英国",
+      "region": "欧洲",
+      "tags": [
+        "drive-left",
+        "latin",
+        "plate-yellow",
+        "eu-sign",
+        "temperate",
+        "rural",
+        "suburban",
+        "narrow-road",
+        "bilingual-sign",
+        "concrete-pole",
+        "desert-road",
+        "mountain",
+        "nordic",
+        "plate-black",
+        "plate-eu",
+        "striped-bollard",
+        "tropical",
+        "urban-dense",
+        "wood-pole",
+        "yellow-center"
+      ],
+      "notes": "Bins in urban areas often have the city name on them.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "drive-left",
+            "plate-yellow"
+          ],
+          "weight": 1.2,
+          "reason": "左行 + 黄牌"
+        },
+        {
+          "tags": [
+            "drive-left",
+            "plate-black"
+          ],
+          "weight": 1.2,
+          "reason": "左行 + 黑牌"
+        },
+        {
+          "tags": [
+            "plate-yellow",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "黄牌 + 左行"
+        },
+        {
+          "tags": [
+            "yellow-center",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "黄中线 + 左行"
+        },
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "泽西岛",
+      "region": "欧洲",
+      "tags": [
+        "eu-sign",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "rural",
+        "tropical",
+        "urban-dense",
+        "white-center"
+      ],
+      "notes": "The roads surrounding Jersey Airport can be recognized thanks to the visible boundary fence.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "直布罗陀",
+      "region": "欧洲",
+      "tags": [
+        "drive-right",
+        "eu-sign",
+        "mediterranean",
+        "mountain",
+        "plate-eu",
+        "urban-dense"
+      ],
+      "notes": "Unlike the UK, Gibraltar drives on the right.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "阿联酋",
+      "region": "西亚",
+      "tags": [
+        "drive-right",
+        "arabic",
+        "desert-road",
+        "urban-dense",
+        "green-highway",
+        "plate-white-long",
+        "wide-road",
+        "arid",
+        "flat",
+        "mountain",
+        "nordic"
+      ],
+      "notes": "The UAE typically features a flat desert landscape.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "arabic",
+            "desert-road"
+          ],
+          "weight": 1.2,
+          "reason": "阿拉伯文 + 荒漠道路"
+        }
+      ]
+    },
+    {
+      "country": "土耳其",
+      "region": "西亚/欧洲",
+      "tags": [
+        "drive-right",
+        "latin",
+        "mediterranean",
+        "mountain",
+        "red-white-chevron",
+        "blue-motorway",
+        "urban-dense",
+        "rural",
+        "concrete-pole",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "nordic",
+        "plate-eu",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "white-center",
+        "yellow-center"
+      ],
+      "notes": "Metal roofs are most common in the east.",
+      "noteSource": "plonkit",
+      "boosts": []
+    },
+    {
+      "country": "阿曼",
+      "region": "西亚",
+      "tags": [
+        "arabic",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-white-long",
+        "red-shoulder",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "white-center",
+        "wood-pole"
+      ],
+      "notes": "A forwards-facing antenna is only found in and around Muscat.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "arabic",
+            "desert-road"
+          ],
+          "weight": 1.2,
+          "reason": "阿拉伯文 + 荒漠道路"
+        }
+      ]
+    },
+    {
+      "country": "澳门",
+      "region": "东亚",
+      "tags": [
+        "chinese",
+        "mountain",
+        "nordic",
+        "plate-black",
+        "plate-white-long",
+        "rural",
+        "temperate"
+      ],
+      "notes": "Red guardrails can be seen on the Amizade Bridge.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "巴基斯坦",
+      "region": "南亚",
+      "tags": [
+        "arabic",
+        "eu-sign",
+        "nordic",
+        "plate-eu",
+        "temperate",
+        "urban-dense"
+      ],
+      "notes": "Coverage in Pakistan was mainly taken with a Generation 3 trekker camera.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "不丹",
+      "region": "南亚",
+      "tags": [
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-yellow",
+        "rural",
+        "urban-dense",
+        "us-sign"
+      ],
+      "notes": "Prayer flags near the road are typically seen in Bhutan.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "哈萨克斯坦",
+      "region": "中亚",
+      "tags": [
+        "bilingual-sign",
+        "cyrillic",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "rural",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "white-center",
+        "yellow-center"
+      ],
+      "notes": "Gas pipes are extremely common in Kazakh cities.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "cyrillic",
+            "snow-road"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 雪地道路"
+        },
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "吉尔吉斯斯坦",
+      "region": "中亚",
+      "tags": [
+        "chinese",
+        "concrete-pole",
+        "cyrillic",
+        "desert-road",
+        "flat",
+        "mountain",
+        "nordic",
+        "red-shoulder",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "urban-dense"
+      ],
+      "notes": "You can find urban snow coverage in this region of Bishkek.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "cyrillic",
+            "snow-road"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 雪地道路"
+        }
+      ]
+    },
+    {
+      "country": "卡塔尔",
+      "region": "西亚",
+      "tags": [
+        "desert-road",
+        "flat",
+        "nordic",
+        "plate-black",
+        "plate-white-long",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "white-center",
+        "yellow-center"
+      ],
+      "notes": "Qatari crossing signs feature a man in a thobe.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "老挝",
+      "region": "东南亚",
+      "tags": [
+        "blue-motorway",
+        "concrete-pole",
+        "desert-road",
+        "drive-left",
+        "drive-right",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "plate-eu",
+        "plate-white-long",
+        "plate-yellow",
+        "red-shoulder",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "thai",
+        "tropical",
+        "urban-dense"
+      ],
+      "notes": "Palm trees are common in Luang Prabang.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "drive-left",
+            "plate-yellow"
+          ],
+          "weight": 1.2,
+          "reason": "左行 + 黄牌"
+        },
+        {
+          "tags": [
+            "thai",
+            "tropical"
+          ],
+          "weight": 1.2,
+          "reason": "泰文 + 热带"
+        },
+        {
+          "tags": [
+            "plate-yellow",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "黄牌 + 左行"
+        }
+      ]
+    },
+    {
+      "country": "黎巴嫩",
+      "region": "西亚",
+      "tags": [
+        "arabic",
+        "bilingual-sign",
+        "eu-sign",
+        "flat",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "rural",
+        "snow-road",
+        "temperate",
+        "tropical",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "A visible black car can be found in and around Zahle.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "蒙古",
+      "region": "东亚",
+      "tags": [
+        "chinese",
+        "cyrillic",
+        "desert-road",
+        "flat",
+        "mountain",
+        "nordic",
+        "red-shoulder",
+        "rural",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "urban-dense",
+        "wood-pole"
+      ],
+      "notes": "Snow coverage is mostly found around Ulaanbaatar.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "cyrillic",
+            "snow-road"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 雪地道路"
+        },
+        {
+          "tags": [
+            "cyrillic",
+            "wood-pole"
+          ],
+          "weight": 1.2,
+          "reason": "西里尔字母 + 木杆"
+        }
+      ]
+    },
+    {
+      "country": "孟加拉国",
+      "region": "南亚",
+      "tags": [
+        "desert-road",
+        "devanagari",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "striped-bollard",
+        "temperate",
+        "urban-dense"
+      ],
+      "notes": "Shitcam coverage is only found in and around Dhaka.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "尼泊尔",
+      "region": "南亚",
+      "tags": [
+        "concrete-pole",
+        "desert-road",
+        "devanagari",
+        "drive-left",
+        "flat",
+        "kana",
+        "mountain",
+        "nordic",
+        "rural",
+        "snow-road",
+        "striped-bollard",
+        "temperate",
+        "tropical",
+        "white-center",
+        "yellow-center"
+      ],
+      "notes": "Nepal drives on the left side of the road.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "drive-left",
+            "kana"
+          ],
+          "weight": 1.2,
+          "reason": "左行 + 日文假名"
+        },
+        {
+          "tags": [
+            "kana",
+            "concrete-pole"
+          ],
+          "weight": 1.2,
+          "reason": "日文假名 + 混凝土杆"
+        },
+        {
+          "tags": [
+            "devanagari",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "天城文 + 左行"
+        },
+        {
+          "tags": [
+            "yellow-center",
+            "drive-left"
+          ],
+          "weight": 1.2,
+          "reason": "黄中线 + 左行"
+        }
+      ]
+    },
+    {
+      "country": "斯里兰卡",
+      "region": "南亚",
+      "tags": [
+        "bilingual-sign",
+        "concrete-pole",
+        "desert-road",
+        "eu-sign",
+        "flat",
+        "low-cam",
+        "mountain",
+        "nordic",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "thai",
+        "tropical"
+      ],
+      "notes": "Vehicles in Sri Lanka have long white front plates and short yellow rear plates.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "thai",
+            "tropical"
+          ],
+          "weight": 1.2,
+          "reason": "泰文 + 热带"
+        },
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "伊拉克",
+      "region": "西亚",
+      "tags": [
+        "eu-sign",
+        "plate-eu",
+        "tropical"
+      ],
+      "notes": "The trekker blur has a well-defined, pointed shape.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "以色列/巴勒斯坦",
+      "region": "西亚",
+      "tags": [
+        "arabic",
+        "bilingual-sign",
+        "concrete-pole",
+        "desert-road",
+        "flat",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-black",
+        "plate-eu",
+        "plate-white-long",
+        "temperate",
+        "tropical",
+        "urban-dense"
+      ],
+      "notes": "Chevrons are white on black.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "arabic",
+            "desert-road"
+          ],
+          "weight": 1.2,
+          "reason": "阿拉伯文 + 荒漠道路"
+        },
+        {
+          "tags": [
+            "bilingual-sign",
+            "nordic"
+          ],
+          "weight": 1.2,
+          "reason": "双语路牌 + 北欧/寒带"
+        }
+      ]
+    },
+    {
+      "country": "英属印度洋领地",
+      "region": "亚洲",
+      "tags": [
+        "nordic",
+        "temperate",
+        "tropical"
+      ],
+      "notes": "Coverage was taken with a Generation 3 trekker.",
+      "noteSource": "plonkit"
+    },
+    {
+      "country": "约旦",
+      "region": "西亚",
+      "tags": [
+        "arabic",
+        "concrete-pole",
+        "desert-road",
+        "flat",
+        "mediterranean",
+        "mountain",
+        "nordic",
+        "plate-white-long",
+        "plate-yellow",
+        "red-shoulder",
+        "urban-dense",
+        "white-center"
+      ],
+      "notes": "In Madaba, taxis are yellow with white bumpers.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "arabic",
+            "desert-road"
+          ],
+          "weight": 1.2,
+          "reason": "阿拉伯文 + 荒漠道路"
+        }
+      ]
+    },
+    {
+      "country": "越南",
+      "region": "东南亚",
+      "tags": [
+        "concrete-pole",
+        "cyrillic",
+        "desert-road",
+        "drive-right",
+        "eu-sign",
+        "flat",
+        "mountain",
+        "nordic",
+        "plate-eu",
+        "red-shoulder",
+        "rural",
+        "striped-bollard",
+        "temperate",
+        "thai",
+        "tropical",
+        "urban-dense"
+      ],
+      "notes": "The posts of road signs are usually painted with a red and white stripe pattern.",
+      "noteSource": "plonkit",
+      "boosts": [
+        {
+          "tags": [
+            "thai",
+            "tropical"
+          ],
+          "weight": 1.2,
+          "reason": "泰文 + 热带"
+        }
+      ]
     }
   ]
 }
