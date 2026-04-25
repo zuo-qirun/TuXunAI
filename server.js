@@ -30,6 +30,7 @@ const guideKnowledge = loadGuideKnowledge();
 const coverageKnowledge = loadCoverageKnowledge();
 const coverageIndex = buildCoverageIndex(coverageKnowledge);
 const allowedTags = collectAllowedTags(knowledgeBase);
+const knowledgeBaseRef = buildKnowledgeBaseReference(knowledgeBase.profiles);
 
 const types = {
   ".html": "text/html; charset=utf-8",
@@ -138,6 +139,32 @@ function collectAllowedTags(base) {
     }
   }
   return tags;
+}
+
+function buildKnowledgeBaseReference(profiles) {
+  if (!Array.isArray(profiles) || !profiles.length) return "";
+
+  const byRegion = new Map();
+  for (const p of profiles) {
+    const region = p.region || "其他";
+    if (!byRegion.has(region)) byRegion.set(region, []);
+    byRegion.get(region).push(p);
+  }
+
+  const lines = ["## 知识库:标签→国家映射"];
+
+  for (const [region, items] of byRegion) {
+    const entries = [];
+    for (const item of items) {
+      const tags = (item.tags || []).slice(0, 8).join(",");
+      const topBoost = (item.boosts || [])[0];
+      const hint = topBoost ? ` [${topBoost.reason}]` : "";
+      entries.push(`${item.country}:${tags}${hint}`);
+    }
+    lines.push(`### ${region}: ${entries.join(" | ")}`);
+  }
+
+  return lines.join("\n");
 }
 
 function normalizeCoverageKey(value) {
@@ -266,6 +293,23 @@ function assertImage(image) {
   }
 }
 
+function normalizeImageInputs(input) {
+  if (Array.isArray(input)) return input.filter((item) => typeof item === "string" && item.startsWith("data:image/"));
+  if (typeof input === "string" && input.startsWith("data:image/")) return [input];
+  return [];
+}
+
+function assertImages(images) {
+  if (!Array.isArray(images) || !images.length) {
+    const error = new Error("Expected at least one data:image URL");
+    error.status = 400;
+    throw error;
+  }
+  for (const image of images) {
+    assertImage(image);
+  }
+}
+
 function base64FromDataUrl(image) {
   return image.replace(/^data:image\/[a-zA-Z0-9.+-]+;base64,/, "");
 }
@@ -326,11 +370,28 @@ function placeGuessSchema() {
   return {
     type: "object",
     additionalProperties: false,
-    required: ["country", "countryZh", "continent", "location", "region", "city", "confidence", "reason", "evidence", "alternatives"],
+    required: [
+      "country",
+      "countryZh",
+      "continent",
+      "continentDirection",
+      "countryDirection",
+      "cityDirection",
+      "location",
+      "region",
+      "city",
+      "confidence",
+      "reason",
+      "evidence",
+      "alternatives"
+    ],
     properties: {
       country: { type: "string" },
       countryZh: { type: "string" },
       continent: { type: "string" },
+      continentDirection: { type: "string" },
+      countryDirection: { type: "string" },
+      cityDirection: { type: "string" },
       location: { type: "string" },
       region: { type: "string" },
       city: { type: "string" },
@@ -348,31 +409,37 @@ function placeGuessSchema() {
   };
 }
 
-function analysisPrompt(notes = "") {
+function analysisPrompt(notes = "", frameCount = 1) {
   if (isFastOllamaModel) {
     return "Describe this image.";
   }
 
-  return [
+  const lines = [
     "You are a GeoGuessr location judge.",
     "Return only JSON.",
     "Do not run a second pass or wait for another model call.",
     "Only choose places that belong to the playable Street View coverage used by the game.",
     "If the strongest guess seems outside playable coverage, say so instead of forcing a country.",
-    "Infer the most likely country, countryZh, continent, region, and city directly from the image.",
+    frameCount > 1 ? `You are given ${frameCount} frames from the same round. Analyze them together.` : "You are given one frame.",
+    "Infer the most likely country, countryZh, continent, region, and city directly from the image. Prefer a city-level best guess whenever the scene gives any useful urban, road, landscape, language, or regional clue.",
     "Use the extracted clues as support, but do not invent hard evidence.",
-    "If the city is not supported, leave city empty.",
-    "Also provide countryZh in Chinese, continent, and a concise location label.",
+    "For city, output the best likely city or nearest city-level area; leave city empty only when there is no meaningful city-level signal at all.",
+    "Use Chinese for reason, evidence, alternatives, location, region, city, and direction fields. Keep country as an English canonical country name for coverage matching, and provide countryZh in Chinese.",
+    "Also provide continent, continentDirection, countryDirection, cityDirection, and a concise location label.",
+    "Direction fields should describe rough relative position, for example: 大洲东北部, 国家西南部, 城市北郊 / 市中心偏东 / 城市周边无法判断.",
     "countryZh and continent are required and must be filled in the same first-pass JSON.",
     "The placeGuess field must be present in the same JSON output.",
-    'placeGuess format: {"country":"","countryZh":"","continent":"","location":"","region":"","city":"","confidence":0,"reason":"","evidence":[],"alternatives":[]}',
+    'placeGuess format: {"country":"","countryZh":"","continent":"","continentDirection":"","countryDirection":"","cityDirection":"","location":"","region":"","city":"","confidence":0,"reason":"","evidence":[],"alternatives":[]}',
     `Summary: ${notes || "none"}`,
     "If the image has clues for placeGuess, include them in evidence and reason.",
     `Allowed clue tags: ${allowedTags.join(", ")}`,
     "Keep candidateRegions as countries or large regions only.",
-    "Keep candidateCities empty unless the evidence is strong.",
-    "Output the JSON structure required by the schema."
-  ].join("\n");
+    "Fill candidateCities with city-level candidates when possible, ordered by likelihood.",
+    "Output the JSON structure required by the schema.",
+    "",
+    knowledgeBaseRef
+  ];
+  return lines.join("\n");
 }
 
 function extractOpenAiOutputText(data) {
@@ -666,9 +733,11 @@ function buildGuidePrompt(analysis, context) {
     "You are a geolocation judge.",
     "Use only the image clues and the guide snippets below.",
     "The game only uses places from the playable coverage whitelist. Do not force a guess outside it.",
-    "Prefer country first, then region, then city only when supported.",
+    "Prefer country first, then region, then a city-level best guess whenever there is any useful support.",
     "Return only JSON.",
-    'Format: {"country":"","region":"","city":"","confidence":0,"reason":"","evidence":[],"alternatives":[]}',
+    "Use Chinese for region, city, reason, evidence, alternatives, and direction fields.",
+    "Also include rough directions: continentDirection, countryDirection, cityDirection.",
+    'Format: {"country":"","countryZh":"","continent":"","continentDirection":"","countryDirection":"","cityDirection":"","location":"","region":"","city":"","confidence":0,"reason":"","evidence":[],"alternatives":[]}',
     `Image summary: ${analysis.summary || "none"}`,
     `Tags: ${(analysis.tags || []).map((item) => item.tag).join(", ") || "none"}`,
     `Text clues: ${(analysis.textClues || []).join(" | ") || "none"}`,
@@ -685,6 +754,9 @@ function buildGuidePrompt(analysis, context) {
   }
 
   lines.push("Guide snippets follow. Use them as evidence, not as a script to repeat.");
+  lines.push("");
+  lines.push(knowledgeBaseRef);
+  lines.push("");
 
   context.forEach((country, index) => {
     lines.push(
@@ -808,6 +880,9 @@ function normalizePlaceGuess(value, context = []) {
     country: typeof result.country === "string" ? result.country.trim() : "",
     countryZh: typeof result.countryZh === "string" && result.countryZh.trim() ? result.countryZh.trim() : countryMeta.countryZh,
     continent: typeof result.continent === "string" && result.continent.trim() ? result.continent.trim() : countryMeta.continent,
+    continentDirection: typeof result.continentDirection === "string" ? result.continentDirection.trim() : "",
+    countryDirection: typeof result.countryDirection === "string" ? result.countryDirection.trim() : "",
+    cityDirection: typeof result.cityDirection === "string" ? result.cityDirection.trim() : "",
     location: typeof result.location === "string" && result.location.trim() ? result.location.trim() : "",
     region: typeof result.region === "string" ? result.region.trim() : "",
     city: typeof result.city === "string" ? result.city.trim() : "",
@@ -949,8 +1024,9 @@ async function ollamaStatus() {
   }
 }
 
-async function analyzeWithOllama(image, notes = "") {
-  assertImage(image);
+async function analyzeWithOllama(images, notes = "") {
+  const normalizedImages = normalizeImageInputs(images);
+  assertImages(normalizedImages);
   const { controller, timeout } = withTimeout(ollamaTimeoutMs);
 
   try {
@@ -970,8 +1046,8 @@ async function analyzeWithOllama(image, notes = "") {
         messages: [
           {
             role: "user",
-            content: isFastOllamaModel ? analysisPrompt(notes) : `/no_think\n${analysisPrompt(notes)}`,
-            images: [base64FromDataUrl(image)]
+            content: isFastOllamaModel ? analysisPrompt(notes, normalizedImages.length) : `/no_think\n${analysisPrompt(notes, normalizedImages.length)}`,
+            images: normalizedImages.map((image) => base64FromDataUrl(image))
           }
         ]
       }),
@@ -1015,8 +1091,9 @@ async function analyzeWithOllama(image, notes = "") {
   }
 }
 
-async function analyzeWithOpenAi(image, notes = "") {
-  assertImage(image);
+async function analyzeWithOpenAi(images, notes = "") {
+  const normalizedImages = normalizeImageInputs(images);
+  assertImages(normalizedImages);
   const auth = resolveOpenAiBearerToken();
   if (!auth.token) {
     const error = new Error("OPENAI_API_KEY is not configured and Codex ChatGPT auth is unavailable");
@@ -1038,10 +1115,9 @@ async function analyzeWithOpenAi(image, notes = "") {
         input: [
           {
             role: "user",
-            content: [
-              { type: "input_text", text: analysisPrompt(notes) },
-              { type: "input_image", image_url: image }
-            ]
+            content: [{ type: "input_text", text: analysisPrompt(notes, normalizedImages.length) }].concat(
+              normalizedImages.map((image) => ({ type: "input_image", image_url: image }))
+            )
           }
         ],
         text: {
@@ -1091,9 +1167,29 @@ function placeGuessSchema() {
   return {
     type: "object",
     additionalProperties: false,
-    required: ["country", "region", "city", "confidence", "reason", "evidence", "alternatives"],
+    required: [
+      "country",
+      "countryZh",
+      "continent",
+      "continentDirection",
+      "countryDirection",
+      "cityDirection",
+      "location",
+      "region",
+      "city",
+      "confidence",
+      "reason",
+      "evidence",
+      "alternatives"
+    ],
     properties: {
       country: { type: "string" },
+      countryZh: { type: "string" },
+      continent: { type: "string" },
+      continentDirection: { type: "string" },
+      countryDirection: { type: "string" },
+      cityDirection: { type: "string" },
+      location: { type: "string" },
       region: { type: "string" },
       city: { type: "string" },
       confidence: { type: "number", minimum: 0, maximum: 1 },
@@ -1116,17 +1212,22 @@ function buildPlaceGuessPrompt(analysis, notes = "") {
     "Return only JSON.",
     "Only choose places that belong to the playable Street View coverage used by the game.",
     "If the strongest guess seems outside playable coverage, say so instead of forcing a country.",
-    "Guess the most likely country, countryZh, continent, region, and city from the image.",
+    "Guess the most likely country, countryZh, continent, region, and city from the image. Prefer a city-level best guess whenever there is any useful support.",
     "Use the extracted clues as support, but do not invent hard evidence.",
-    "If the city is not supported, leave city empty.",
+    "For city, output the best likely city or nearest city-level area; leave city empty only when there is no meaningful city-level signal at all.",
+    "Use Chinese for reason, evidence, alternatives, location, region, city, and direction fields. Keep country as an English canonical country name for coverage matching, and provide countryZh in Chinese.",
+    "Also provide continentDirection, countryDirection, and cityDirection.",
+    "Direction fields should describe rough relative position, for example: 大洲东北部, 国家西南部, 城市北郊 / 市中心偏东 / 城市周边无法判断.",
     "countryZh and continent are required and must be filled directly by the model.",
-    'Format: {"country":"","countryZh":"","continent":"","location":"","region":"","city":"","confidence":0,"reason":"","evidence":[],"alternatives":[]}',
+    'Format: {"country":"","countryZh":"","continent":"","continentDirection":"","countryDirection":"","cityDirection":"","location":"","region":"","city":"","confidence":0,"reason":"","evidence":[],"alternatives":[]}',
     `Summary: ${analysis.summary || "none"}`,
     `Tags: ${(analysis.tags || []).map((item) => item.tag).join(", ") || "none"}`,
     `Text clues: ${(analysis.textClues || []).join(" | ") || "none"}`,
     `Candidate regions: ${(analysis.candidateRegions || []).join(", ") || "none"}`,
     `Candidate cities: ${Array.isArray(analysis.candidateCities) && analysis.candidateCities.length ? analysis.candidateCities.slice(0, 3).map((item) => `${item.city}${item.country ? ` (${item.country})` : ""}`).join(", ") : "none"}`,
-    `Notes: ${notes || "none"}`
+    `Notes: ${notes || "none"}`,
+    "",
+    knowledgeBaseRef
   ];
   return lines.join("\n");
 }
@@ -1148,7 +1249,7 @@ async function guessPlaceWithOpenAi(image, analysis, notes = "") {
       },
       body: JSON.stringify({
         model: visionModel,
-        max_output_tokens: 220,
+        max_output_tokens: 360,
         input: [
           {
             role: "user",
@@ -1185,10 +1286,12 @@ async function guessPlaceWithOpenAi(image, analysis, notes = "") {
   }
 }
 
-async function analyzeImage(image, notes = "") {
+async function analyzeImage(imageOrImages, notes = "") {
+  const images = normalizeImageInputs(imageOrImages);
+  assertImages(images);
   let analysis;
-  if (visionProvider === "openai" || visionProvider === "chatgpt" || visionProvider === "newapi") analysis = await analyzeWithOpenAi(image, notes);
-  else if (visionProvider === "ollama") analysis = await analyzeWithOllama(image, notes);
+  if (visionProvider === "openai" || visionProvider === "chatgpt" || visionProvider === "newapi") analysis = await analyzeWithOpenAi(images, notes);
+  else if (visionProvider === "ollama") analysis = await analyzeWithOllama(images, notes);
   else {
     const error = new Error(`Unsupported VISION_PROVIDER: ${visionProvider}`);
     error.status = 400;
@@ -1263,7 +1366,8 @@ http
     if (req.method === "POST" && req.url === "/api/analyze") {
       try {
         const body = await readJson(req);
-        const result = await analyzeImage(body.image, body.notes);
+        const inputImages = Array.isArray(body.images) && body.images.length ? body.images : body.image;
+        const result = await analyzeImage(inputImages, body.notes);
         sendJson(res, 200, result);
       } catch (error) {
         sendJson(res, error.status || 500, {

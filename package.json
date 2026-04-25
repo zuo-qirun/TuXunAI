@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node server.js",
     "crawl:guide": "node scripts/build-plonkit-guide.js",
-    "build:coverage": "node scripts/build-coverage-generations.js"
+    "build:coverage": "node scripts/build-coverage-generations.js",
+    "deploy": "node scripts/deploy.js",
+    "deploy:watch": "node scripts/deploy.js --watch"
   },
   "engines": {
     "node": ">=18"
