@@ -49,8 +49,26 @@ function testConnection() {
   });
 }
 
+function testSudo() {
+  return new Promise((resolve) => {
+    const ssh = spawn("ssh", [
+      "-o",
+      "ConnectTimeout=5",
+      "-o",
+      "BatchMode=yes",
+      `${CONFIG.user}@${CONFIG.host}`,
+      "sudo -n whoami 2>/dev/null",
+    ]);
+    let output = "";
+    ssh.stdout.on("data", (d) => (output += d.toString()));
+    ssh.on("close", (code) => resolve(code === 0 && output.includes("root")));
+    ssh.on("error", () => resolve(false));
+  });
+}
+
 // ===== DEPLOY VIA TAR + SSH =====
 // tar xzf 只覆盖同名文件，不删除服务器上已有的其他文件
+// 宝塔面板文件归 www 所有，需 sudo
 function deploy() {
   return new Promise((resolve, reject) => {
     const start = Date.now();
@@ -60,12 +78,15 @@ function deploy() {
     }
     tarArgs.push(".");
 
+    // Try sudo first (宝塔权限), fallback to direct extract
+    const remoteCmd = `sudo -n tar xzf - -C ${CONFIG.remotePath} 2>/dev/null || tar xzf - -C ${CONFIG.remotePath}`;
+
     const tar = spawn("tar", tarArgs, { cwd: CONFIG.localPath });
     const ssh = spawn("ssh", [
       "-o",
       "ConnectTimeout=10",
       `${CONFIG.user}@${CONFIG.host}`,
-      `tar xzf - -C ${CONFIG.remotePath}`,
+      remoteCmd,
     ]);
 
     let sshStderr = "";
@@ -78,10 +99,19 @@ function deploy() {
     ssh.on("close", (code) => {
       const elapsed = ((Date.now() - start) / 1000).toFixed(1);
       if (code !== 0) {
-        console.error(
-          `\n[deploy] Failed (exit ${code}) after ${elapsed}s`
-        );
-        if (sshStderr.trim()) console.error(sshStderr.trim());
+        console.error(`\n[deploy] Failed (exit ${code}) after ${elapsed}s`);
+        const stderr = sshStderr.trim();
+        if (stderr) {
+          // Filter out repetitive tar "Cannot open" messages
+          const lines = stderr.split("\n").filter((l) => l.trim());
+          const unique = [...new Set(lines)];
+          console.error(unique.slice(0, 3).join("\n"));
+          if (unique.length > 3) console.error(`... and ${unique.length - 3} more errors`);
+        }
+        if (stderr.includes("Cannot open") || stderr.includes("Operation not permitted")) {
+          console.error("[deploy] 权限不足，请在服务器上运行一次：");
+          console.error(`[deploy]   sudo setfacl -R -m u:${CONFIG.user}:rwx ${CONFIG.remotePath}`);
+        }
         return reject(new Error(`ssh exited with code ${code}`));
       }
       console.log(`[deploy] Synced to ${CONFIG.remotePath} in ${elapsed}s (other files untouched)`);
@@ -236,7 +266,17 @@ async function main() {
     console.error(`[deploy]   ssh ${CONFIG.user}@${CONFIG.host}\n`);
     process.exit(1);
   }
-  console.log("[deploy] SSH connection OK\n");
+  console.log("[deploy] SSH connection OK");
+
+  const hasSudo = await testSudo();
+  if (hasSudo) {
+    console.log("[deploy] sudo access OK");
+  } else {
+    console.log("[deploy] sudo unavailable (will try direct write)");
+    console.log("[deploy] If permission errors occur, run on server:");
+    console.log(`[deploy]   sudo setfacl -R -m u:${CONFIG.user}:rwx ${CONFIG.remotePath}`);
+  }
+  console.log("");
 
   if (WATCH_MODE) {
     // Initial sync

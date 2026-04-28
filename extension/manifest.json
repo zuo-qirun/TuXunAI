@@ -7,6 +7,6 @@
     "default_title": "TuXun AI Capture",
     "default_popup": "popup.html"
   },
-  "permissions": ["tabs", "activeTab", "storage"],
+  "permissions": ["tabs", "activeTab", "scripting", "debugger"],
   "host_permissions": ["<all_urls>"]
 }

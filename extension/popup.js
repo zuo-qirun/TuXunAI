@@ -1,8 +1,15 @@
 const DEFAULT_API_BASE = "http://localhost:4173";
+const BURST_COUNT = 3;
+const BURST_DELAY_MS = 450;
+const CENTER_DRAG_COUNT = 5;
+const CENTER_DRAG_PIXELS = 220;
+const CENTER_DRAG_STEP_DELAY_MS = 12;
+const CENTER_DRAG_DELAY_MS = 35;
 
 const els = {
   status: document.querySelector("#status"),
   captureBtn: document.querySelector("#captureBtn"),
+  burstBtn: document.querySelector("#burstBtn"),
   saveServerUrl: document.querySelector("#saveServerUrl"),
   serverUrl: document.querySelector("#serverUrl"),
   preview: document.querySelector("#preview"),
@@ -29,31 +36,18 @@ function normalizeBaseUrl(value) {
   return `https://${raw}`;
 }
 
-function readStoredServerUrl() {
-  const fallback = localStorage.getItem("serverUrl") || DEFAULT_API_BASE;
-  if (!chrome.storage?.local) return Promise.resolve(fallback);
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-  return new Promise((resolve) => {
-    chrome.storage.local.get({ serverUrl: fallback }, (items) => {
-      if (chrome.runtime?.lastError) {
-        resolve(fallback);
-        return;
-      }
-      resolve(items?.serverUrl || fallback);
-    });
-  });
+function readStoredServerUrl() {
+  return Promise.resolve(localStorage.getItem("serverUrl") || DEFAULT_API_BASE);
 }
 
 function writeStoredServerUrl(value) {
   const nextValue = normalizeBaseUrl(value);
   localStorage.setItem("serverUrl", nextValue);
-  if (!chrome.storage?.local) return Promise.resolve();
-
-  return new Promise((resolve) => {
-    chrome.storage.local.set({ serverUrl: nextValue }, () => {
-      resolve();
-    });
-  });
+  return Promise.resolve();
 }
 
 function captureVisibleTab() {
@@ -106,11 +100,226 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
+async function getActiveTabId() {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+        return;
+      }
+      const tab = tabs && tabs[0];
+      if (!tab || typeof tab.id !== "number") {
+        reject(new Error("找不到当前标签页"));
+        return;
+      }
+      resolve(tab.id);
+    });
+  });
+}
+
+function debuggerAttach(target) {
+  return new Promise((resolve, reject) => {
+    chrome.debugger.attach(target, "1.3", () => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+        return;
+      }
+      resolve();
+    });
+  });
+}
+
+function debuggerDetach(target) {
+  return new Promise((resolve) => {
+    chrome.debugger.detach(target, () => resolve());
+  });
+}
+
+function debuggerSend(target, method, params = {}) {
+  return new Promise((resolve, reject) => {
+    chrome.debugger.sendCommand(target, method, params, (result) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+        return;
+      }
+      resolve(result);
+    });
+  });
+}
+
+async function dragWithDebugger(tabId, direction = 1) {
+  const target = { tabId };
+  let attached = false;
+  let startX = 640;
+  let startY = 360;
+  let endX = 420;
+  let endY = 360;
+
+  try {
+    await debuggerAttach(target);
+    attached = true;
+    await debuggerSend(target, "Page.enable");
+
+    const metrics = await debuggerSend(target, "Page.getLayoutMetrics");
+    const viewport = metrics?.cssVisualViewport || metrics?.cssLayoutViewport || {};
+    const width = Math.max(1, Math.round(viewport.clientWidth || viewport.pageX || 1280));
+    const height = Math.max(1, Math.round(viewport.clientHeight || viewport.pageY || 720));
+    startX = Math.round(width / 2);
+    startY = Math.round(height / 2);
+    const dragPixels = Math.min(CENTER_DRAG_PIXELS, Math.max(80, Math.round(width * 0.22)));
+    const deltaX = direction >= 0 ? -dragPixels : dragPixels;
+    endX = startX + deltaX;
+    endY = startY;
+
+    for (let dragIndex = 0; dragIndex < CENTER_DRAG_COUNT; dragIndex += 1) {
+      await debuggerSend(target, "Input.dispatchMouseEvent", {
+        type: "mouseMoved",
+        x: startX,
+        y: startY,
+        button: "none",
+        buttons: 0
+      });
+
+      await debuggerSend(target, "Input.dispatchMouseEvent", {
+        type: "mousePressed",
+        x: startX,
+        y: startY,
+        button: "left",
+        buttons: 1,
+        clickCount: 1
+      });
+
+      const steps = 5;
+      for (let i = 1; i <= steps; i += 1) {
+        const t = i / steps;
+        await debuggerSend(target, "Input.dispatchMouseEvent", {
+          type: "mouseMoved",
+          x: Math.round(startX + (endX - startX) * t),
+          y: Math.round(startY + (endY - startY) * t),
+          button: "left",
+          buttons: 1
+        });
+        await sleep(CENTER_DRAG_STEP_DELAY_MS);
+      }
+
+      await debuggerSend(target, "Input.dispatchMouseEvent", {
+        type: "mouseReleased",
+        x: endX,
+        y: endY,
+        button: "left",
+        buttons: 0,
+        clickCount: 1
+      });
+
+      await sleep(CENTER_DRAG_DELAY_MS);
+    }
+  } finally {
+    if (attached) {
+      await debuggerDetach(target);
+    }
+  }
+}
+
+async function nudgeCurrentTab(direction = 1) {
+  try {
+    const tabId = await getActiveTabId();
+    await dragWithDebugger(tabId, direction);
+  } catch (error) {
+    try {
+      const tabId = await getActiveTabId();
+      if (!chrome.scripting?.executeScript) return;
+      await chrome.scripting.executeScript({
+        target: { tabId },
+        args: [direction, CENTER_DRAG_COUNT, CENTER_DRAG_PIXELS, CENTER_DRAG_STEP_DELAY_MS, CENTER_DRAG_DELAY_MS],
+        func: async (dir, dragCount, dragPixels, dragStepDelayMs, dragDelayMs) => {
+          const key = dir >= 0 ? "ArrowRight" : "ArrowLeft";
+          const centerX = Math.round(window.innerWidth / 2);
+          const centerY = Math.round(window.innerHeight / 2);
+          const offset = Math.min(dragPixels, Math.max(80, Math.round(window.innerWidth * 0.22)));
+          const endX = centerX + (dir >= 0 ? -offset : offset);
+          const dispatch = (type, init = {}) => {
+            const eventInit = {
+              bubbles: true,
+              cancelable: true,
+              composed: true,
+              key,
+              code: key,
+              ...init
+            };
+            window.dispatchEvent(new KeyboardEvent(type, eventInit));
+            document.dispatchEvent(new KeyboardEvent(type, eventInit));
+          };
+          dispatch("keydown");
+          dispatch("keyup");
+
+          const target = document.elementFromPoint(centerX, centerY) || document.body || document.documentElement;
+          const start = {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+            clientX: centerX,
+            clientY: centerY,
+            button: 0,
+            buttons: 1
+          };
+          const fire = (EventClass, type, init) => {
+            if (typeof EventClass === "function") {
+              target.dispatchEvent(new EventClass(type, init));
+            }
+          };
+          for (let dragIndex = 0; dragIndex < dragCount; dragIndex += 1) {
+            fire(MouseEvent, "mousemove", { ...start, buttons: 0 });
+            fire(window.PointerEvent, "pointerdown", { ...start, pointerId: 1, pointerType: "mouse", isPrimary: true });
+            fire(MouseEvent, "mousedown", start);
+
+            const steps = 5;
+            for (let i = 1; i <= steps; i += 1) {
+              const move = {
+                ...start,
+                clientX: Math.round(centerX + (endX - centerX) * (i / steps)),
+                clientY: centerY
+              };
+              fire(window.PointerEvent, "pointermove", { ...move, pointerId: 1, pointerType: "mouse", isPrimary: true });
+              fire(MouseEvent, "mousemove", move);
+              await new Promise((resolve) => setTimeout(resolve, dragStepDelayMs));
+            }
+
+            const end = { ...start, clientX: endX, buttons: 0 };
+            fire(window.PointerEvent, "pointerup", { ...end, pointerId: 1, pointerType: "mouse", isPrimary: true });
+            fire(MouseEvent, "mouseup", end);
+            await new Promise((resolve) => setTimeout(resolve, dragDelayMs));
+          }
+        }
+      });
+    } catch {
+      // Best-effort only.
+    }
+  }
+}
+
+async function captureFrames(frameCount = 1) {
+  const frames = [];
+  for (let i = 0; i < frameCount; i += 1) {
+    if (i > 0) {
+      await nudgeCurrentTab(1);
+      await sleep(BURST_DELAY_MS);
+    }
+    const rawImage = await captureVisibleTab();
+    frames.push(await resizeImage(rawImage));
+  }
+  return frames;
+}
+
 function renderResult(result) {
   const guess = result.placeGuess || {};
   const country = guess.countryZh || guess.country || "未识别";
   const continent = guess.continent || "";
   const location = guess.location || [guess.region, guess.city].filter(Boolean).join(" / ");
+  const directions = [
+    guess.continentDirection ? `大洲方位：${guess.continentDirection}` : "",
+    guess.countryDirection ? `国家方位：${guess.countryDirection}` : "",
+    guess.cityDirection ? `城市方位：${guess.cityDirection}` : ""
+  ].filter(Boolean);
   const coverage = guess.coverage || {};
   const coverageLabel = coverage.playable === false ? "不在覆盖" : coverage.playable ? "可玩覆盖" : "";
   const generations = Array.isArray(coverage.generations) ? coverage.generations.join(" / ") : "";
@@ -127,7 +336,18 @@ function renderResult(result) {
     </div>
   `;
 
+  if (directions.length) {
+    const meta = els.place.querySelector(".meta");
+    if (meta) {
+      meta.insertAdjacentHTML(
+        "beforeend",
+        directions.map((item) => `<span>${escapeHtml(item)}</span>`).join("")
+      );
+    }
+  }
+
   const parts = [];
+  if (directions.length) parts.push(directions.join("；"));
   if (guess.reason) parts.push(`理由：${guess.reason}`);
   if (Array.isArray(guess.evidence) && guess.evidence.length) parts.push(`证据：${guess.evidence.slice(0, 4).join("；")}`);
   if (Array.isArray(guess.alternatives) && guess.alternatives.length) parts.push(`备选：${guess.alternatives.slice(0, 3).join("、")}`);
@@ -141,34 +361,62 @@ function renderResult(result) {
   setText(els.details, parts.length ? parts.join("\n") : "模型没有返回更多说明。");
 }
 
+async function analyzeImages(images, notes, previewImage) {
+  if (previewImage) {
+    els.preview.src = previewImage;
+    els.preview.style.display = "block";
+  } else {
+    els.preview.removeAttribute("src");
+    els.preview.style.display = "none";
+  }
+
+  setStatus("正在识图…");
+  const result = await fetchJson(`${apiBase}/api/analyze`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ images, notes })
+  });
+
+  renderResult(result);
+  setStatus("识图完成");
+}
+
 async function analyzeCurrentTab() {
   els.captureBtn.disabled = true;
+  els.burstBtn.disabled = true;
   setStatus("正在截图…");
   setText(els.details, "正在抓取当前标签页的可见区域。", true);
-  els.preview.removeAttribute("src");
-  els.preview.style.display = "none";
 
   try {
-    const rawImage = await captureVisibleTab();
-    const image = await resizeImage(rawImage);
-    els.preview.src = image;
-    els.preview.style.display = "block";
-
-    setStatus("正在识图…");
-    const result = await fetchJson(`${apiBase}/api/analyze`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ image, notes: "chrome extension capture" })
-    });
-
-    renderResult(result);
-    setStatus("识图完成");
+    const [image] = await captureFrames(1);
+    await analyzeImages([image], "chrome extension capture", image);
   } catch (error) {
     setStatus("识图失败", "warning");
     setText(els.details, error.message || "出现了一个错误。");
     els.place.innerHTML = `<span class="muted">没有结果。</span>`;
   } finally {
     els.captureBtn.disabled = false;
+    els.burstBtn.disabled = false;
+  }
+}
+
+async function analyzeBurst() {
+  els.captureBtn.disabled = true;
+  els.burstBtn.disabled = true;
+  setStatus("正在三连拍…");
+  setText(els.details, "正在连续抓取三张图。", true);
+
+  try {
+    const images = await captureFrames(BURST_COUNT);
+    const previewImage = images[0];
+    await analyzeImages(images, "chrome extension burst capture", previewImage);
+  } catch (error) {
+    setStatus("识图失败", "warning");
+    setText(els.details, error.message || "出现了一个错误。");
+    els.place.innerHTML = `<span class="muted">没有结果。</span>`;
+  } finally {
+    els.captureBtn.disabled = false;
+    els.burstBtn.disabled = false;
   }
 }
 
@@ -178,9 +426,6 @@ async function loadConfig() {
     const label = config.vision ? `${config.provider}/${config.model}` : config.message || "视觉不可用";
     setStatus(label);
     setText(els.details, `本地服务已连接。${config.vision ? "点击按钮即可抓图识图。" : config.message || ""}`, true);
-    if (config.vision) {
-      setTimeout(() => analyzeCurrentTab(), 180);
-    }
   } catch (error) {
     setStatus("本地服务未连接", "warning");
     setText(els.details, `无法连接到 ${apiBase}。先启动本地助手，再回到这里点击识图。`, true);
@@ -201,6 +446,7 @@ async function saveServerUrl() {
 }
 
 els.captureBtn.addEventListener("click", analyzeCurrentTab);
+els.burstBtn.addEventListener("click", analyzeBurst);
 els.saveServerUrl.addEventListener("click", saveServerUrl);
 els.serverUrl.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {

@@ -30,7 +30,7 @@ const guideKnowledge = loadGuideKnowledge();
 const coverageKnowledge = loadCoverageKnowledge();
 const coverageIndex = buildCoverageIndex(coverageKnowledge);
 const allowedTags = collectAllowedTags(knowledgeBase);
-const knowledgeBaseRef = buildKnowledgeBaseReference(knowledgeBase.profiles);
+const knowledgeBaseRef = buildKnowledgeBaseReference(knowledgeBase);
 
 const types = {
   ".html": "text/html; charset=utf-8",
@@ -141,30 +141,54 @@ function collectAllowedTags(base) {
   return tags;
 }
 
-function buildKnowledgeBaseReference(profiles) {
-  if (!Array.isArray(profiles) || !profiles.length) return "";
+function buildKnowledgeBaseReference(kb) {
+  if (!kb || typeof kb !== "object") return "";
 
-  const byRegion = new Map();
-  for (const p of profiles) {
-    const region = p.region || "其他";
-    if (!byRegion.has(region)) byRegion.set(region, []);
-    byRegion.get(region).push(p);
-  }
+  const { groups, textHints, profiles } = kb;
+  const sections = [];
 
-  const lines = ["## 知识库:标签→国家映射"];
-
-  for (const [region, items] of byRegion) {
-    const entries = [];
-    for (const item of items) {
-      const tags = (item.tags || []).slice(0, 8).join(",");
-      const topBoost = (item.boosts || [])[0];
-      const hint = topBoost ? ` [${topBoost.reason}]` : "";
-      entries.push(`${item.country}:${tags}${hint}`);
+  // 1. Tag descriptions — what each tag visually means
+  if (Array.isArray(groups) && groups.length) {
+    sections.push("## 视觉标签说明");
+    for (const group of groups) {
+      const options = (group.options || [])
+        .map((o) => `${o.id}(${o.label})`)
+        .join("、");
+      sections.push(`- ${group.title}${group.multi ? "(多选)" : "(单选)"}: ${options}`);
     }
-    lines.push(`### ${region}: ${entries.join(" | ")}`);
   }
 
-  return lines.join("\n");
+  // 2. Text hint rules — what text patterns indicate which country/script
+  if (Array.isArray(textHints) && textHints.length) {
+    sections.push("\n## 文字线索→标签");
+    for (const hint of textHints) {
+      const samples = (hint.phrases || []).slice(0, 5).join("/");
+      sections.push(`- ${samples} → ${hint.tag}(${hint.reason})`);
+    }
+  }
+
+  // 3. Country profiles with tags and identifying notes
+  if (Array.isArray(profiles) && profiles.length) {
+    const byRegion = new Map();
+    for (const p of profiles) {
+      const region = p.region || "其他";
+      if (!byRegion.has(region)) byRegion.set(region, []);
+      byRegion.get(region).push(p);
+    }
+
+    sections.push("\n## 国家/地区特征索引");
+    for (const [region, items] of byRegion) {
+      const entries = [];
+      for (const item of items) {
+        const tags = (item.tags || []).slice(0, 12).join(",");
+        const note = item.notes ? ` [注:${item.notes.slice(0, 100)}]` : "";
+        entries.push(`${item.country}:${tags}${note}`);
+      }
+      sections.push(`### ${region}: ${entries.join(" | ")}`);
+    }
+  }
+
+  return sections.join("\n");
 }
 
 function normalizeCoverageKey(value) {
@@ -1206,7 +1230,7 @@ function placeGuessSchema() {
   };
 }
 
-function buildPlaceGuessPrompt(analysis, notes = "") {
+function buildPlaceGuessPrompt(analysis, notes = "", guideContext = []) {
   const lines = [
     "You are a GeoGuessr location judge.",
     "Return only JSON.",
@@ -1229,10 +1253,27 @@ function buildPlaceGuessPrompt(analysis, notes = "") {
     "",
     knowledgeBaseRef
   ];
+
+  if (Array.isArray(guideContext) && guideContext.length) {
+    lines.push("");
+    lines.push("知识库中与当前线索匹配度最高的国家/地区参考:");
+    guideContext.forEach((country, index) => {
+      lines.push(
+        `#${index + 1} ${country.title}${country.cat?.length ? ` / ${country.cat.join(", ")}` : ""}`,
+        `特征标签: ${(country.signalTags || []).slice(0, 12).join(", ") || "none"}`,
+        `主要城市: ${(country.localities || []).slice(0, 10).join(", ") || "none"}`,
+        `概况: ${country.summary || "none"}`
+      );
+      for (const highlight of country.highlights || []) {
+        lines.push(`- ${highlight}`);
+      }
+    });
+  }
+
   return lines.join("\n");
 }
 
-async function guessPlaceWithOpenAi(image, analysis, notes = "") {
+async function guessPlaceWithOpenAi(image, analysis, notes = "", guideContext = []) {
   assertImage(image);
   const auth = resolveOpenAiBearerToken();
   if (!auth.token) {
@@ -1254,7 +1295,7 @@ async function guessPlaceWithOpenAi(image, analysis, notes = "") {
           {
             role: "user",
             content: [
-              { type: "input_text", text: buildPlaceGuessPrompt(analysis, notes) },
+              { type: "input_text", text: buildPlaceGuessPrompt(analysis, notes, guideContext) },
               { type: "input_image", image_url: image }
             ]
           }
@@ -1302,6 +1343,19 @@ async function analyzeImage(imageOrImages, notes = "") {
     const placeGuess = await guessPlaceWithGuide(analysis);
     if (placeGuess) {
       analysis.placeGuess = placeGuess;
+    }
+  } else if (visionProvider === "openai" || visionProvider === "chatgpt" || visionProvider === "newapi") {
+    const guideContext = buildGuideContext(analysis, 4);
+    if (guideContext.length && (guideContext[0].hardEvidence || 0) >= 1) {
+      const placeGuess = await guessPlaceWithOpenAi(images[0], analysis, notes, guideContext);
+      if (placeGuess) {
+        analysis.placeGuess = placeGuess;
+      }
+    } else {
+      const placeGuess = await guessPlaceWithOpenAi(images[0], analysis, notes);
+      if (placeGuess) {
+        analysis.placeGuess = placeGuess;
+      }
     }
   }
 

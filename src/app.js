@@ -398,6 +398,11 @@
     const originalCountry = countryLabel && guess.country && countryLabel !== guess.country ? guess.country : "";
     const continent = guess.continent || fallbackMeta.continent || "";
     const location = guess.location || [guess.region, guess.city].filter(Boolean).join(" / ");
+    const directionItems = [
+      guess.continentDirection ? `大洲方位：${guess.continentDirection}` : "",
+      guess.countryDirection ? `国家方位：${guess.countryDirection}` : "",
+      guess.cityDirection ? `城市方位：${guess.cityDirection}` : ""
+    ].filter(Boolean);
     const confidence = Math.round((Number(guess.confidence) || 0) * 100);
     const evidence = Array.isArray(guess.evidence) ? guess.evidence.slice(0, 4) : [];
     const alternatives = Array.isArray(guess.alternatives) ? guess.alternatives.slice(0, 3) : [];
@@ -420,6 +425,7 @@
           ${generationLabel ? `<span>代际：${escapeHtml(generationLabel)}</span>` : ""}
           ${continent ? `<span>洲别：${escapeHtml(continent)}</span>` : ""}
           ${location ? `<span>位置：${escapeHtml(location)}</span>` : ""}
+          ${directionItems.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}
           ${originalCountry ? `<span>原文：${escapeHtml(originalCountry)}</span>` : ""}
         </div>
         <ul class="reasons">
