@@ -314,7 +314,8 @@ function renderPlaceGuess(guess) {
   const country = guess.countryZh || guess.country || "未识别";
   const continent = guess.continent || "";
   const location = guess.location || [guess.region, guess.city].filter(Boolean).join(" / ");
-  const confidence = Math.round((Number(guess.confidence) || 0) * 100);
+  const rawConf = Number(guess.confidence) || 0;
+  const confidence = Math.round(rawConf > 1 ? rawConf : rawConf * 100);
   const directions = [
     guess.continentDirection ? `大洲方位：${guess.continentDirection}` : "",
     guess.countryDirection ? `国家方位：${guess.countryDirection}` : "",
@@ -437,23 +438,19 @@ async function analyzeImagesStream(images, notes, previewImage) {
           break;
 
         case "analysis": {
-          if (data.candidateCities && data.candidateCities.length > 0) {
-            const top = data.candidateCities[0];
-            renderPlaceGuess({
-              country: top.country,
-              countryZh: top.city,
-              confidence: top.confidence,
-              location: top.country || ""
-            });
-          }
           if (data.tags && data.tags.length) {
             setText(els.details, "线索：" + data.tags.map((t) => t.tag).join(" / "));
           }
           break;
         }
 
-        case "guide":
+        case "tags": {
+          if (data.tags && data.tags.length) {
+            els.details.textContent = "线索：" + data.tags.join(" / ") + "\n" + reasonAcc;
+            els.details.className = "details";
+          }
           break;
+        }
 
         case "place": {
           renderPlaceGuess(data);
@@ -462,17 +459,18 @@ async function analyzeImagesStream(images, notes, previewImage) {
 
         case "reason": {
           reasonAcc += data.chunk;
-          els.details.textContent = reasonAcc;
+          if (reasonAcc.startsWith("线索：")) {
+            els.details.textContent = reasonAcc;
+          } else {
+            els.details.textContent = reasonAcc;
+          }
           els.details.className = "details";
           break;
         }
 
         case "done": {
           if (data.placeGuess) {
-            const fullResult = { placeGuess: data.placeGuess };
-            const analysis = data.analysis;
-            if (analysis) fullResult.tags = analysis.tags;
-            renderResult(fullResult);
+            renderResult({ placeGuess: data.placeGuess, tags: data.tags });
           }
           setStatus("识图完成");
           break;

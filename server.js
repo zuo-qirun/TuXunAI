@@ -279,26 +279,43 @@ function extractPartialPlaceFields(partialJson) {
   return fields;
 }
 
-function sendPlaceSSE(res, fields, sentFields) {
-  const place = {};
-  const keys = ["country", "countryZh", "continent", "continentDirection", "countryDirection", "cityDirection", "location", "region", "city", "confidence"];
-  for (const key of keys) {
-    if (fields[key] !== undefined && !sentFields.has(key)) {
-      place[key] = fields[key];
-      sentFields.add(key);
-    }
-  }
-  if (Object.keys(place).length) sendSSE(res, "place", place);
-  return sentFields;
+function combinedStreamingPrompt(notes = "", frameCount = 1) {
+  const lines = [
+    "You are a GeoGuessr location judge. Return only JSON.",
+    "IMPORTANT — output order: write the placeGuess field FIRST, then tags, textClues, candidateRegions, candidateCities, summary.",
+    "Only choose places that belong to the playable Street View coverage used by the game.",
+    "If the strongest guess seems outside playable coverage, say so instead of forcing a country.",
+    frameCount > 1 ? `You are given ${frameCount} frames from the same round.` : "You are given one frame.",
+    "Infer country, countryZh, continent, region, city, confidence, reason, evidence, alternatives from the image.",
+    "For city, output the best likely city; leave empty only when no city-level signal exists.",
+    "Use Chinese for reason, evidence, alternatives, location, region, city, direction fields.",
+    "Keep country as English canonical name, countryZh in Chinese.",
+    "continentDirection, countryDirection, cityDirection describe rough position: 大洲东北部, 国家西南部, 城市北郊.",
+    "The placeGuess object MUST be the very first field in the JSON output.",
+    "After placeGuess, fill tags (clue tags from the allowed list), textClues, candidateRegions, candidateCities, and a one-line summary.",
+    `Allowed clue tags: ${allowedTags.join(", ")}`,
+    `Summary: ${notes || "none"}`,
+    "",
+    knowledgeBaseRef
+  ];
+  return lines.join("\n");
 }
 
-async function streamPlaceGuessWithChatCompletions(res, image, analysis, notes, guideContext, auth) {
-  const prompt = buildPlaceGuessPrompt(analysis, notes, guideContext);
-  const { controller, timeout } = withTimeout(35000);
+async function streamCombinedAnalysis(res, image, notes) {
+  const auth = resolveOpenAiBearerToken();
+  if (!auth.token) {
+    sendSSE(res, "error", { message: "AI 认证不可用" });
+    sendSSE(res, "done", {});
+    return;
+  }
+
+  const prompt = combinedStreamingPrompt(notes, 1);
+  const { controller, timeout } = withTimeout(70000);
   let fullContent = "";
   let placeSent = false;
   let reasonSentLen = 0;
   const sentFields = new Set();
+  let lastTagCount = 0;
 
   try {
     const messages = [
@@ -322,7 +339,7 @@ async function streamPlaceGuessWithChatCompletions(res, image, analysis, notes, 
         stream: true,
         messages,
         response_format: { type: "json_object" },
-        max_tokens: 600,
+        max_tokens: 1200,
         temperature: 0.1
       }),
       signal: controller.signal
@@ -330,7 +347,7 @@ async function streamPlaceGuessWithChatCompletions(res, image, analysis, notes, 
 
     if (!response.ok) {
       const errData = await response.json().catch(() => ({}));
-      throw new Error(errData.error?.message || "streaming place guess failed");
+      throw new Error(errData.error?.message || "streaming analysis failed");
     }
 
     const reader = response.body.getReader();
@@ -361,10 +378,23 @@ async function streamPlaceGuessWithChatCompletions(res, image, analysis, notes, 
 
           if (!placeSent && (fields.city || fields.countryZh)) {
             placeSent = true;
-            sendPlaceSSE(res, fields, sentFields);
+            const place = {};
+            const keys = ["country", "countryZh", "continent", "continentDirection", "countryDirection", "cityDirection", "location", "region", "city", "confidence"];
+            for (const key of keys) {
+              if (fields[key] !== undefined) { place[key] = fields[key]; sentFields.add(key); }
+            }
+            sendSSE(res, "place", place);
           }
+
           if (placeSent) {
-            sendPlaceSSE(res, fields, sentFields);
+            const updates = {};
+            for (const key of ["country", "countryZh", "continent", "continentDirection", "countryDirection", "cityDirection", "location", "region", "city", "confidence"]) {
+              if (fields[key] !== undefined && !sentFields.has(key)) {
+                updates[key] = fields[key];
+                sentFields.add(key);
+              }
+            }
+            if (Object.keys(updates).length) sendSSE(res, "place", updates);
           }
 
           if (placeSent && fields.reason && fields.reason.length > reasonSentLen) {
@@ -372,28 +402,47 @@ async function streamPlaceGuessWithChatCompletions(res, image, analysis, notes, 
             reasonSentLen = fields.reason.length;
             if (chunk) sendSSE(res, "reason", { chunk });
           }
+
+          const tagMatch = fullContent.match(/"tags"\s*:\s*\[([\s\S]*?)(?:\]|$)/);
+          if (tagMatch) {
+            const tagBlock = tagMatch[1];
+            const currentTags = [...tagBlock.matchAll(/"tag"\s*:\s*"([^"]+)"/g)].map(m => m[1]);
+            if (currentTags.length > lastTagCount) {
+              lastTagCount = currentTags.length;
+              sendSSE(res, "tags", { tags: currentTags });
+            }
+          }
         } catch (e) {
-          // skip malformed SSE chunks
+          // skip malformed chunks
         }
       }
     }
 
-    const finalParsed = parseModelJson(fullContent);
-    if (finalParsed) {
-      const normalized = normalizePlaceGuess(finalParsed, guideContext);
-      sendSSE(res, "done", { placeGuess: normalized });
-      return normalized;
+    const parsed = parseModelJson(fullContent);
+    if (!parsed) {
+      sendSSE(res, "error", { message: "无法解析模型输出" });
+      sendSSE(res, "done", {});
+      return;
     }
-    sendSSE(res, "done", {});
-    return null;
+
+    const analysis = normalizeVisionResult(parsed);
+    const guideContext = buildGuideContext(analysis, 4);
+    const placeGuess = normalizePlaceGuess(parsed.placeGuess || {}, guideContext);
+
+    sendSSE(res, "done", {
+      placeGuess,
+      tags: analysis.tags,
+      textClues: analysis.textClues,
+      candidateCities: analysis.candidateCities,
+      candidateRegions: analysis.candidateRegions
+    });
   } catch (error) {
     if (error.name === "AbortError") {
-      sendSSE(res, "error", { message: "位置推测超时" });
+      sendSSE(res, "error", { message: "识图超时" });
     } else {
-      sendSSE(res, "error", { message: error.message || "位置推测失败" });
+      sendSSE(res, "error", { message: error.message || "识图失败" });
     }
     sendSSE(res, "done", {});
-    return null;
   } finally {
     clearTimeout(timeout);
   }
@@ -1589,24 +1638,17 @@ http
 
         sendSSE(res, "status", { message: "正在识图…" });
 
-        let analysis;
         if (visionProvider === "ollama") {
-          analysis = await analyzeWithOllama(images, notes);
-        } else {
-          analysis = await analyzeWithOpenAi(images, notes);
-        }
+          const analysis = await analyzeWithOllama(images, notes);
 
-        sendSSE(res, "analysis", {
-          summary: analysis.summary,
-          tags: analysis.tags,
-          textClues: analysis.textClues,
-          candidateCities: analysis.candidateCities,
-          candidateRegions: analysis.candidateRegions,
-          confidence: analysis.confidence,
-          nextChecks: analysis.nextChecks
-        });
+          sendSSE(res, "analysis", {
+            summary: analysis.summary,
+            tags: analysis.tags,
+            textClues: analysis.textClues,
+            candidateCities: analysis.candidateCities,
+            candidateRegions: analysis.candidateRegions
+          });
 
-        if (visionProvider === "ollama") {
           const placeGuess = await guessPlaceWithGuide(analysis);
           if (placeGuess) {
             sendSSE(res, "place", {
@@ -1622,30 +1664,12 @@ http
               confidence: placeGuess.confidence
             });
             sendSSE(res, "reason", { chunk: placeGuess.reason || "" });
-            sendSSE(res, "done", { placeGuess });
+            sendSSE(res, "done", { placeGuess, tags: analysis.tags });
           } else {
             sendSSE(res, "done", {});
           }
         } else {
-          const auth = resolveOpenAiBearerToken();
-          if (!auth.token) {
-            sendSSE(res, "error", { message: "AI 认证不可用" });
-            res.end();
-            return;
-          }
-          const guideContext = buildGuideContext(analysis, 4);
-          if (guideContext.length) {
-            sendSSE(res, "guide", {
-              matches: guideContext.map((c) => ({
-                title: c.title,
-                code: c.code,
-                score: Math.round(c.score * 100) / 100,
-                hardEvidence: c.hardEvidence
-              }))
-            });
-          }
-          const ctx = guideContext.length && (guideContext[0].hardEvidence || 0) >= 1 ? guideContext : [];
-          await streamPlaceGuessWithChatCompletions(res, images[0], analysis, notes, ctx, auth);
+          await streamCombinedAnalysis(res, images[0], notes);
         }
 
         res.end();
