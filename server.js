@@ -260,6 +260,145 @@ function sendJson(res, status, value) {
   send(res, status, JSON.stringify(value), "application/json; charset=utf-8");
 }
 
+function sendSSE(res, event, data) {
+  res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+}
+
+function extractPartialPlaceFields(partialJson) {
+  const fields = {};
+  const stringFields = [
+    "country", "countryZh", "continent", "continentDirection",
+    "countryDirection", "cityDirection", "location", "region", "city", "reason"
+  ];
+  for (const field of stringFields) {
+    const match = partialJson.match(new RegExp(`"${field}"\\s*:\\s*"((?:[^"\\\\]|\\\\.)*)"`));
+    if (match) fields[field] = match[1].replace(/\\"/g, '"').replace(/\\\\/g, "\\");
+  }
+  const confMatch = partialJson.match(/"confidence"\s*:\s*([0-9.]+)/);
+  if (confMatch) fields.confidence = parseFloat(confMatch[1]);
+  return fields;
+}
+
+function sendPlaceSSE(res, fields, sentFields) {
+  const place = {};
+  const keys = ["country", "countryZh", "continent", "continentDirection", "countryDirection", "cityDirection", "location", "region", "city", "confidence"];
+  for (const key of keys) {
+    if (fields[key] !== undefined && !sentFields.has(key)) {
+      place[key] = fields[key];
+      sentFields.add(key);
+    }
+  }
+  if (Object.keys(place).length) sendSSE(res, "place", place);
+  return sentFields;
+}
+
+async function streamPlaceGuessWithChatCompletions(res, image, analysis, notes, guideContext, auth) {
+  const prompt = buildPlaceGuessPrompt(analysis, notes, guideContext);
+  const { controller, timeout } = withTimeout(35000);
+  let fullContent = "";
+  let placeSent = false;
+  let reasonSentLen = 0;
+  const sentFields = new Set();
+
+  try {
+    const messages = [
+      {
+        role: "user",
+        content: [
+          { type: "text", text: prompt },
+          { type: "image_url", image_url: { url: image } }
+        ]
+      }
+    ];
+
+    const response = await fetch(`${openAiBaseUrl}/chat/completions`, {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${auth.token}`,
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({
+        model: visionModel,
+        stream: true,
+        messages,
+        response_format: { type: "json_object" },
+        max_tokens: 600,
+        temperature: 0.1
+      }),
+      signal: controller.signal
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error?.message || "streaming place guess failed");
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() || "";
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed || !trimmed.startsWith("data: ")) continue;
+        const rawData = trimmed.slice(6);
+        if (rawData === "[DONE]") continue;
+
+        try {
+          const parsed = JSON.parse(rawData);
+          const delta = parsed.choices?.[0]?.delta?.content;
+          if (!delta) continue;
+          fullContent += delta;
+
+          const fields = extractPartialPlaceFields(fullContent);
+
+          if (!placeSent && (fields.city || fields.countryZh)) {
+            placeSent = true;
+            sendPlaceSSE(res, fields, sentFields);
+          }
+          if (placeSent) {
+            sendPlaceSSE(res, fields, sentFields);
+          }
+
+          if (placeSent && fields.reason && fields.reason.length > reasonSentLen) {
+            const chunk = fields.reason.slice(reasonSentLen);
+            reasonSentLen = fields.reason.length;
+            if (chunk) sendSSE(res, "reason", { chunk });
+          }
+        } catch (e) {
+          // skip malformed SSE chunks
+        }
+      }
+    }
+
+    const finalParsed = parseModelJson(fullContent);
+    if (finalParsed) {
+      const normalized = normalizePlaceGuess(finalParsed, guideContext);
+      sendSSE(res, "done", { placeGuess: normalized });
+      return normalized;
+    }
+    sendSSE(res, "done", {});
+    return null;
+  } catch (error) {
+    if (error.name === "AbortError") {
+      sendSSE(res, "error", { message: "位置推测超时" });
+    } else {
+      sendSSE(res, "error", { message: error.message || "位置推测失败" });
+    }
+    sendSSE(res, "done", {});
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 function readJson(req, limit = 8 * 1024 * 1024) {
   return new Promise((resolve, reject) => {
     let size = 0;
@@ -1427,6 +1566,92 @@ http
         sendJson(res, error.status || 500, {
           error: error.message || "Analysis failed"
         });
+      }
+      return;
+    }
+
+    if (req.method === "POST" && req.url === "/api/analyze-stream") {
+      res.writeHead(200, {
+        "content-type": "text/event-stream",
+        "cache-control": "no-cache",
+        connection: "keep-alive",
+        "access-control-allow-origin": "*",
+        "access-control-allow-methods": "GET,POST,OPTIONS",
+        "access-control-allow-headers": "content-type, authorization"
+      });
+
+      try {
+        const body = await readJson(req);
+        const inputImages = Array.isArray(body.images) && body.images.length ? body.images : body.image;
+        const images = normalizeImageInputs(inputImages);
+        assertImages(images);
+        const notes = body.notes || "";
+
+        sendSSE(res, "status", { message: "正在识图…" });
+
+        let analysis;
+        if (visionProvider === "ollama") {
+          analysis = await analyzeWithOllama(images, notes);
+        } else {
+          analysis = await analyzeWithOpenAi(images, notes);
+        }
+
+        sendSSE(res, "analysis", {
+          summary: analysis.summary,
+          tags: analysis.tags,
+          textClues: analysis.textClues,
+          candidateCities: analysis.candidateCities,
+          candidateRegions: analysis.candidateRegions,
+          confidence: analysis.confidence,
+          nextChecks: analysis.nextChecks
+        });
+
+        if (visionProvider === "ollama") {
+          const placeGuess = await guessPlaceWithGuide(analysis);
+          if (placeGuess) {
+            sendSSE(res, "place", {
+              country: placeGuess.country,
+              countryZh: placeGuess.countryZh,
+              continent: placeGuess.continent,
+              continentDirection: placeGuess.continentDirection,
+              countryDirection: placeGuess.countryDirection,
+              cityDirection: placeGuess.cityDirection,
+              location: placeGuess.location,
+              region: placeGuess.region,
+              city: placeGuess.city,
+              confidence: placeGuess.confidence
+            });
+            sendSSE(res, "reason", { chunk: placeGuess.reason || "" });
+            sendSSE(res, "done", { placeGuess });
+          } else {
+            sendSSE(res, "done", {});
+          }
+        } else {
+          const auth = resolveOpenAiBearerToken();
+          if (!auth.token) {
+            sendSSE(res, "error", { message: "AI 认证不可用" });
+            res.end();
+            return;
+          }
+          const guideContext = buildGuideContext(analysis, 4);
+          if (guideContext.length) {
+            sendSSE(res, "guide", {
+              matches: guideContext.map((c) => ({
+                title: c.title,
+                code: c.code,
+                score: Math.round(c.score * 100) / 100,
+                hardEvidence: c.hardEvidence
+              }))
+            });
+          }
+          const ctx = guideContext.length && (guideContext[0].hardEvidence || 0) >= 1 ? guideContext : [];
+          await streamPlaceGuessWithChatCompletions(res, images[0], analysis, notes, ctx, auth);
+        }
+
+        res.end();
+      } catch (error) {
+        sendSSE(res, "error", { message: error.message || "分析失败" });
+        res.end();
       }
       return;
     }

@@ -310,44 +310,48 @@ async function captureFrames(frameCount = 1) {
   return frames;
 }
 
-function renderResult(result) {
-  const guess = result.placeGuess || {};
+function renderPlaceGuess(guess) {
   const country = guess.countryZh || guess.country || "未识别";
   const continent = guess.continent || "";
   const location = guess.location || [guess.region, guess.city].filter(Boolean).join(" / ");
+  const confidence = Math.round((Number(guess.confidence) || 0) * 100);
   const directions = [
     guess.continentDirection ? `大洲方位：${guess.continentDirection}` : "",
     guess.countryDirection ? `国家方位：${guess.countryDirection}` : "",
     guess.cityDirection ? `城市方位：${guess.cityDirection}` : ""
   ].filter(Boolean);
-  const coverage = guess.coverage || {};
-  const coverageLabel = coverage.playable === false ? "不在覆盖" : coverage.playable ? "可玩覆盖" : "";
-  const generations = Array.isArray(coverage.generations) ? coverage.generations.join(" / ") : "";
-  const confidence = Math.round((Number(guess.confidence) || 0) * 100);
+
+  let metaHtml = "";
+  if (continent) metaHtml += `<span>洲别：${escapeHtml(continent)}</span>`;
+  if (location) metaHtml += `<span>位置：${escapeHtml(location)}</span>`;
+  metaHtml += `<span>置信度：${confidence}%</span>`;
+  for (const d of directions) metaHtml += `<span>${escapeHtml(d)}</span>`;
 
   els.place.innerHTML = `
     <strong>${escapeHtml(country)}</strong>
-    <div class="meta">
-      ${coverageLabel ? `<span class="${coverage.playable === false ? "warning" : ""}">覆盖：${escapeHtml(coverageLabel)}</span>` : ""}
-      ${continent ? `<span>洲别：${escapeHtml(continent)}</span>` : ""}
-      ${location ? `<span>位置：${escapeHtml(location)}</span>` : ""}
-      ${generations ? `<span>代际：${escapeHtml(generations)}</span>` : ""}
-      <span>置信度：${confidence}%</span>
-    </div>
+    <div class="meta">${metaHtml}</div>
   `;
+}
 
-  if (directions.length) {
+function renderResult(result) {
+  const guess = result.placeGuess || {};
+  renderPlaceGuess(guess);
+
+  const coverage = guess.coverage || {};
+  const coverageLabel = coverage.playable === false ? "不在覆盖" : coverage.playable ? "可玩覆盖" : "";
+  const generations = Array.isArray(coverage.generations) ? coverage.generations.join(" / ") : "";
+
+  if (coverageLabel || generations) {
     const meta = els.place.querySelector(".meta");
     if (meta) {
-      meta.insertAdjacentHTML(
-        "beforeend",
-        directions.map((item) => `<span>${escapeHtml(item)}</span>`).join("")
-      );
+      let extra = "";
+      if (coverageLabel) extra += `<span class="${coverage.playable === false ? "warning" : ""}">覆盖：${escapeHtml(coverageLabel)}</span>`;
+      if (generations) extra += `<span>代际：${escapeHtml(generations)}</span>`;
+      meta.insertAdjacentHTML("afterbegin", extra);
     }
   }
 
   const parts = [];
-  if (directions.length) parts.push(directions.join("；"));
   if (guess.reason) parts.push(`理由：${guess.reason}`);
   if (Array.isArray(guess.evidence) && guess.evidence.length) parts.push(`证据：${guess.evidence.slice(0, 4).join("；")}`);
   if (Array.isArray(guess.alternatives) && guess.alternatives.length) parts.push(`备选：${guess.alternatives.slice(0, 3).join("、")}`);
@@ -361,7 +365,31 @@ function renderResult(result) {
   setText(els.details, parts.length ? parts.join("\n") : "模型没有返回更多说明。");
 }
 
-async function analyzeImages(images, notes, previewImage) {
+function parseSSE(raw) {
+  const events = [];
+  const parts = raw.split("\n\n");
+  for (const part of parts) {
+    if (!part.trim()) continue;
+    const lines = part.split("\n");
+    let event = "message";
+    let data = "";
+    for (const line of lines) {
+      if (line.startsWith("event: ")) event = line.slice(7);
+      else if (line.startsWith("data: ")) data = line.slice(6);
+      else if (line.startsWith("data:")) data = line.slice(5);
+    }
+    if (data) {
+      try {
+        events.push({ event, data: JSON.parse(data) });
+      } catch (e) {
+        // skip unparseable
+      }
+    }
+  }
+  return events;
+}
+
+async function analyzeImagesStream(images, notes, previewImage) {
   if (previewImage) {
     els.preview.src = previewImage;
     els.preview.style.display = "block";
@@ -371,14 +399,93 @@ async function analyzeImages(images, notes, previewImage) {
   }
 
   setStatus("正在识图…");
-  const result = await fetchJson(`${apiBase}/api/analyze`, {
+  els.place.innerHTML = '<span class="muted">分析中…</span>';
+  setText(els.details, "", true);
+
+  const response = await fetch(`${apiBase}/api/analyze-stream`, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ images, notes })
   });
 
-  renderResult(result);
-  setStatus("识图完成");
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error || `请求失败：${response.status}`);
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let reasonAcc = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const lastDouble = buffer.lastIndexOf("\n\n");
+    if (lastDouble === -1) continue;
+
+    const processable = buffer.slice(0, lastDouble + 2);
+    buffer = buffer.slice(lastDouble + 2);
+
+    const events = parseSSE(processable);
+    for (const { event, data } of events) {
+      switch (event) {
+        case "status":
+          setStatus(data.message || "处理中…");
+          break;
+
+        case "analysis": {
+          if (data.candidateCities && data.candidateCities.length > 0) {
+            const top = data.candidateCities[0];
+            renderPlaceGuess({
+              country: top.country,
+              countryZh: top.city,
+              confidence: top.confidence,
+              location: top.country || ""
+            });
+          }
+          if (data.tags && data.tags.length) {
+            setText(els.details, "线索：" + data.tags.map((t) => t.tag).join(" / "));
+          }
+          break;
+        }
+
+        case "guide":
+          break;
+
+        case "place": {
+          renderPlaceGuess(data);
+          break;
+        }
+
+        case "reason": {
+          reasonAcc += data.chunk;
+          els.details.textContent = reasonAcc;
+          els.details.className = "details";
+          break;
+        }
+
+        case "done": {
+          if (data.placeGuess) {
+            const fullResult = { placeGuess: data.placeGuess };
+            const analysis = data.analysis;
+            if (analysis) fullResult.tags = analysis.tags;
+            renderResult(fullResult);
+          }
+          setStatus("识图完成");
+          break;
+        }
+
+        case "error": {
+          setStatus("识图失败", "warning");
+          setText(els.details, data.message || "出现错误。");
+          break;
+        }
+      }
+    }
+  }
 }
 
 async function analyzeCurrentTab() {
@@ -389,7 +496,7 @@ async function analyzeCurrentTab() {
 
   try {
     const [image] = await captureFrames(1);
-    await analyzeImages([image], "chrome extension capture", image);
+    await analyzeImagesStream([image], "chrome extension capture", image);
   } catch (error) {
     setStatus("识图失败", "warning");
     setText(els.details, error.message || "出现了一个错误。");
@@ -409,7 +516,7 @@ async function analyzeBurst() {
   try {
     const images = await captureFrames(BURST_COUNT);
     const previewImage = images[0];
-    await analyzeImages(images, "chrome extension burst capture", previewImage);
+    await analyzeImagesStream(images, "chrome extension burst capture", previewImage);
   } catch (error) {
     setStatus("识图失败", "warning");
     setText(els.details, error.message || "出现了一个错误。");
