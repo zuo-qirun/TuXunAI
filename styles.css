@@ -1,14 +1,12 @@
 :root {
   color-scheme: light;
   --ink: #17211f;
-  --muted: #66716d;
+  --muted: #5f6d68;
   --line: #d9dfdc;
   --surface: #ffffff;
   --wash: #f4f7f5;
-  --mint: #dff5eb;
   --green: #226b45;
-  --gold: #f0c84b;
-  --shadow: 0 14px 34px rgba(29, 45, 38, 0.12);
+  --green-strong: #174b31;
 }
 
 * {
@@ -17,74 +15,30 @@
 
 body {
   margin: 0;
+  min-height: 100vh;
   background: var(--wash);
   color: var(--ink);
   font-family:
-    Inter, "Segoe UI", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont,
     sans-serif;
   letter-spacing: 0;
 }
 
-button,
-input,
-textarea {
-  font: inherit;
-  letter-spacing: 0;
-}
-
-button,
-.file-button {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface);
-  color: var(--ink);
-  cursor: pointer;
-  min-height: 40px;
-  padding: 0 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    transform 120ms ease,
-    border-color 120ms ease,
-    background 120ms ease;
-}
-
-button:hover,
-.file-button:hover {
-  border-color: var(--green);
-  transform: translateY(-1px);
-}
-
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
-  transform: none;
-}
-
-.app-shell {
+.download-page {
   min-height: 100vh;
-}
-
-.band {
-  padding: 28px clamp(16px, 4vw, 48px);
-}
-
-.intro {
-  background:
-    linear-gradient(90deg, rgba(223, 245, 235, 0.96), rgba(255, 255, 255, 0.86)),
-    url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80")
-      center/cover;
-  min-height: 28vh;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 24px;
-  align-items: end;
-  border-bottom: 1px solid var(--line);
+  align-content: center;
+  gap: 28px;
+  padding: clamp(22px, 6vw, 72px);
+}
+
+.download-hero,
+.install-steps {
+  max-width: 760px;
 }
 
 .eyebrow {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   color: var(--green);
   font-size: 0.78rem;
   font-weight: 800;
@@ -93,376 +47,65 @@ button:disabled {
 
 h1,
 h2,
-h3,
 p {
   margin-top: 0;
 }
 
 h1 {
-  margin-bottom: 12px;
-  font-size: 3.6rem;
-  line-height: 1.05;
+  margin-bottom: 14px;
+  font-size: clamp(2.2rem, 7vw, 4.8rem);
+  line-height: 1.02;
 }
 
 h2 {
-  margin-bottom: 10px;
-  font-size: 1.8rem;
-  line-height: 1.15;
-}
-
-h3 {
-  font-size: 1rem;
+  margin-bottom: 12px;
+  font-size: 1.35rem;
 }
 
 .lede {
-  max-width: 760px;
-  margin-bottom: 0;
+  margin-bottom: 24px;
+  max-width: 620px;
   color: #31433c;
+  font-size: 1.05rem;
   line-height: 1.75;
 }
 
-.status-strip {
+.download-actions {
   display: flex;
-  gap: 8px;
   flex-wrap: wrap;
+  gap: 12px;
   align-items: center;
-  justify-content: flex-end;
 }
 
-.status-strip span,
-.metrics span,
-.tag,
-.score-chip {
-  border: 1px solid rgba(34, 107, 69, 0.24);
+.download-button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.78);
-  color: #263832;
-  padding: 8px 10px;
-  font-size: 0.88rem;
-  white-space: nowrap;
+  background: var(--green);
+  color: #fff;
+  padding: 0 18px;
+  font-weight: 800;
+  text-decoration: none;
 }
 
-.workspace {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(330px, 0.8fr);
-  min-height: 62vh;
-  border-bottom: 1px solid var(--line);
+.download-button:hover {
+  background: var(--green-strong);
 }
 
-.preview-pane {
-  padding: 18px clamp(12px, 3vw, 32px) 24px clamp(16px, 4vw, 48px);
+.download-note {
+  color: var(--muted);
 }
 
-.assistant-pane {
-  padding: 18px clamp(16px, 4vw, 32px) 24px;
-  background: var(--surface);
-  border-left: 1px solid var(--line);
-}
-
-.toolbar {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-
-.file-button input {
-  display: none;
-}
-
-.frame-surface {
-  position: relative;
-  overflow: hidden;
-  min-height: 420px;
-  height: min(64vh, 700px);
-  background: #101614;
-  border: 1px solid #22342e;
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-}
-
-#screenVideo,
-#frameCanvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-#screenVideo {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.drop-hint {
-  position: absolute;
-  inset: 16px;
-  display: grid;
-  place-items: center;
-  border: 1px dashed rgba(255, 255, 255, 0.28);
-  border-radius: 8px;
-  color: rgba(255, 255, 255, 0.76);
-  text-align: center;
-  padding: 20px;
-}
-
-.drop-hint.is-hidden {
-  display: none;
-}
-
-.metrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.auto-clues {
-  margin-top: 18px;
+.install-steps {
   border-top: 1px solid var(--line);
-  padding-top: 16px;
+  padding-top: 24px;
 }
 
-.auto-clues-head {
-  display: flex;
-  align-items: start;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.auto-clue-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  min-height: 40px;
-  color: var(--muted);
-  line-height: 1.6;
-}
-
-.auto-clue {
-  border: 1px solid rgba(34, 107, 69, 0.24);
-  border-radius: 8px;
-  background: #fbfdfc;
-  color: #263832;
-  padding: 8px 10px;
-  font-size: 0.9rem;
-}
-
-.result-head,
-.section-title {
-  display: flex;
-  align-items: start;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.candidate-list {
-  display: grid;
-  gap: 12px;
-  margin: 10px 0 22px;
-}
-
-.city-list-wrap {
-  margin-top: 8px;
-}
-
-.candidate {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 14px;
-  background: #fbfdfc;
-}
-
-.candidate-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.candidate h3 {
-  margin: 0;
-}
-
-.bar {
-  height: 8px;
-  border-radius: 8px;
-  overflow: hidden;
-  background: #e7ece9;
-}
-
-.bar span {
-  display: block;
-  height: 100%;
-  width: 0;
-  background: linear-gradient(90deg, var(--green), var(--gold));
-}
-
-.reasons {
-  margin: 10px 0 0;
-  padding: 0;
-  list-style: none;
-  color: var(--muted);
-  line-height: 1.55;
-  font-size: 0.92rem;
-}
-
-.place-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.place-meta span {
-  border: 1px solid rgba(34, 107, 69, 0.18);
-  border-radius: 8px;
-  background: #f6faf7;
-  color: #31433c;
-  padding: 6px 10px;
-  font-size: 0.86rem;
-}
-
-.place-meta span.is-ok {
-  background: #eef8f1;
-  border-color: rgba(34, 107, 69, 0.22);
-}
-
-.place-meta span.is-warning {
-  background: #fff4e8;
-  border-color: rgba(191, 104, 23, 0.28);
-  color: #7a4b16;
-}
-
-.next-checks ul,
-.guide ol {
+.install-steps ol {
   margin: 0;
   padding-left: 22px;
-  line-height: 1.8;
   color: #31433c;
-}
-
-.clue-board {
-  background: var(--surface);
-}
-
-.clue-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-}
-
-.clue-group {
-  border-top: 1px solid var(--line);
-  padding-top: 14px;
-}
-
-.clue-group h3 {
-  margin: 0 0 10px;
-}
-
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.chip {
-  min-height: 36px;
-  padding: 0 11px;
-}
-
-.chip.is-active {
-  background: var(--mint);
-  border-color: var(--green);
-  color: #11432a;
-}
-
-.text-clues {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-top: 22px;
-}
-
-label {
-  display: grid;
-  gap: 8px;
-  color: #31433c;
-  font-weight: 700;
-}
-
-textarea {
-  width: 100%;
-  resize: vertical;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 12px;
-  color: var(--ink);
-  background: #fbfdfc;
-  line-height: 1.55;
-  font-weight: 500;
-}
-
-.guide {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 24px;
-  background: #ecf3ef;
-}
-
-@media (max-width: 980px) {
-  h1 {
-    font-size: 2.6rem;
-  }
-
-  h2 {
-    font-size: 1.55rem;
-  }
-
-  .intro,
-  .workspace,
-  .guide,
-  .text-clues {
-    grid-template-columns: 1fr;
-  }
-
-  .status-strip {
-    justify-content: flex-start;
-  }
-
-  .assistant-pane {
-    border-left: 0;
-    border-top: 1px solid var(--line);
-  }
-
-  .clue-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
-}
-
-@media (max-width: 640px) {
-  h1 {
-    font-size: 2.1rem;
-  }
-
-  h2 {
-    font-size: 1.35rem;
-  }
-
-  .frame-surface {
-    min-height: 300px;
-    height: 48vh;
-  }
-
-  .clue-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .toolbar button,
-  .file-button {
-    flex: 1 1 140px;
-  }
+  line-height: 1.9;
 }

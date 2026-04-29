@@ -11,7 +11,7 @@
       <header class="top">
         <div>
           <p class="eyebrow">TuXun AI</p>
-          <h1>点击抓图识图</h1>
+          <h1>插件识图</h1>
         </div>
         <span id="status" class="pill">等待操作</span>
       </header>
@@ -24,9 +24,37 @@
         </div>
       </section>
 
+      <section class="panel">
+        <h2>AI 模式</h2>
+        <select id="aiMode">
+          <option value="auto">智能选择</option>
+          <option value="single">单帧快速</option>
+          <option value="burst">三连拍稳判</option>
+        </select>
+        <p id="modeHint" class="hint">自动根据当前模型选择单帧或多帧。</p>
+      </section>
+
+      <section class="panel">
+        <h2>游戏模式</h2>
+        <select id="gameMode">
+          <option value="world">世界</option>
+          <option value="china">中国</option>
+        </select>
+        <p id="gameModeHint" class="hint">世界模式不会把中国大陆作为答案。</p>
+      </section>
+
+      <section class="panel">
+        <h2>推理模式</h2>
+        <select id="reasoningMode">
+          <option value="fast">快速</option>
+          <option value="accurate">精准</option>
+        </select>
+        <p id="reasoningModeHint" class="hint">快速模式不复核；精准模式会检索资料多轮复核。</p>
+      </section>
+
       <div class="action-row">
-        <button id="captureBtn" class="primary" type="button">截图并识图</button>
-        <button id="burstBtn" type="button">三连拍识图</button>
+        <button id="captureBtn" class="primary" type="button">开始识图</button>
+        <button id="burstBtn" type="button">强制三连拍</button>
       </div>
 
       <section class="panel">
@@ -42,6 +70,19 @@
       <section class="panel">
         <h2>线索</h2>
         <div id="details" class="details muted">点击上方按钮后，这里会显示国家、洲别、位置和理由。</div>
+        <div id="feedbackPanel" class="feedback-panel">
+          <button id="markAccurate" type="button">准确</button>
+          <button id="markWrong" type="button">不准确</button>
+          <span id="feedbackStatus" class="hint"></span>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <h2>历史日志</h2>
+          <button id="clearHistory" class="small" type="button">清空</button>
+        </div>
+        <div id="historyList" class="history-list muted">暂无历史搜索。</div>
       </section>
     </main>
 

@@ -1,8 +1,12 @@
 ﻿const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
+const { buildExtensionZip } = require("./scripts/build-extension-zip");
 
 const root = __dirname;
+const extensionDir = path.join(root, "extension");
+const extensionZipPath = path.join(root, "dist", "TuXunAI.zip");
+const memoryPath = path.join(root, "data", "tuxun-memory.json");
 loadDotEnv(path.join(root, ".env"));
 const port = Number(process.env.PORT || 4173);
 const defaultVisionProvider =
@@ -13,6 +17,8 @@ const visionProvider = (process.env.VISION_PROVIDER || defaultVisionProvider).to
 const visionMode = (process.env.VISION_MODE || "balanced").toLowerCase();
 const openAiBaseUrl = normalizeOpenAiBaseUrl(process.env.OPENAI_BASE_URL || process.env.NEWAPI_BASE_URL);
 const openAiTimeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 45000);
+const agentReviewEnabled = process.env.AGENT_REVIEW !== "0";
+const maxAgentReviewRounds = Math.max(1, Math.min(3, Number(process.env.AGENT_REVIEW_ROUNDS || 2)));
 const defaultOllamaModel =
   visionMode === "accurate" ? "qwen3-vl:8b" : visionMode === "fast" ? "moondream" : "qwen3-vl:4b";
 const visionModel =
@@ -28,9 +34,14 @@ const codexAuthPath = path.join(process.env.USERPROFILE || "", ".codex", "auth.j
 const knowledgeBase = loadKnowledgeBase();
 const guideKnowledge = loadGuideKnowledge();
 const coverageKnowledge = loadCoverageKnowledge();
+const tuxunDocSummary = loadTuxunDocSummary();
 const coverageIndex = buildCoverageIndex(coverageKnowledge);
 const allowedTags = collectAllowedTags(knowledgeBase);
 const knowledgeBaseRef = buildKnowledgeBaseReference(knowledgeBase);
+const tuxunPromptReferences = {
+  china: buildTuxunPromptReference(tuxunDocSummary, "china"),
+  world: buildTuxunPromptReference(tuxunDocSummary, "world")
+};
 
 const types = {
   ".html": "text/html; charset=utf-8",
@@ -40,7 +51,8 @@ const types = {
   ".svg": "image/svg+xml",
   ".png": "image/png",
   ".jpg": "image/jpeg",
-  ".jpeg": "image/jpeg"
+  ".jpeg": "image/jpeg",
+  ".zip": "application/zip"
 };
 
 function loadKnowledgeBase() {
@@ -89,6 +101,48 @@ function loadCoverageKnowledge() {
   } catch (error) {
     return { playablePlaces: [], playablePolicy: "" };
   }
+}
+
+function loadTuxunDocSummary() {
+  const summaryPath = path.join(root, "data", "tuxun-doc-summary.json");
+  if (!fs.existsSync(summaryPath)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(summaryPath, "utf8"));
+  } catch (error) {
+    return null;
+  }
+}
+
+function normalizeGameMode(value) {
+  return String(value || "").toLowerCase() === "china" ? "china" : "world";
+}
+
+function normalizeReasoningMode(value) {
+  return String(value || "").toLowerCase() === "accurate" ? "accurate" : "fast";
+}
+
+function loadMemoryStore() {
+  if (!fs.existsSync(memoryPath)) return { version: 1, items: [] };
+  try {
+    const parsed = JSON.parse(fs.readFileSync(memoryPath, "utf8"));
+    return {
+      version: 1,
+      items: Array.isArray(parsed.items) ? parsed.items : []
+    };
+  } catch {
+    return { version: 1, items: [] };
+  }
+}
+
+function saveMemoryStore(store) {
+  fs.mkdirSync(path.dirname(memoryPath), { recursive: true });
+  const next = {
+    version: 1,
+    updatedAt: new Date().toISOString(),
+    items: Array.isArray(store.items) ? store.items.slice(0, 400) : []
+  };
+  fs.writeFileSync(memoryPath, `${JSON.stringify(next, null, 2)}\n`);
+  return next;
 }
 
 function loadCodexAuth() {
@@ -191,6 +245,257 @@ function buildKnowledgeBaseReference(kb) {
   return sections.join("\n");
 }
 
+function buildTuxunPromptReference(summary, gameMode = "world") {
+  if (!summary || typeof summary !== "object") return "";
+
+  const mode = normalizeGameMode(gameMode);
+  const topicFilter = mode === "china"
+    ? new Set(["china", "vegetation-climate", "language-text"])
+    : new Set(["world-country-guides", "regionguessing", "confusable-countries", "pole-meta", "car-meta", "vegetation-climate", "language-text"]);
+  const docs = Array.isArray(summary.importantDocs)
+    ? summary.importantDocs
+        .filter((doc) => Array.isArray(doc.topics) && doc.topics.some((topic) => topicFilter.has(topic)))
+        .slice(0, mode === "china" ? 28 : 42)
+    : [];
+
+  const categories = Array.isArray(summary.categorySummary)
+    ? summary.categorySummary
+        .filter((item) => {
+          const text = `${item.path} ${(item.examples || []).join(" ")}`;
+          return mode === "china"
+            ? /中国|省|自治区|上海|重庆|天津|香港|出租车|区号/.test(text)
+            : /世界|Plonk|非洲|亚洲|欧洲|北美|南美|大洋|寻友|社区|地理/.test(text);
+        })
+        .slice(0, 12)
+    : [];
+
+  const lines = [
+    mode === "china" ? "## 图寻中国模式知识摘要" : "## 图寻世界模式知识摘要",
+    `来源：${summary.book?.name || "图寻文档"}，可用文档 ${summary.availableDocCount || "?"}/${summary.docCount || "?"} 篇。`,
+    mode === "china"
+      ? "中国模式只会出现中国街景。不要回答其他国家；country 固定为 China，countryZh 固定为 中国。重点输出省/自治区/直辖市/特别行政区、城市和区域方向。"
+      : "世界模式不包含中国大陆街景。不要回答 China/中国大陆；出现中文时优先考虑香港、澳门、台湾、新加坡、马来西亚、海外华人区等世界覆盖可能性。",
+    "",
+    "核心参考目录："
+  ];
+
+  for (const item of categories) {
+    lines.push(`- ${item.path}: ${item.examples.join("、")}`);
+  }
+
+  lines.push("");
+  lines.push("重点文档/章节：");
+  for (const doc of docs) {
+    lines.push(`- ${doc.title}: ${(doc.headings || []).slice(0, 8).join(" / ")}`);
+  }
+
+  lines.push("");
+  if (mode === "china") {
+    lines.push(
+      "中国模式判题顺序：",
+      "1. 先找硬文字：省市县名、路名牌、店招、电话区号、车牌简称、道路编号、报警编号牌。",
+      "2. 再看中国特有线索：蓝牌/新能源牌/出租车涂装、公交/路灯/护栏/指路牌、腾讯街景车代数与画质。",
+      "3. 再用自然人文缩小区域：东北/华北/西北/西南/华南/华东的地形、植被、建筑和饮食店招。",
+      "4. 需要给出 province/region、city、location，不要泛泛只回答中国。"
+    );
+  } else {
+    lines.push(
+      "世界模式判题顺序：",
+      "1. 先找硬线索：语言文字、国别名、电话区号、车牌、道路编号、限速/路牌体系、驾驶方向。",
+      "2. 再看 Meta：Google 街景车/相机、水箱、各洲电线杆、菲律宾贴纸、护栏/路桩/道路标线。",
+      "3. 再用自然线索：植被、棕榈、气候、地形、海岸、建筑风格。",
+      "4. 易混国家必须对照排除：墨西哥/西班牙/希腊/土耳其，东南亚，塞内加尔/尼日利亚/肯尼亚，哥伦比亚/厄瓜多尔/秘鲁。"
+    );
+  }
+
+  return lines.join("\n");
+}
+
+function modePromptLines(gameMode = "world") {
+  const mode = normalizeGameMode(gameMode);
+  if (mode === "china") {
+    return [
+      "GAME MODE: TuXun China.",
+      "The answer must be a Chinese street-view location. Do not choose any non-China country.",
+      "Set country to \"China\", countryZh to \"中国\", continent to \"亚洲\".",
+      "Focus on province/autonomous region/municipality/SAR, city, district/road/area, and rough direction inside China.",
+      "Use China-specific clues: Chinese license plates, fixed phone area codes, taxi liveries, Chinese road/street signs, Tencent street-view camera/generation, regional vegetation, terrain, architecture, public transport, road signs, guardrails, lane markings."
+    ];
+  }
+
+  return [
+    "GAME MODE: TuXun World.",
+    "World mode does not include mainland China street-view rounds. Never answer mainland China/China as the final country.",
+    "If Chinese text appears, consider Hong Kong, Macau, Taiwan, Singapore, Malaysia, nearby countries, or overseas Chinese signs only when supported by visible evidence.",
+    "Use world-country and regionguessing clues: language/script, license plates, road signs, driving side, road markings, Google car/camera, utility poles, bollards, vegetation, climate, architecture, and known confusable-country comparisons."
+  ];
+}
+
+function promptReferenceForMode(gameMode = "world") {
+  return tuxunPromptReferences[normalizeGameMode(gameMode)] || tuxunPromptReferences.world || "";
+}
+
+function tokenizeForSearch(value) {
+  const text = String(value || "")
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .trim();
+  if (!text) return [];
+  const parts = text.split(/\s+/).filter((item) => item.length >= 2);
+  const cjk = [...String(value || "").matchAll(/[\u4e00-\u9fff]{2,}/g)].map((match) => match[0]);
+  return [...new Set([...parts, ...cjk])].slice(0, 40);
+}
+
+function docsForMode(gameMode = "world") {
+  const mode = normalizeGameMode(gameMode);
+  const topicFilter = mode === "china"
+    ? new Set(["china", "vegetation-climate", "language-text"])
+    : new Set(["world-country-guides", "regionguessing", "confusable-countries", "pole-meta", "car-meta", "vegetation-climate", "language-text"]);
+
+  return Array.isArray(tuxunDocSummary?.importantDocs)
+    ? tuxunDocSummary.importantDocs.filter((doc) => Array.isArray(doc.topics) && doc.topics.some((topic) => topicFilter.has(topic)))
+    : [];
+}
+
+function relatedMemoryItems(analysis, placeGuess, gameMode = "world", limit = 6) {
+  const mode = normalizeGameMode(gameMode);
+  const store = loadMemoryStore();
+  const seed = [
+    placeGuess?.country,
+    placeGuess?.countryZh,
+    placeGuess?.region,
+    placeGuess?.city,
+    placeGuess?.location,
+    ...(Array.isArray(placeGuess?.evidence) ? placeGuess.evidence : []),
+    analysis?.summary,
+    ...(Array.isArray(analysis?.textClues) ? analysis.textClues : []),
+    ...(Array.isArray(analysis?.tags) ? analysis.tags.map((item) => `${item.tag} ${item.reason || ""}`) : [])
+  ].join(" ");
+  const tokens = tokenizeForSearch(seed);
+
+  return store.items
+    .filter((item) => item && item.gameMode === mode)
+    .map((item) => {
+      const haystack = `${item.title || ""} ${item.location || ""} ${item.clue || ""} ${item.knowledge || ""} ${(item.tags || []).join(" ")}`.toLowerCase();
+      let score = 0;
+      for (const token of tokens) {
+        if (haystack.includes(token.toLowerCase())) score += token.length >= 4 ? 3 : 1;
+      }
+      return { item, score };
+    })
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score || String(b.item.createdAt || "").localeCompare(String(a.item.createdAt || "")))
+    .slice(0, limit)
+    .map(({ item }) => item);
+}
+
+function memoryPromptReference(analysis, placeGuess, gameMode = "world") {
+  const items = relatedMemoryItems(analysis, placeGuess, gameMode, 6);
+  if (!items.length) return "";
+  return [
+    "## 用户确认过的常用知识点",
+    ...items.map((item, index) => `#${index + 1} ${item.title || item.location || "记忆"}\n地点: ${item.location || ""}\n线索: ${item.clue || ""}\n知识点: ${item.knowledge || ""}`)
+  ].join("\n");
+}
+
+function recentMemoryPromptReference(gameMode = "world", limit = 8) {
+  const mode = normalizeGameMode(gameMode);
+  const store = loadMemoryStore();
+  const items = store.items
+    .filter((item) => item && item.gameMode === mode)
+    .slice(0, limit);
+  if (!items.length) return "";
+  return [
+    "## 最近确认过的常用知识点",
+    ...items.map((item, index) => `#${index + 1} ${item.title || item.location || "记忆"}\n地点: ${item.location || ""}\n线索: ${item.clue || ""}\n知识点: ${item.knowledge || ""}`)
+  ].join("\n");
+}
+
+function relatedTuxunReferences(analysis, placeGuess, gameMode = "world", limit = 8) {
+  const mode = normalizeGameMode(gameMode);
+  const seed = [
+    placeGuess?.country,
+    placeGuess?.countryZh,
+    placeGuess?.continent,
+    placeGuess?.region,
+    placeGuess?.city,
+    placeGuess?.location,
+    ...(Array.isArray(placeGuess?.alternatives) ? placeGuess.alternatives : []),
+    ...(Array.isArray(placeGuess?.evidence) ? placeGuess.evidence : []),
+    analysis?.summary,
+    ...(Array.isArray(analysis?.textClues) ? analysis.textClues : []),
+    ...(Array.isArray(analysis?.candidateRegions) ? analysis.candidateRegions : []),
+    ...(Array.isArray(analysis?.candidateCities) ? analysis.candidateCities.map((item) => `${item.city || ""} ${item.country || ""}`) : []),
+    ...(Array.isArray(analysis?.tags) ? analysis.tags.map((item) => `${item.tag} ${item.reason || ""}`) : [])
+  ].join(" ");
+
+  const tokens = tokenizeForSearch(seed);
+  const hardHints = mode === "china"
+    ? ["中国", "省", "市", "区号", "出租车", "车牌", "街景车", "植被", "建筑"]
+    : ["易混", "电线杆", "街景车", "语言", "植被", "区域", "Plonk", "电话区号"];
+
+  return docsForMode(mode)
+    .map((doc) => {
+      const text = `${doc.title} ${(doc.topics || []).join(" ")} ${(doc.headings || []).join(" ")}`.toLowerCase();
+      let score = 0;
+      for (const token of tokens) {
+        if (text.includes(token.toLowerCase())) score += token.length >= 4 ? 3 : 1;
+      }
+      for (const hint of hardHints) {
+        if (text.includes(hint.toLowerCase())) score += 0.6;
+      }
+      if (mode === "china" && (doc.topics || []).includes("china")) score += 1.4;
+      if (mode === "world" && (doc.topics || []).includes("confusable-countries")) score += 1.2;
+      if (mode === "world" && ((doc.topics || []).includes("pole-meta") || (doc.topics || []).includes("car-meta"))) score += 0.9;
+      return { doc, score };
+    })
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score || b.doc.wordCount - a.doc.wordCount)
+    .slice(0, limit)
+    .map((item) => item.doc);
+}
+
+function formatConcreteReference(doc, index) {
+  const excerpts = Array.isArray(doc.excerpts) ? doc.excerpts.slice(0, 4) : [];
+  const excerptText = excerpts.length
+    ? excerpts.map((item) => `- ${item.heading}: ${item.text}`).join("\n")
+    : `章节: ${(doc.headings || []).slice(0, 12).join(" / ")}`;
+  return `#${index + 1} ${doc.title}\n主题: ${(doc.topics || []).join(", ")}\n${excerptText}`;
+}
+
+function buildAgentReviewPrompt(analysis, placeGuess, references, notes = "", gameMode = "world") {
+  const refText = references.length
+    ? references
+        .map(formatConcreteReference)
+        .join("\n\n")
+    : "No focused document match; use only visible evidence and lower confidence if uncertain.";
+  const memoryText = memoryPromptReference(analysis, placeGuess, gameMode);
+
+  return [
+    "You are the second-pass TuXun review agent.",
+    "Return only JSON using the exact placeGuess schema.",
+    ...modePromptLines(gameMode),
+    "Task: Review the first model guess against the retrieved TuXun document references and the image.",
+    "You may keep the guess, correct it, or lower confidence. Do not invent evidence that is not visible or supported by the references.",
+    "If the retrieved references are only weakly related, say that in Chinese and keep confidence conservative.",
+    "Use Chinese for reason, evidence, alternatives, location, region, city, and direction fields.",
+    'Format: {"country":"","countryZh":"","continent":"","continentDirection":"","countryDirection":"","cityDirection":"","location":"","region":"","city":"","confidence":0,"reason":"","evidence":[],"alternatives":[]}',
+    "",
+    `Game mode: ${normalizeGameMode(gameMode)}`,
+    `Notes: ${notes || "none"}`,
+    `First guess: ${JSON.stringify(placeGuess)}`,
+    `Visual tags: ${(analysis.tags || []).map((item) => `${item.tag}:${item.reason || ""}`).join(" | ") || "none"}`,
+    `Text clues: ${(analysis.textClues || []).join(" | ") || "none"}`,
+    `Candidate regions: ${(analysis.candidateRegions || []).join(", ") || "none"}`,
+    `Candidate cities: ${Array.isArray(analysis.candidateCities) && analysis.candidateCities.length ? analysis.candidateCities.slice(0, 5).map((item) => `${item.city}${item.country ? ` (${item.country})` : ""}`).join(", ") : "none"}`,
+    "",
+    "Retrieved TuXun references:",
+    refText,
+    "",
+    memoryText
+  ].join("\n");
+}
+
 function normalizeCoverageKey(value) {
   return String(value || "")
     .normalize("NFKD")
@@ -264,6 +569,60 @@ function sendSSE(res, event, data) {
   res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
 }
 
+function rebuildExtensionZip(reason = "startup") {
+  try {
+    const result = buildExtensionZip(extensionDir, extensionZipPath);
+    console.log(`[extension] Packaged ${result.files} files into ${path.relative(root, result.outputFile)} (${result.bytes} bytes, ${reason})`);
+  } catch (error) {
+    console.warn(`[extension] Failed to package extension zip (${reason}): ${error.message}`);
+  }
+}
+
+function watchExtensionZip() {
+  if (!fs.existsSync(extensionDir)) return;
+
+  let timer = null;
+  const schedule = (reason) => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      timer = null;
+      rebuildExtensionZip(reason);
+    }, 500);
+  };
+
+  try {
+    fs.watch(extensionDir, { recursive: true }, (eventType, filename) => {
+      schedule(filename ? `${eventType}:${filename}` : eventType);
+    });
+    console.log(`[extension] Watching ${path.relative(root, extensionDir)} for zip updates`);
+  } catch (error) {
+    console.warn(`[extension] Recursive watch unavailable: ${error.message}`);
+    const watchedDirs = new Set();
+    const watchDir = (dir) => {
+      if (watchedDirs.has(dir)) return;
+      watchedDirs.add(dir);
+      try {
+        fs.watch(dir, (eventType, filename) => {
+          if (filename) {
+            const fullPath = path.join(dir, filename.toString());
+            try {
+              if (fs.existsSync(fullPath) && fs.statSync(fullPath).isDirectory()) watchDir(fullPath);
+            } catch {}
+          }
+          schedule(filename ? `${eventType}:${path.relative(extensionDir, path.join(dir, filename.toString()))}` : eventType);
+        });
+      } catch (watchError) {
+        console.warn(`[extension] Failed to watch ${dir}: ${watchError.message}`);
+      }
+
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        if (entry.isDirectory()) watchDir(path.join(dir, entry.name));
+      }
+    };
+    watchDir(extensionDir);
+  }
+}
+
 function extractPartialPlaceFields(partialJson) {
   const fields = {};
   const stringFields = [
@@ -279,12 +638,11 @@ function extractPartialPlaceFields(partialJson) {
   return fields;
 }
 
-function combinedStreamingPrompt(notes = "", frameCount = 1) {
+function combinedStreamingPrompt(notes = "", frameCount = 1, gameMode = "world") {
   const lines = [
     "You are a GeoGuessr location judge. Return only JSON.",
     "IMPORTANT — output order: write the placeGuess field FIRST, then tags, textClues, candidateRegions, candidateCities, summary.",
-    "Only choose places that belong to the playable Street View coverage used by the game.",
-    "If the strongest guess seems outside playable coverage, say so instead of forcing a country.",
+    ...modePromptLines(gameMode),
     frameCount > 1 ? `You are given ${frameCount} frames from the same round.` : "You are given one frame.",
     "Infer country, countryZh, continent, region, city, confidence, reason, evidence, alternatives from the image.",
     "For city, output the best likely city; leave empty only when no city-level signal exists.",
@@ -296,12 +654,18 @@ function combinedStreamingPrompt(notes = "", frameCount = 1) {
     `Allowed clue tags: ${allowedTags.join(", ")}`,
     `Summary: ${notes || "none"}`,
     "",
+    recentMemoryPromptReference(gameMode),
+    "",
+    promptReferenceForMode(gameMode),
+    "",
     knowledgeBaseRef
   ];
   return lines.join("\n");
 }
 
-async function streamCombinedAnalysis(res, image, notes) {
+async function streamCombinedAnalysis(res, images, notes, gameMode = "world", reasoningMode = "accurate") {
+  const normalizedImages = normalizeImageInputs(images);
+  assertImages(normalizedImages);
   const auth = resolveOpenAiBearerToken();
   if (!auth.token) {
     sendSSE(res, "error", { message: "AI 认证不可用" });
@@ -309,7 +673,7 @@ async function streamCombinedAnalysis(res, image, notes) {
     return;
   }
 
-  const prompt = combinedStreamingPrompt(notes, 1);
+  const prompt = combinedStreamingPrompt(notes, normalizedImages.length, gameMode);
   const { controller, timeout } = withTimeout(70000);
   let fullContent = "";
   let placeSent = false;
@@ -323,7 +687,7 @@ async function streamCombinedAnalysis(res, image, notes) {
         role: "user",
         content: [
           { type: "text", text: prompt },
-          { type: "image_url", image_url: { url: image } }
+          ...normalizedImages.map((image) => ({ type: "image_url", image_url: { url: image } }))
         ]
       }
     ];
@@ -425,9 +789,13 @@ async function streamCombinedAnalysis(res, image, notes) {
       return;
     }
 
-    const analysis = normalizeVisionResult(parsed);
+    const analysis = normalizeVisionResult(parsed, gameMode);
     const guideContext = buildGuideContext(analysis, 4);
-    const placeGuess = normalizePlaceGuess(parsed.placeGuess || {}, guideContext);
+    let placeGuess = normalizePlaceGuess(parsed.placeGuess || {}, guideContext, gameMode);
+    if (normalizeReasoningMode(reasoningMode) === "accurate") {
+      sendSSE(res, "status", { message: "正在检索图寻资料复核…" });
+    }
+    placeGuess = await reviewPlaceGuessWithOpenAi(normalizedImages[0], analysis, placeGuess, notes, gameMode, reasoningMode);
 
     sendSSE(res, "done", {
       placeGuess,
@@ -487,7 +855,8 @@ function isPublicFile(filePath) {
     relative === "index.html" ||
     relative === "styles.css" ||
     relative.startsWith("src/") ||
-    relative.startsWith("data/")
+    relative.startsWith("data/") ||
+    relative === "dist/TuXunAI.zip"
   );
 }
 
@@ -621,17 +990,21 @@ function placeGuessSchema() {
   };
 }
 
-function analysisPrompt(notes = "", frameCount = 1) {
+function analysisPrompt(notes = "", frameCount = 1, gameMode = "world") {
   if (isFastOllamaModel) {
-    return "Describe this image.";
+    return [
+      "Describe this geolocation image for TuXun.",
+      ...modePromptLines(gameMode),
+      "Focus on visible text, signs, road markings, vehicles, poles, camera/car meta, vegetation, terrain, architecture, and likely region.",
+      `Notes: ${notes || "none"}`
+    ].join("\n");
   }
 
   const lines = [
     "You are a GeoGuessr location judge.",
     "Return only JSON.",
     "Do not run a second pass or wait for another model call.",
-    "Only choose places that belong to the playable Street View coverage used by the game.",
-    "If the strongest guess seems outside playable coverage, say so instead of forcing a country.",
+    ...modePromptLines(gameMode),
     frameCount > 1 ? `You are given ${frameCount} frames from the same round. Analyze them together.` : "You are given one frame.",
     "Infer the most likely country, countryZh, continent, region, and city directly from the image. Prefer a city-level best guess whenever the scene gives any useful urban, road, landscape, language, or regional clue.",
     "Use the extracted clues as support, but do not invent hard evidence.",
@@ -648,6 +1021,10 @@ function analysisPrompt(notes = "", frameCount = 1) {
     "Keep candidateRegions as countries or large regions only.",
     "Fill candidateCities with city-level candidates when possible, ordered by likelihood.",
     "Output the JSON structure required by the schema.",
+    "",
+    recentMemoryPromptReference(gameMode),
+    "",
+    promptReferenceForMode(gameMode),
     "",
     knowledgeBaseRef
   ];
@@ -738,7 +1115,7 @@ function isNegatedClue(text, index, length) {
   return /not|no |without|exclude|except|鎺掗櫎|娌℃湁|鐒鏃爘涓嶅|涓嶆槸|涓嶇鍚坾骞堕潪/.test(context);
 }
 
-function normalizeVisionResult(value) {
+function normalizeVisionResult(value, gameMode = "world") {
   const result = value && typeof value === "object" ? value : {};
   const normalized = {
     summary: typeof result.summary === "string" ? result.summary : "",
@@ -794,13 +1171,13 @@ function normalizeVisionResult(value) {
     : compactSummary.slice(0, 120);
 
   if (result.placeGuess && typeof result.placeGuess === "object") {
-    normalized.placeGuess = normalizePlaceGuess(result.placeGuess, []);
+    normalized.placeGuess = normalizePlaceGuess(result.placeGuess, [], gameMode);
   }
 
   return normalized;
 }
 
-function normalizeVisionResultFromText(text) {
+function normalizeVisionResultFromText(text, gameMode = "world") {
   const rawText = String(text || "").replace(/<\/?think>/gi, "").trim();
   const tags = inferTagsFromText(rawText);
   const compact = rawText.replace(/\s+/g, " ").trim();
@@ -816,7 +1193,7 @@ function normalizeVisionResultFromText(text) {
     candidateCities: [],
     confidence: 0.45,
     nextChecks: []
-  });
+  }, gameMode);
 }
 
 function guideAnalysisTokens(analysis) {
@@ -1082,16 +1459,23 @@ function countryMetaForPlace(country) {
   return lookup[country] || { countryZh: country || "", continent: "" };
 }
 
-function normalizePlaceGuess(value, context = []) {
+function normalizePlaceGuess(value, context = [], gameMode = "world") {
   const result = value && typeof value === "object" ? value : {};
-  const countryMeta = countryMetaForPlace(result.country);
-  const coverage = coverageInfoForPlace(result.country);
+  const mode = normalizeGameMode(gameMode);
+  const resultCountry = mode === "china" && !result.country ? "China" : result.country;
+  const countryMeta = countryMetaForPlace(resultCountry);
+  const isMainlandChinaInWorld = mode === "world" && normalizeCoverageKey(resultCountry) === "china";
+  const coverage = mode === "china"
+    ? { title: "China", code: "CN", continent: "Asia", generations: [], generationNotes: ["图寻中国模式：使用中国街景题库判断"] }
+    : isMainlandChinaInWorld
+      ? null
+      : coverageInfoForPlace(resultCountry);
   const generationNotes = Array.isArray(coverage?.generationNotes) ? coverage.generationNotes.slice(0, 3) : [];
   const generations = Array.isArray(coverage?.generations) ? coverage.generations.slice(0, 4) : [];
   const normalized = {
-    country: typeof result.country === "string" ? result.country.trim() : "",
-    countryZh: typeof result.countryZh === "string" && result.countryZh.trim() ? result.countryZh.trim() : countryMeta.countryZh,
-    continent: typeof result.continent === "string" && result.continent.trim() ? result.continent.trim() : countryMeta.continent,
+    country: mode === "china" ? "China" : typeof result.country === "string" ? result.country.trim() : "",
+    countryZh: mode === "china" ? "中国" : typeof result.countryZh === "string" && result.countryZh.trim() ? result.countryZh.trim() : countryMeta.countryZh,
+    continent: mode === "china" ? "亚洲" : typeof result.continent === "string" && result.continent.trim() ? result.continent.trim() : countryMeta.continent,
     continentDirection: typeof result.continentDirection === "string" ? result.continentDirection.trim() : "",
     countryDirection: typeof result.countryDirection === "string" ? result.countryDirection.trim() : "",
     cityDirection: typeof result.cityDirection === "string" ? result.cityDirection.trim() : "",
@@ -1112,10 +1496,10 @@ function normalizePlaceGuess(value, context = []) {
           generations,
           generationNotes
         }
-      : result.country
+      : resultCountry
         ? {
             playable: false,
-            title: result.country.trim(),
+            title: String(resultCountry).trim(),
             code: "",
             continent: "",
             generations: [],
@@ -1236,7 +1620,7 @@ async function ollamaStatus() {
   }
 }
 
-async function analyzeWithOllama(images, notes = "") {
+async function analyzeWithOllama(images, notes = "", gameMode = "world") {
   const normalizedImages = normalizeImageInputs(images);
   assertImages(normalizedImages);
   const { controller, timeout } = withTimeout(ollamaTimeoutMs);
@@ -1258,7 +1642,7 @@ async function analyzeWithOllama(images, notes = "") {
         messages: [
           {
             role: "user",
-            content: isFastOllamaModel ? analysisPrompt(notes, normalizedImages.length) : `/no_think\n${analysisPrompt(notes, normalizedImages.length)}`,
+            content: isFastOllamaModel ? analysisPrompt(notes, normalizedImages.length, gameMode) : `/no_think\n${analysisPrompt(notes, normalizedImages.length, gameMode)}`,
             images: normalizedImages.map((image) => base64FromDataUrl(image))
           }
         ]
@@ -1275,20 +1659,20 @@ async function analyzeWithOllama(images, notes = "") {
 
     const content = data.message?.content || "";
     const thinking = data.message?.thinking || "";
-    if (isFastOllamaModel) return normalizeVisionResultFromText(content);
-    if (isQwenOllamaModel && !content.trim() && thinking.trim()) return normalizeVisionResultFromText(thinking);
+    if (isFastOllamaModel) return normalizeVisionResultFromText(content, gameMode);
+    if (isQwenOllamaModel && !content.trim() && thinking.trim()) return normalizeVisionResultFromText(thinking, gameMode);
 
     const parsed = parseModelJson(content);
     if (!parsed) {
-      if (isQwenOllamaModel && thinking.trim()) return normalizeVisionResultFromText(thinking);
-      if (isFastOllamaModel) return normalizeVisionResultFromText(content);
+      if (isQwenOllamaModel && thinking.trim()) return normalizeVisionResultFromText(thinking, gameMode);
+      if (isFastOllamaModel) return normalizeVisionResultFromText(content, gameMode);
       const error = new Error("Ollama returned no parseable JSON");
       error.status = 502;
       throw error;
     }
-    const normalized = normalizeVisionResult(parsed);
+    const normalized = normalizeVisionResult(parsed, gameMode);
     if (isFastOllamaModel && !normalized.tags.length && content.trim()) {
-      return normalizeVisionResultFromText(content);
+      return normalizeVisionResultFromText(content, gameMode);
     }
     return normalized;
   } catch (error) {
@@ -1303,7 +1687,7 @@ async function analyzeWithOllama(images, notes = "") {
   }
 }
 
-async function analyzeWithOpenAi(images, notes = "") {
+async function analyzeWithOpenAi(images, notes = "", gameMode = "world") {
   const normalizedImages = normalizeImageInputs(images);
   assertImages(normalizedImages);
   const auth = resolveOpenAiBearerToken();
@@ -1327,7 +1711,7 @@ async function analyzeWithOpenAi(images, notes = "") {
         input: [
           {
             role: "user",
-            content: [{ type: "input_text", text: analysisPrompt(notes, normalizedImages.length) }].concat(
+            content: [{ type: "input_text", text: analysisPrompt(notes, normalizedImages.length, gameMode) }].concat(
               normalizedImages.map((image) => ({ type: "input_image", image_url: image }))
             )
           }
@@ -1362,7 +1746,7 @@ async function analyzeWithOpenAi(images, notes = "") {
       error.status = 502;
       throw error;
     }
-    return normalizeVisionResult(parsed);
+    return normalizeVisionResult(parsed, gameMode);
   } catch (error) {
     if (error.name === "AbortError") {
       const timeoutError = new Error(`OpenAI vision request timed out after ${Math.round(openAiTimeoutMs / 1000)}s`);
@@ -1418,12 +1802,11 @@ function placeGuessSchema() {
   };
 }
 
-function buildPlaceGuessPrompt(analysis, notes = "", guideContext = []) {
+function buildPlaceGuessPrompt(analysis, notes = "", guideContext = [], gameMode = "world") {
   const lines = [
     "You are a GeoGuessr location judge.",
     "Return only JSON.",
-    "Only choose places that belong to the playable Street View coverage used by the game.",
-    "If the strongest guess seems outside playable coverage, say so instead of forcing a country.",
+    ...modePromptLines(gameMode),
     "Guess the most likely country, countryZh, continent, region, and city from the image. Prefer a city-level best guess whenever there is any useful support.",
     "Use the extracted clues as support, but do not invent hard evidence.",
     "For city, output the best likely city or nearest city-level area; leave city empty only when there is no meaningful city-level signal at all.",
@@ -1438,6 +1821,10 @@ function buildPlaceGuessPrompt(analysis, notes = "", guideContext = []) {
     `Candidate regions: ${(analysis.candidateRegions || []).join(", ") || "none"}`,
     `Candidate cities: ${Array.isArray(analysis.candidateCities) && analysis.candidateCities.length ? analysis.candidateCities.slice(0, 3).map((item) => `${item.city}${item.country ? ` (${item.country})` : ""}`).join(", ") : "none"}`,
     `Notes: ${notes || "none"}`,
+    "",
+    memoryPromptReference(analysis, null, gameMode),
+    "",
+    promptReferenceForMode(gameMode),
     "",
     knowledgeBaseRef
   ];
@@ -1461,11 +1848,11 @@ function buildPlaceGuessPrompt(analysis, notes = "", guideContext = []) {
   return lines.join("\n");
 }
 
-async function guessPlaceWithOpenAi(image, analysis, notes = "", guideContext = []) {
+async function guessPlaceWithOpenAi(image, analysis, notes = "", guideContext = [], gameMode = "world") {
   assertImage(image);
   const auth = resolveOpenAiBearerToken();
   if (!auth.token) {
-    return normalizePlaceGuess({ reason: "OpenAI auth unavailable", confidence: 0 }, []);
+    return normalizePlaceGuess({ reason: "OpenAI auth unavailable", confidence: 0 }, [], gameMode);
   }
 
   const { controller, timeout } = withTimeout(30000);
@@ -1483,7 +1870,7 @@ async function guessPlaceWithOpenAi(image, analysis, notes = "", guideContext = 
           {
             role: "user",
             content: [
-              { type: "input_text", text: buildPlaceGuessPrompt(analysis, notes, guideContext) },
+              { type: "input_text", text: buildPlaceGuessPrompt(analysis, notes, guideContext, gameMode) },
               { type: "input_image", image_url: image }
             ]
           }
@@ -1502,32 +1889,242 @@ async function guessPlaceWithOpenAi(image, analysis, notes = "", guideContext = 
 
     const data = await response.json();
     if (!response.ok) {
-      return normalizePlaceGuess({ reason: data.error?.message || "place guess failed", confidence: 0 }, []);
+      return normalizePlaceGuess({ reason: data.error?.message || "place guess failed", confidence: 0 }, [], gameMode);
     }
 
     const parsed = parseModelJson(extractOpenAiOutputText(data));
     if (!parsed) {
-      return normalizePlaceGuess({ reason: "OpenAI returned no parseable place guess", confidence: 0 }, []);
+      return normalizePlaceGuess({ reason: "OpenAI returned no parseable place guess", confidence: 0 }, [], gameMode);
     }
-    return normalizePlaceGuess(parsed, []);
+    return normalizePlaceGuess(parsed, [], gameMode);
   } finally {
     clearTimeout(timeout);
   }
 }
 
-async function analyzeImage(imageOrImages, notes = "") {
+async function reviewPlaceGuessWithOpenAi(image, analysis, placeGuess, notes = "", gameMode = "world", reasoningMode = "accurate") {
+  if (!agentReviewEnabled || normalizeReasoningMode(reasoningMode) !== "accurate" || !placeGuess) return placeGuess;
+  assertImage(image);
+  const auth = resolveOpenAiBearerToken();
+  if (!auth.token) return placeGuess;
+
+  let current = placeGuess;
+  const seenSignatures = new Set();
+
+  for (let round = 0; round < maxAgentReviewRounds; round += 1) {
+    const signature = [current.country, current.region, current.city, current.location].map((item) => String(item || "").toLowerCase()).join("|");
+    if (seenSignatures.has(signature)) break;
+    seenSignatures.add(signature);
+
+    const references = relatedTuxunReferences(analysis, current, gameMode, round === 0 ? 8 : 10);
+    const { controller, timeout } = withTimeout(Math.min(openAiTimeoutMs, 45000));
+    try {
+      const response = await fetch(`${openAiBaseUrl}/responses`, {
+        method: "POST",
+        headers: {
+          authorization: `Bearer ${auth.token}`,
+          "content-type": "application/json"
+        },
+        body: JSON.stringify({
+          model: visionModel,
+          max_output_tokens: 520,
+          input: [
+            {
+              role: "user",
+              content: [
+                { type: "input_text", text: buildAgentReviewPrompt(analysis, current, references, notes, gameMode) },
+                { type: "input_image", image_url: image }
+              ]
+            }
+          ],
+          text: {
+            format: {
+              type: "json_schema",
+              name: "tuxun_agent_review_place_guess",
+              strict: true,
+              schema: placeGuessSchema()
+            }
+          }
+        }),
+        signal: controller.signal
+      });
+
+      const data = await response.json();
+      if (!response.ok) return current;
+      const parsed = parseModelJson(extractOpenAiOutputText(data));
+      if (!parsed) return current;
+
+      const reviewed = normalizePlaceGuess(parsed, [], gameMode);
+      reviewed.reviewed = true;
+      reviewed.reviewRounds = round + 1;
+      reviewed.reviewSources = references.map((doc) => doc.title);
+      if (!reviewed.evidence.some((item) => item.includes("复核参考")) && references.length) {
+        reviewed.evidence = reviewed.evidence.concat(`复核参考：${references.slice(0, 3).map((doc) => doc.title).join("、")}`).slice(0, 6);
+      }
+
+      const nextSignature = [reviewed.country, reviewed.region, reviewed.city, reviewed.location].map((item) => String(item || "").toLowerCase()).join("|");
+      current = reviewed;
+      if (nextSignature === signature) break;
+    } catch {
+      return current;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  return current;
+}
+
+function memorySchema() {
+  return {
+    type: "object",
+    additionalProperties: false,
+    required: ["items"],
+    properties: {
+      items: {
+        type: "array",
+        maxItems: 3,
+        items: {
+          type: "object",
+          additionalProperties: false,
+          required: ["title", "location", "clue", "knowledge", "tags"],
+          properties: {
+            title: { type: "string" },
+            location: { type: "string" },
+            clue: { type: "string" },
+            knowledge: { type: "string" },
+            tags: {
+              type: "array",
+              items: { type: "string" }
+            }
+          }
+        }
+      }
+    }
+  };
+}
+
+function buildMemoryPrompt(payload) {
+  return [
+    "You create reusable TuXun geolocation memory after the user marked an answer as accurate.",
+    "Return only JSON. Write concise, generalizable knowledge points, not a recap of one screenshot.",
+    "Prefer clues that can help future fast guesses: visible signs, plates, taxi livery, pole/car meta, vegetation, architecture, road markings, city/province/region cues.",
+    "Use Chinese.",
+    `Game mode: ${normalizeGameMode(payload.gameMode)}`,
+    `Confirmed result: ${JSON.stringify(payload.result || {})}`,
+    `Notes: ${payload.notes || "none"}`,
+    'Format: {"items":[{"title":"","location":"","clue":"","knowledge":"","tags":[]}]}'
+  ].join("\n");
+}
+
+async function generateMemoryItems(payload) {
+  const auth = resolveOpenAiBearerToken();
+  const guess = payload.result?.placeGuess || {};
+  const fallback = {
+    title: `${guess.countryZh || guess.country || "地点"} 常用线索`,
+    location: [guess.countryZh || guess.country, guess.region, guess.city].filter(Boolean).join(" / "),
+    clue: Array.isArray(guess.evidence) && guess.evidence.length ? guess.evidence.slice(0, 2).join("；") : guess.reason || "用户确认该判断准确",
+    knowledge: guess.reason || "该地点判断被用户确认准确，可作为后续同类线索参考。",
+    tags: Array.isArray(payload.result?.tags) ? payload.result.tags.slice(0, 6).map((item) => item.tag).filter(Boolean) : []
+  };
+
+  if (!auth.token || !(visionProvider === "openai" || visionProvider === "chatgpt" || visionProvider === "newapi")) {
+    return [fallback];
+  }
+
+  const { controller, timeout } = withTimeout(Math.min(openAiTimeoutMs, 30000));
+  try {
+    const response = await fetch(`${openAiBaseUrl}/responses`, {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${auth.token}`,
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({
+        model: visionModel,
+        max_output_tokens: 420,
+        input: [
+          {
+            role: "user",
+            content: [{ type: "input_text", text: buildMemoryPrompt(payload) }]
+          }
+        ],
+        text: {
+          format: {
+            type: "json_schema",
+            name: "tuxun_memory_items",
+            strict: true,
+            schema: memorySchema()
+          }
+        }
+      }),
+      signal: controller.signal
+    });
+    const data = await response.json();
+    if (!response.ok) return [fallback];
+    const parsed = parseModelJson(extractOpenAiOutputText(data));
+    const items = Array.isArray(parsed?.items) ? parsed.items : [];
+    return items.length ? items : [fallback];
+  } catch {
+    return [fallback];
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function rememberAccurateResult(payload) {
+  const generated = await generateMemoryItems(payload);
+  const store = loadMemoryStore();
+  const now = new Date().toISOString();
+  const gameMode = normalizeGameMode(payload.gameMode);
+  const result = payload.result || {};
+  const items = generated
+    .filter((item) => item && (item.knowledge || item.clue || item.title))
+    .map((item) => ({
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      createdAt: now,
+      gameMode,
+      title: String(item.title || "").slice(0, 80),
+      location: String(item.location || "").slice(0, 120),
+      clue: String(item.clue || "").slice(0, 260),
+      knowledge: String(item.knowledge || "").slice(0, 420),
+      tags: Array.isArray(item.tags) ? item.tags.map((tag) => String(tag).slice(0, 40)).slice(0, 8) : [],
+      sourceGuess: result.placeGuess
+        ? {
+            country: result.placeGuess.country || "",
+            countryZh: result.placeGuess.countryZh || "",
+            region: result.placeGuess.region || "",
+            city: result.placeGuess.city || "",
+            confidence: result.placeGuess.confidence || 0
+          }
+        : null
+    }));
+
+  store.items = [...items, ...store.items];
+  return saveMemoryStore(store);
+}
+
+async function analyzeImage(imageOrImages, notes = "", gameMode = "world", reasoningMode = "accurate") {
+  const mode = normalizeGameMode(gameMode);
   const images = normalizeImageInputs(imageOrImages);
   assertImages(images);
   let analysis;
-  if (visionProvider === "openai" || visionProvider === "chatgpt" || visionProvider === "newapi") analysis = await analyzeWithOpenAi(images, notes);
-  else if (visionProvider === "ollama") analysis = await analyzeWithOllama(images, notes);
+  if (visionProvider === "openai" || visionProvider === "chatgpt" || visionProvider === "newapi") analysis = await analyzeWithOpenAi(images, notes, mode);
+  else if (visionProvider === "ollama") analysis = await analyzeWithOllama(images, notes, mode);
   else {
     const error = new Error(`Unsupported VISION_PROVIDER: ${visionProvider}`);
     error.status = 400;
     throw error;
   }
 
-  if (visionProvider === "ollama") {
+  if (mode === "china") {
+    if (analysis.placeGuess) {
+      const placeGuess = normalizePlaceGuess(analysis.placeGuess, [], mode);
+      analysis.placeGuess = visionProvider === "openai" || visionProvider === "chatgpt" || visionProvider === "newapi"
+        ? await reviewPlaceGuessWithOpenAi(images[0], analysis, placeGuess, notes, mode, reasoningMode)
+        : placeGuess;
+    }
+  } else if (visionProvider === "ollama") {
     const placeGuess = await guessPlaceWithGuide(analysis);
     if (placeGuess) {
       analysis.placeGuess = placeGuess;
@@ -1535,14 +2132,14 @@ async function analyzeImage(imageOrImages, notes = "") {
   } else if (visionProvider === "openai" || visionProvider === "chatgpt" || visionProvider === "newapi") {
     const guideContext = buildGuideContext(analysis, 4);
     if (guideContext.length && (guideContext[0].hardEvidence || 0) >= 1) {
-      const placeGuess = await guessPlaceWithOpenAi(images[0], analysis, notes, guideContext);
+      const placeGuess = await guessPlaceWithOpenAi(images[0], analysis, notes, guideContext, mode);
       if (placeGuess) {
-        analysis.placeGuess = placeGuess;
+        analysis.placeGuess = await reviewPlaceGuessWithOpenAi(images[0], analysis, placeGuess, notes, mode, reasoningMode);
       }
     } else {
-      const placeGuess = await guessPlaceWithOpenAi(images[0], analysis, notes);
+      const placeGuess = await guessPlaceWithOpenAi(images[0], analysis, notes, [], mode);
       if (placeGuess) {
-        analysis.placeGuess = placeGuess;
+        analysis.placeGuess = await reviewPlaceGuessWithOpenAi(images[0], analysis, placeGuess, notes, mode, reasoningMode);
       }
     }
   }
@@ -1559,6 +2156,8 @@ async function configPayload() {
       model: visionModel,
       baseUrl: openAiBaseUrl,
       authSource: auth.source || "none",
+      agentReview: agentReviewEnabled,
+      agentReviewRounds: maxAgentReviewRounds,
       message: auth.token
         ? auth.source === "codex-chatgpt"
           ? "OpenAI vision enabled via Codex ChatGPT auth"
@@ -1576,6 +2175,7 @@ async function configPayload() {
       model: visionModel,
       host: ollamaHost,
       timeoutMs: ollamaTimeoutMs,
+      agentReview: false,
       models: status.models,
       message: !status.available
         ? "Ollama is not running or not reachable"
@@ -1593,6 +2193,9 @@ async function configPayload() {
   };
 }
 
+rebuildExtensionZip();
+watchExtensionZip();
+
 http
   .createServer(async (req, res) => {
     if (req.method === "OPTIONS") {
@@ -1605,11 +2208,35 @@ http
       return;
     }
 
+    if (req.method === "GET" && req.url === "/api/memory") {
+      sendJson(res, 200, loadMemoryStore());
+      return;
+    }
+
+    if (req.method === "POST" && req.url === "/api/memory/confirm") {
+      try {
+        const body = await readJson(req, 2 * 1024 * 1024);
+        if (!body.accurate) {
+          sendJson(res, 200, { ok: true, remembered: false });
+          return;
+        }
+        const store = await rememberAccurateResult({
+          gameMode: body.gameMode,
+          result: body.result,
+          notes: body.notes
+        });
+        sendJson(res, 200, { ok: true, remembered: true, count: store.items.length, items: store.items.slice(0, 3) });
+      } catch (error) {
+        sendJson(res, error.status || 500, { error: error.message || "Failed to save memory" });
+      }
+      return;
+    }
+
     if (req.method === "POST" && req.url === "/api/analyze") {
       try {
         const body = await readJson(req);
         const inputImages = Array.isArray(body.images) && body.images.length ? body.images : body.image;
-        const result = await analyzeImage(inputImages, body.notes);
+        const result = await analyzeImage(inputImages, body.notes, body.gameMode, body.reasoningMode);
         sendJson(res, 200, result);
       } catch (error) {
         sendJson(res, error.status || 500, {
@@ -1635,11 +2262,13 @@ http
         const images = normalizeImageInputs(inputImages);
         assertImages(images);
         const notes = body.notes || "";
+        const gameMode = normalizeGameMode(body.gameMode);
+        const reasoningMode = normalizeReasoningMode(body.reasoningMode);
 
         sendSSE(res, "status", { message: "正在识图…" });
 
         if (visionProvider === "ollama") {
-          const analysis = await analyzeWithOllama(images, notes);
+          const analysis = await analyzeWithOllama(images, notes, gameMode);
 
           sendSSE(res, "analysis", {
             summary: analysis.summary,
@@ -1649,7 +2278,9 @@ http
             candidateRegions: analysis.candidateRegions
           });
 
-          const placeGuess = await guessPlaceWithGuide(analysis);
+          const placeGuess = gameMode === "china"
+            ? analysis.placeGuess ? normalizePlaceGuess(analysis.placeGuess, [], gameMode) : null
+            : await guessPlaceWithGuide(analysis);
           if (placeGuess) {
             sendSSE(res, "place", {
               country: placeGuess.country,
@@ -1669,7 +2300,7 @@ http
             sendSSE(res, "done", {});
           }
         } else {
-          await streamCombinedAnalysis(res, images[0], notes);
+          await streamCombinedAnalysis(res, images, notes, gameMode, reasoningMode);
         }
 
         res.end();
@@ -1707,6 +2338,3 @@ http
     console.log(`TuXun AI assistant is running at http://localhost:${port}`);
     console.log(`Vision provider: ${visionProvider} (${visionModel})`);
   });
-
-
-

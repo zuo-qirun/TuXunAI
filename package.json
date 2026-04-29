@@ -5,6 +5,8 @@
   "description": "A local real-time clue assistant for practicing TuXun / geolocation rounds.",
   "scripts": {
     "start": "node server.js",
+    "build:extension": "node scripts/build-extension-zip.js",
+    "build:tuxun-summary": "node scripts/build-tuxun-summary.js",
     "crawl:guide": "node scripts/build-plonkit-guide.js",
     "build:coverage": "node scripts/build-coverage-generations.js",
     "deploy": "node scripts/deploy.js",

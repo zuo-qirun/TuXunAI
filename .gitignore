@@ -2,3 +2,4 @@ pem
 dist
 .env
 .claude/
+data/tuxun-memory.json
